@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\BankMore.Domain.ContasCorrentes\BankMore.Domain.ContasCorrentes.csproj" />
+    <ProjectReference Include="..\BankMore.Infra.Data.ContasCorrentes\BankMore.Infra.Data.ContasCorrentes.csproj" />
+  </ItemGroup>
+
+</Project>

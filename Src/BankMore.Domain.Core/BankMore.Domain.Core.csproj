@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" />
+    <PackageReference Include="KafkaFlow.LogHandler.Console" />
+    <PackageReference Include="KafkaFlow.Serializer.ProtobufNet" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="KafkaFlow" />
+    <PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" />
+    <PackageReference Include="KafkaFlow.Serializer.JsonCore" />
+  </ItemGroup>
+
+</Project>

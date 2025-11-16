@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\BankMore.Application.ContasCorrentes\BankMore.Application.ContasCorrentes.csproj" />
+    <ProjectReference Include="..\BankMore.Domain.ContasCorrentes\BankMore.Domain.ContasCorrentes.csproj" />
+    <ProjectReference Include="..\BankMore.Infra.Apis\BankMore.Infra.Apis.csproj" />
+    <ProjectReference Include="..\BankMore.Infra.CrossCutting.Bus\BankMore.Infra.CrossCutting.Bus.csproj" />
+    <ProjectReference Include="..\BankMore.Infra.CrossCutting.IoC\BankMore.Infra.CrossCutting.IoC.csproj" />
+    <ProjectReference Include="..\BankMore.Infra.Data.ContasCorrentes\BankMore.Infra.Data.ContasCorrentes.csproj" />
+  </ItemGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
+
+</Project>

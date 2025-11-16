@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\BankMore.Domain.ContasCorrentes\BankMore.Domain.ContasCorrentes.csproj" />
+    <ProjectReference Include="..\BankMore.Infra.Data.Common\BankMore.Infra.Data.Common.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
+
+</Project>

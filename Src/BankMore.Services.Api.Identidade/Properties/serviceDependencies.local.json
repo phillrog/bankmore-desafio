@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "containerPorts": "1433:1433",
+      "secretStore": null,
+      "containerName": "sql.data",
+      "containerImage": "mcr.microsoft.com/mssql/server:2017-latest",
+      "type": "mssql.container",
+      "connectionId": "ConnectionStrings:DatabaseConnection",
+      "dynamicId": null
+    }
+  }
+}
