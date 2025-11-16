@@ -8,6 +8,7 @@ public class ViewModelToDomainMappingProfile : Profile
 {
     public ViewModelToDomainMappingProfile()
     {
+        /// Commands
         CreateMap<ContaCorrenteViewModel, CadastrarNovaContaCorrenteCommand>()
             .ConstructUsing(c => new CadastrarNovaContaCorrenteCommand(c.Nome, c.Senha, c.Cpf));
         CreateMap<ContaCorrenteViewModel, AlterarContaCorrenteCommand>()

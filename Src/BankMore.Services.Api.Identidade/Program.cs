@@ -15,7 +15,7 @@ var apiNome = "API Identidade";
 // END: Variables
 
 // START:
-builder.Services.AddKafkaSetup();
+builder.Services.AddKafkaSetup(builder.Configuration);
 // ----- Database -----
 builder.Services.AddDatabaseSetup(builder.Configuration, builder.Environment);
 

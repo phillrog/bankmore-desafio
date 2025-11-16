@@ -4,9 +4,7 @@ using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
 using BankMore.Infra.CrossCutting.Identity.Authorization;
 using BankMore.Services.Apis.Controllers;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +28,39 @@ public class ContaCorrenteController : ApiController
         : base(notifications, mediator)
     {
         _contaCorrenteService = contaCorrenteService;
+    }
+    #endregion
+
+    #region [ GET ]
+    /// <summary>
+    /// Consulta as informações básicas de uma conta corrente pelo CPF do titular.
+    /// </summary>
+    /// <remarks>
+    /// Este endpoint permite acesso não autenticado (AllowAnonymous).
+    /// Retorna o nome do titular, número e status da conta.
+    /// </remarks>
+    /// <param name="cpf">O CPF do titular da conta.</param>
+    /// <returns>Retorna os dados da conta (Nome, Número, Ativo) ou um erro.</returns>
+    [HttpGet("informacoes/{cpf}")]
+    [Authorize(Policy = "CanWriteRead", Roles = Roles.Admin)]
+    [ProducesResponseType(typeof(InformacoesViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)] 
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Informacoes(string cpf)
+    {
+        InformacoesViewModel informacoes = await _contaCorrenteService.BuscarInformcoes(cpf);
+
+        if (!IsValidOperation())
+        {
+            return Response();
+        }
+
+        if (informacoes == null)
+        {
+            return NotFound(new { success = false, message = "Conta não encontrada." });
+        }
+
+        return Response(informacoes);
     }
     #endregion
 
@@ -87,7 +118,7 @@ public class ContaCorrenteController : ApiController
 
         _contaCorrenteService.Alterar(contaViewModel);
 
-        return Response(contaViewModel);
+        return Response();
     }
     #endregion
 }

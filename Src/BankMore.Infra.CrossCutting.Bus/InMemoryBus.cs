@@ -23,6 +23,11 @@ public sealed class InMemoryBus : IMediatorHandler
         return _mediator.Send(command);
     }
 
+    public Task<TResult> SendCommand<T, TResult>(T command) where T : IRequest<TResult>
+    {
+        return _mediator.Send(command);
+    }
+
     public Task RaiseEvent<T>(T @event)
         where T : Event
     {

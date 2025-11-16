@@ -17,6 +17,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
@@ -31,5 +32,8 @@
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+		<DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
 	</PropertyGroup>
 </Project>

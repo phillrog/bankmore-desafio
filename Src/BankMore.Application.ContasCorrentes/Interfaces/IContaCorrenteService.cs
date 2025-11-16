@@ -6,5 +6,5 @@ public interface IContaCorrenteService : IDisposable
 {
     void Cadastrar(ContaCorrenteViewModel contaCorrenteViewModel);
     void Alterar(ContaCorrenteViewModel contaCorrenteViewModel);
-
+    Task<InformacoesViewModel> BuscarInformcoes(string cpf);
 }

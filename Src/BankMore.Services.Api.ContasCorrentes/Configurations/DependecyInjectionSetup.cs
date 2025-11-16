@@ -1,6 +1,8 @@
 using BankMore.Application.ContasCorrentes.Commands;
 using BankMore.Application.ContasCorrentes.Interfaces;
+using BankMore.Application.ContasCorrentes.Querys;
 using BankMore.Application.ContasCorrentes.Services;
+using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.ContasCorrentes.Interfaces;
 using BankMore.Domain.ContasCorrentes.Services;
@@ -20,9 +22,12 @@ public static class DependecyInjectionSetup
         // Application
         services.AddScoped<IContaCorrenteService, ContaCorrenteService>();       
 
-        // Domain - Commands
+        // Application - Commands
         services.AddScoped<IRequestHandler<CadastrarNovaContaCorrenteCommand, bool>, ContaCorrenteHandler>();
         services.AddScoped<IRequestHandler<AlterarContaCorrenteCommand, bool>, ContaCorrenteHandler>();
+
+        // Application - Querys
+        services.AddScoped<IRequestHandler<InformacoesQuery, InformacoesViewModel>, InformacoesQueryHandler>();
 
         // Domain - Services
         services.AddScoped<IGeradorNumeroService, GeradorNumeroService>();

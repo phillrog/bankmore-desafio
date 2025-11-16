@@ -11,49 +11,48 @@ public static class SwaggerExtension
 {
     public static IServiceCollection AddCustomizedSwagger(this IServiceCollection services, IWebHostEnvironment env, string api, params Type[] assemblyAnchorTypes)
     {
-        if (env.IsDevelopment())
+
+        services.AddSwaggerGen(c =>
         {
-            services.AddSwaggerGen(c =>
+            var assembliesToDocument = assemblyAnchorTypes
+                .Select(t => t.Assembly)
+                .Distinct()
+                .ToList();
+
+            // Adicione o assembly executando a extensão como fallback
+            assembliesToDocument.Add(Assembly.GetExecutingAssembly());
+
+            foreach (var assembly in assembliesToDocument.Distinct())
             {
-                var assembliesToDocument = assemblyAnchorTypes
-                    .Select(t => t.Assembly)
-                    .Distinct()
-                    .ToList();
+                var xmlFile = $"{assembly.GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 
-                // Adicione o assembly executando a extensão como fallback
-                assembliesToDocument.Add(Assembly.GetExecutingAssembly());
-
-                foreach (var assembly in assembliesToDocument.Distinct())
+                // Verifica se o arquivo XML existe antes de tentar incluir
+                if (File.Exists(xmlPath))
                 {
-                    var xmlFile = $"{assembly.GetName().Name}.xml";
-                    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-                    // Verifica se o arquivo XML existe antes de tentar incluir
-                    if (File.Exists(xmlPath))
-                    {
-                        c.IncludeXmlComments(xmlPath);
-                    }
+                    c.IncludeXmlComments(xmlPath);
                 }
+            }
 
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "Desafio BankMore - " + api,
-                    Description = string.Empty,
-                    Contact = new OpenApiContact { Name = "Phillipe Souza" },
-                });
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Version = "v1",
+                Title = "Desafio BankMore - " + api,
+                Description = string.Empty,
+                Contact = new OpenApiContact { Name = "Phillipe Souza" },
+            });
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
-                });
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+            });
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
                     {
                         new OpenApiSecurityScheme
                         {
@@ -70,29 +69,27 @@ public static class SwaggerExtension
 
                         // new string[] { }
                     },
-                });
-
             });
-        }
+
+        });
 
         return services;
     }
 
     public static IApplicationBuilder UseCustomizedSwagger(this IApplicationBuilder app, IWebHostEnvironment env, string api)
     {
-        if (env.IsDevelopment())
-        {
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", $"Desafio BankMore {api} v1.0" );
-                
-            });
-        }
+        // Enable middleware to serve generated Swagger as a JSON endpoint.
+        app.UseSwagger();
+
+        // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+        // specifying the Swagger JSON endpoint.
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", $"Desafio BankMore {api} v1.0");
+
+        });
+
 
         return app;
     }

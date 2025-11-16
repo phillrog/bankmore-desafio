@@ -1,4 +1,5 @@
 using BankMore.Application.ContasCorrentes.Validations;
+using MediatR;
 
 namespace BankMore.Application.ContasCorrentes.Commands;
 

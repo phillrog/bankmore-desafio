@@ -1,3 +1,6 @@
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using BankMore.Infra.CrossCutting.IoC;
 using BankMore.Services.Api.ContasCorrentes.Configurations;
 using BankMore.Services.Api.ContasCorrentes.Controllers;
@@ -5,9 +8,6 @@ using BankMore.Services.Apis.StartupExtensions;
 using KafkaFlow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var apiNome = "API Conta Corrente";
@@ -15,7 +15,7 @@ var apiNome = "API Conta Corrente";
 // END: Variables
 
 // START: Custom services
-builder.Services.AddKafkaSetup();
+builder.Services.AddKafkaSetup(builder.Configuration);
 // ----- Database -----
 builder.Services.AddDatabaseSetup(builder.Configuration, builder.Environment);
 
