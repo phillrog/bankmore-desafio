@@ -40,5 +40,9 @@ public class ContaCorrenteMap : IEntityTypeConfiguration<ContaCorrente>
             .IsRequired();
 
         builder.HasQueryFilter(p => !p.IsDeleted);
+
+        builder.HasMany(i => i.Idempotencias)
+                   .WithOne()
+                   .HasForeignKey(i => i.IdContaCorrente);
     }
 }

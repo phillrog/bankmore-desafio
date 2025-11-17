@@ -10,6 +10,7 @@ namespace BankMore.Domain.ContasCorrentes.Models
         public string Senha { get; private set; }
         public string Salt { get; private set; }
         public bool Ativo { get; private set; }
+        public ICollection<Idempotencia>? Idempotencias { get; set; }
 
         public ContaCorrente() { }
 

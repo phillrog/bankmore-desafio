@@ -1,7 +1,6 @@
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
-using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.Common.Providers.Http;
 using BankMore.Infra.CrossCutting.Bus;
 using BankMore.Infra.CrossCutting.Identity.Authorization;
@@ -35,15 +34,9 @@ public class NativeInjectorBootStrapper
         // Domain - Providers, 3rd parties
         services.AddScoped<IHttpProvider, HttpProvider>();
 
-        // Infra - Identity Services
-        services.AddTransient<IEmailSender, AuthEmailMessageSender>();
-        services.AddTransient<ISmsSender, AuthSMSMessageSender>();
-
         // Infra - Identity
         services.AddScoped<IUser, AspNetUser>();
         services.AddSingleton<IJwtFactory, JwtFactory>();
-
-        //services.AddScoped<DomainNotificationHandler>();
 
     }
 }

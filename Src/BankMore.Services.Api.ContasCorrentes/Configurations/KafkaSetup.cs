@@ -1,9 +1,7 @@
 using BankMore.Infra.Kafka.Consumers;
 using BankMore.Infra.Kafka.Producers;
-using BankMore.Infra.Kafka.Responses;
-using BankMore.Infra.Kafka.Services;
+using Confluent.Kafka;
 using KafkaFlow;
-using KafkaFlow.Configuration;
 using KafkaFlow.Serializer;
 
 namespace BankMore.Services.Api.ContasCorrentes.Configurations;
@@ -57,12 +55,24 @@ public static class KafkaSetup
                 .AddProducer<ICadastroContaRequestProducer>(
                     producer => producer
                         .DefaultTopic("cadastrar.conta.requisicao")
+                        .WithAcks(KafkaFlow.Acks.All)
+                        .WithProducerConfig(new ProducerConfig
+                        {
+                            EnableIdempotence = true,
+                            MessageTimeoutMs = 10000,
+                        })
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
 
                 )
                 .AddProducer<IInforcacoesContaResponseProducer>(
                     producer => producer
                         .DefaultTopic("informacoes.conta.resposta")
+                        .WithAcks(KafkaFlow.Acks.All)
+                        .WithProducerConfig(new ProducerConfig
+                        {
+                            EnableIdempotence = true,
+                            MessageTimeoutMs = 10000,
+                        })
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
                 )
             )
