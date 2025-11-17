@@ -7,11 +7,12 @@ namespace BankMore.Application.ContasCorrentes.Commands;
 
 public class CadastrarNovaIdempotenciaCommand : IdempotenciaCommand, IRequest<Result<bool>>
 {
-    public CadastrarNovaIdempotenciaCommand(Guid idContaCorrente, string requisicao)
+    public CadastrarNovaIdempotenciaCommand(Guid id, Guid idContaCorrente, string resultado, string requisicao)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         IdContaCorrente = idContaCorrente;
         Requisicao = requisicao;
+        Resultado = resultado;
     }
 
     public override bool IsValid()

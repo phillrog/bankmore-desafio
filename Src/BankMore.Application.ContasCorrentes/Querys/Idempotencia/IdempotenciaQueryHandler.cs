@@ -30,7 +30,7 @@ namespace BankMore.Application.ContasCorrentes.Querys
 
         public Task<bool> Handle(IdempotenciaExisteQuery message, CancellationToken cancellationToken)
         {
-            var chave = _idempotenciaRepository.GetByExpression(d => d.Id == message.Id);
+            var chave = _idempotenciaRepository.GetByExpressionAsync(d => d.Id == message.Id);
             return Task.FromResult(chave is null);
         }
     }

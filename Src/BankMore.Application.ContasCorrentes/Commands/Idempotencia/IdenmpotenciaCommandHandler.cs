@@ -1,3 +1,4 @@
+using AutoMapper;
 using BankMore.Domain.Common.CommandHandlers;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.ContasCorrentes.Events;
@@ -17,6 +18,7 @@ public class IdenmpotenciaCommandHandler : CommandHandler,
 
     private readonly IMediatorHandler _bus;
     private readonly IIdempotenciaRepository _idempotenciaRepository;
+    private readonly IMapper _mapper;
     #endregion
 
     #region [ CONSTRUTOR ]
@@ -25,11 +27,13 @@ public class IdenmpotenciaCommandHandler : CommandHandler,
         IUnitOfWork uow,
         IMediatorHandler bus,
         INotificationHandler<DomainNotification> notifications,
-        IIdempotenciaRepository idempotenciaRepository)
+        IIdempotenciaRepository idempotenciaRepository,
+        IMapper mapper)
         : base(uow, bus, notifications)
     {
         _bus = bus;
         _idempotenciaRepository = idempotenciaRepository;
+        _mapper = mapper;
     }
     #endregion
 
@@ -50,7 +54,7 @@ public class IdenmpotenciaCommandHandler : CommandHandler,
             return Task.FromResult(Result<bool>.Failure(erro, Erro.INVALID_DOCUMENT));
         }
 
-        var chave = new BankMore.Domain.ContasCorrentes.Models.Idempotencia();
+        var chave = _mapper.Map<BankMore.Domain.ContasCorrentes.Models.Idempotencia>(message);
 
         _idempotenciaRepository.Add(chave);
         if (Commit())

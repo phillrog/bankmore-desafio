@@ -7,7 +7,6 @@ public class CadastrarNovaIdempotenciaValidation : IdempotenciaValidation<Cadast
     public CadastrarNovaIdempotenciaValidation()
     {
         ValidarId();
-        ValidarIdContaCorrente();
         ValidarRequisicao();
     }
 }

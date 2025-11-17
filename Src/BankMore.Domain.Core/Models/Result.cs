@@ -10,7 +10,9 @@ namespace BankMore.Domain.Core.Models
         INVALID_ACCOUNT,
         INACTIVE_ACCOUNT,
         INVALID_VALUE,
-        INVALID_TYPE
+        INVALID_TYPE,
+        INERNAL_ERROR,
+        INSUFFICIENT_FUNDS
     }
     public class Result<T>
     {

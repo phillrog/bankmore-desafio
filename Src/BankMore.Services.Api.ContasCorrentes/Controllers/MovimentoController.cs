@@ -43,7 +43,7 @@ public class MovimentoController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult Cadastrar([FromBody] MovimentoViewModel contaViewModel)
+    public async Task<IActionResult> Cadastrar([FromBody] MovimentoViewModel contaViewModel)
     {
         if (!ModelState.IsValid)
         {
@@ -51,9 +51,9 @@ public class MovimentoController : ApiController
             return Response(contaViewModel);
         }
 
-        _movimentoService.Cadastrar(contaViewModel);
+        var retorno = await _movimentoService.Cadastrar(contaViewModel);
 
-        return Response(contaViewModel);
+        return ResponseResult(retorno);
     }
     #endregion
 

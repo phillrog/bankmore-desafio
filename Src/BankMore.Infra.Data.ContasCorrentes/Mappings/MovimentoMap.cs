@@ -10,7 +10,7 @@ namespace BankMore.Infra.Data.ContasCorrentes.Mappings
         {
             builder.ToTable("movimento");
 
-             builder.HasKey(m => m.Id);
+            builder.HasKey(m => m.Id);
             builder.Property(m => m.IdContaCorrente)
                    .HasColumnName("idcontacorrente")
                    .IsRequired();
@@ -30,7 +30,7 @@ namespace BankMore.Infra.Data.ContasCorrentes.Mappings
                    .IsRequired();
 
             builder.HasOne(m => m.ContaCorrente)
-                   .WithMany()
+                   .WithMany(d => d.Movimentacoes)
                    .HasForeignKey(m => m.IdContaCorrente)
                    .OnDelete(DeleteBehavior.Restrict);
         }

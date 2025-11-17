@@ -6,10 +6,16 @@ namespace BankMore.Application.ContasCorrentes.Querys
 {
     public class InformacoesQuery : IRequest<Result<InformacoesViewModel>>
     {
-        public string Cpf { get; set; }
+        public string Cpf { get; private set; }
+        public int Numero { get; private set; }
         public InformacoesQuery(string cpf)
         {
             Cpf = cpf;
+        }
+
+        public InformacoesQuery(int numero)
+        {
+            Numero = numero;
         }
     }
 }

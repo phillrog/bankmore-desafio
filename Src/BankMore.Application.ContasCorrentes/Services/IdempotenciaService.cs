@@ -4,6 +4,7 @@ using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.Querys;
 using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Domain.Core.Bus;
+using BankMore.Domain.Core.Models;
 
 namespace BankMore.Application.Idempotencia.Services
 {
@@ -37,10 +38,10 @@ namespace BankMore.Application.Idempotencia.Services
 
         #region [ CADASTRAR ]
 
-        public void Cadastrar(IdempotenciaViewModel idempotencia)
+        public async Task<Result<bool>> Cadastrar(IdempotenciaViewModel idempotencia)
         {
-            var registerCommand = _mapper.Map<CadastrarNovaContaCorrenteCommand>(idempotencia);
-            _bus.SendCommand(registerCommand);
+            var registerCommand = _mapper.Map<CadastrarNovaIdempotenciaCommand>(idempotencia);
+            return await _bus.SendCommand<CadastrarNovaIdempotenciaCommand, Result<bool>>(registerCommand);
         }
         #endregion       
 

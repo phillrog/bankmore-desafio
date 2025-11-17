@@ -3,7 +3,9 @@ using BankMore.Application.ContasCorrentes.Commands;
 using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.Querys;
 using BankMore.Application.ContasCorrentes.ViewModels;
+using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.Core.Bus;
+using BankMore.Domain.Core.Models;
 
 namespace BankMore.Application.ContasCorrentes.Services
 {
@@ -37,10 +39,10 @@ namespace BankMore.Application.ContasCorrentes.Services
 
         #region [ CADASTRAR ]
 
-        public void Cadastrar(MovimentoViewModel idempotencia)
+        public  async Task<Result<MovimentacaoRelaizadaDto>> Cadastrar(MovimentoViewModel movimento)
         {
-            var registerCommand = _mapper.Map<CadastrarNovaContaCorrenteCommand>(idempotencia);
-            _bus.SendCommand(registerCommand);
+            var registerCommand = _mapper.Map<CadastrarNovaMovimentacaoCommand>(movimento);
+            return await _bus.SendCommand<CadastrarNovaMovimentacaoCommand, Result<MovimentacaoRelaizadaDto>>(registerCommand);
         }
         #endregion       
 

@@ -53,7 +53,21 @@ public static class JwtExtension
             configureOptions.SaveToken = true;
         });
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            var policy1 = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireRole("Admin")
+                .AddRequirements(new ClaimRequirement("Admin_Write", "Write"))
+                .Build();
+            var policy2 = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireRole("Admin")
+                .AddRequirements(new ClaimRequirement("Admin_Remove", "Remove"))
+                .Build();
+            options.AddPolicy("CanWriteData", policy1);
+            options.AddPolicy("CanRemoveData", policy2);
+        });
 
         return services;
     }

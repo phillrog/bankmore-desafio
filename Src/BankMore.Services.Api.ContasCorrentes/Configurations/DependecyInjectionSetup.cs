@@ -7,6 +7,7 @@ using BankMore.Application.Idempotencia.Services;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Interfaces;
+using BankMore.Domain.ContasCorrentes.Interfaces.Services;
 using BankMore.Domain.ContasCorrentes.Services;
 using BankMore.Domain.Core.Models;
 using BankMore.Infra.Data.ContasCorrentes.Repository;
@@ -31,24 +32,25 @@ public static class DependecyInjectionSetup
         services.AddScoped<IRequestHandler<CadastrarNovaContaCorrenteCommand, Result<NumeroContaCorrenteDto>>, ContaCorrenteCommandHandler>();
         services.AddScoped<IRequestHandler<AlterarContaCorrenteCommand, bool>, ContaCorrenteCommandHandler>();
 
-        /// Idempotencia
+        // Application - Commands - Idempotencia
         services.AddScoped<IRequestHandler<CadastrarNovaIdempotenciaCommand, Result<bool>>, IdenmpotenciaCommandHandler>();
 
-        /// Movimento
+        // Application - Commands - Movimento
         services.AddScoped<IRequestHandler<CadastrarNovaMovimentacaoCommand, Result<MovimentacaoRelaizadaDto>>, MovimentoCommandHandler>();
-
+        
         // Application - Querys
         services.AddScoped<IRequestHandler<InformacoesQuery, Result<InformacoesViewModel>>, InformacoesQueryHandler>();
 
-        /// Idempotencia
+        // Application - Querys - Idempotencia
         services.AddScoped<IRequestHandler<IdempotenciaViewQuery, Result<IdempotenciaViewModel>>, IdempotenciaQueryHandler>();
         services.AddScoped<IRequestHandler<IdempotenciaExisteQuery, bool>, IdempotenciaQueryHandler>();
-
-        /// Movimento
+        
+        // Application - Querys - Movimento
         services.AddScoped<IRequestHandler<MovimentoViewQuery, Result<MovimentoViewModel>>, MovimentoQueryHandler>();
-
+        
         // Domain - Services
         services.AddScoped<IGeradorNumeroService, GeradorNumeroService>();
+        services.AddScoped<ICorrentistaService, CorrentistaService>();
 
         // Infra - Data
         services.AddScoped<IContaCorrenteRepository, ContaCorrenteRepository>();

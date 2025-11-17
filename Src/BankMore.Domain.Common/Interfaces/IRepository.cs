@@ -10,7 +10,7 @@ public interface IRepository<TEntity> : IDisposable
 
     TEntity GetById(Guid id);
 
-    TEntity GetByExpression(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity?> GetByExpressionAsync(Expression<Func<TEntity, bool>> predicate);
 
     IQueryable<TEntity> GetAll();
 

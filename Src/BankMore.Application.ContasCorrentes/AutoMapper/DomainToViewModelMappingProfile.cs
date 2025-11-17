@@ -15,5 +15,8 @@ public class DomainToViewModelMappingProfile : Profile
 
         /// Idempotencia
         CreateMap<BankMore.Domain.ContasCorrentes.Models.Idempotencia, IdempotenciaViewModel>().ReverseMap();
+
+        /// Movimentações
+        CreateMap<Movimento, MovimentoViewModel>().ReverseMap();
     }
 }

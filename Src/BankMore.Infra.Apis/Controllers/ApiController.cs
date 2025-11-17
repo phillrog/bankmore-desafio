@@ -50,13 +50,13 @@ public abstract class ApiController : ControllerBase
                 data = result.Data,
             });
         }
-       
+
         return BadRequest(new
         {
             success = false,
             data = result.Data,
             errors = (result as dynamic)?.Erros ?? new List<string>(),
-            errorType = result.ErroTipo
+            errorType = (result as dynamic)?.ErroTipo ?? "Erro"
         });
     }
 

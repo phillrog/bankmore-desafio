@@ -34,6 +34,13 @@ public class ContaCorrenteService : IContaCorrenteService
         var conta = await _bus.SendCommand<InformacoesQuery, Result<InformacoesViewModel>>(query);
         return conta;
     }
+
+    public async Task<InformacoesViewModel> BuscarPorNumero(int numero)
+    {
+        var query = new InformacoesQuery(numero);
+        var conta = await _bus.SendCommand<InformacoesQuery, Result<InformacoesViewModel>>(query);
+        return conta.Data;
+    }
     #endregion
 
     #region [ CADASTRAR ]

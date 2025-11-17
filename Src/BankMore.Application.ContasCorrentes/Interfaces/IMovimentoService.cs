@@ -1,9 +1,11 @@
 ﻿using BankMore.Application.ContasCorrentes.ViewModels;
+using BankMore.Domain.ContasCorrentes.Dtos;
+using BankMore.Domain.Core.Models;
 namespace BankMore.Application.ContasCorrentes.Interfaces
 {
     public interface IMovimentoService : IDisposable
     {
-        void Cadastrar(MovimentoViewModel contaCorrenteViewModel);
+        Task<Result<MovimentacaoRelaizadaDto>> Cadastrar(MovimentoViewModel contaCorrenteViewModel);
         Task<bool> Existe(Guid id);
     }
 }

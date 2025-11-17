@@ -20,21 +20,7 @@ public abstract class MovimentoValidation<T> : AbstractValidator<T>
                 return false;
             }).WithMessage("O identificador da idempotência informado não é um GUID válido.");
      
-    }
-    protected void ValidarIdContaCorrente()
-    {
-        RuleFor(c => c.IdContaCorrente)
-            .NotEmpty().WithMessage("O identificador da conta corrente é obrigatório.")
-            .Must(id => id != Guid.Empty).WithMessage("O identificador da conta corrente não pode ser um GUID vazio.")
-            .Must(id =>
-            {
-                if (Guid.TryParse(id.ToString(), out Guid result))
-                {
-                    return true;
-                }
-                return false;
-            }).WithMessage("O identificador da conta corrente informado não é um GUID válido.");
-    }
+    }    
 
     protected void ValidarDataMovimento()
     {

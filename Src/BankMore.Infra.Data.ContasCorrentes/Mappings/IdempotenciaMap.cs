@@ -22,7 +22,7 @@ namespace BankMore.Infra.Data.ContasCorrentes.Mappings
                    .IsRequired();
 
             builder.HasOne(i => i.ContaCorrente)
-                   .WithMany()
+                   .WithMany(g=> g.Idempotencias)
                    .HasForeignKey(i => i.IdContaCorrente)
                    .OnDelete(DeleteBehavior.Restrict);
 

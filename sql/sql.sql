@@ -421,7 +421,7 @@ CREATE TABLE contacorrente (
 )
 GO
 CREATE TABLE movimento (
-    idmovimento UNIQUEIDENTIFIER PRIMARY KEY, -- ID único do movimento
+    id UNIQUEIDENTIFIER PRIMARY KEY, -- ID único do movimento
     idcontacorrente UNIQUEIDENTIFIER NOT NULL, -- ID da conta corrente (FK)
     datamovimento DATETIME2(0) NOT NULL, -- Data e hora do movimento
     tipomovimento CHAR(1) NOT NULL, -- Tipo do movimento (C ou D)
@@ -440,7 +440,7 @@ CREATE TABLE movimento (
 );
 GO
 CREATE TABLE idempotencia (
-    chave_idempotencia UNIQUEIDENTIFIER PRIMARY KEY, -- Chave de idempotência (GUID)
+    id UNIQUEIDENTIFIER PRIMARY KEY, -- Chave de idempotência (GUID)
     idcontacorrente UNIQUEIDENTIFIER NULL, -- ID da conta (Adicionado para suportar a FK)
     requisicao NVARCHAR(MAX) NULL, -- Dados de requisição (JSON/XML/String)
     resultado NVARCHAR(MAX) NULL, -- Dados de retorno (JSON/XML/String)

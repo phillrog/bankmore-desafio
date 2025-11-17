@@ -10,4 +10,6 @@ public interface IUser
     bool IsAuthenticated();
 
     IEnumerable<Claim> GetClaimsIdentity();
+
+    string Conta { get; }
 }

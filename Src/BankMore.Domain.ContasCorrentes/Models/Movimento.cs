@@ -4,10 +4,20 @@ namespace BankMore.Domain.ContasCorrentes.Models
 {
     public class Movimento : EntityAudit
     {
-        public Guid IdContaCorrente { get; set; }
-        public DateTime DataMovimento { get; set; }
-        public char TipoMovimento { get; set; }
-        public decimal Valor { get; set; }
+        public Movimento(){}
+        public Movimento(Guid id, Guid idContaCorrente, DateTime dataMovimento, char tipoMovimento, decimal valor)
+        {
+            IdContaCorrente = idContaCorrente;
+            DataMovimento = dataMovimento;
+            TipoMovimento = tipoMovimento;
+            Valor = valor;
+            Id = id;
+        }
+
+        public Guid IdContaCorrente { get; private set; }
+        public DateTime DataMovimento { get; private set; }
+        public char TipoMovimento { get; private set; }
+        public decimal Valor { get; private set; }
         public ContaCorrente? ContaCorrente { get; set; }
     }
 }

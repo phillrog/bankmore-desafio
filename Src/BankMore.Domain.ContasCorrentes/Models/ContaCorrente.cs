@@ -39,5 +39,7 @@ namespace BankMore.Domain.ContasCorrentes.Models
         {
             Senha = senha;
         }
+
+        public bool Inativa() => !Ativo;
     }
 }

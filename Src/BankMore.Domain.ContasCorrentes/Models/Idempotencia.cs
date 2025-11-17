@@ -4,10 +4,19 @@ namespace BankMore.Domain.ContasCorrentes.Models
 {
     public class Idempotencia : EntityAudit
     {
-        public Guid Id { get; set; }
-        public Guid IdContaCorrente { get; set; }
-        public string Requisicao { get; set; }
-        public string Resultado { get; set; }
+        public Idempotencia(){}
+        public Idempotencia(Guid id, Guid idContaCorrente, string requisicao, string resultado)
+        {
+            Id = id;
+            IdContaCorrente = idContaCorrente;
+            Requisicao = requisicao;
+            Resultado = resultado;
+        }
+
+        public Guid Id { get; private set; }
+        public Guid IdContaCorrente { get; private set; }
+        public string Requisicao { get; private set; }
+        public string Resultado { get; private set; }
 
         public ContaCorrente? ContaCorrente { get; set; }
     }

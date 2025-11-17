@@ -26,9 +26,9 @@ public abstract class Repository<TEntity, TContext> : IRepository<TEntity> where
         return _dbSet.Find(id);
     }
 
-    public virtual TEntity GetByExpression(Expression<Func<TEntity, bool>> predicate)
+    public virtual Task<TEntity?> GetByExpressionAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        return _dbSet.Find(predicate);
+        return _dbSet.FirstOrDefaultAsync(predicate);
     }
 
     public virtual IQueryable<TEntity> GetAll()

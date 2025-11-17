@@ -10,7 +10,7 @@ public abstract class Command : Message
 {
     public DateTime Timestamp { get; private set; }
 
-    public ValidationResult ValidationResult { get; set; }
+    public ValidationResult ValidationResult { get; set; } = new ValidationResult();
 
     protected Command()
     {

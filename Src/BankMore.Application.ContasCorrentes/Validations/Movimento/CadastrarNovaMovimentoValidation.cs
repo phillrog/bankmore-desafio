@@ -7,7 +7,6 @@ public class CadastrarNovaMovimentacaoValidation : MovimentoValidation<Cadastrar
     public CadastrarNovaMovimentacaoValidation()
     {
         ValidarId();
-        ValidarIdContaCorrente();
         ValidarDataMovimento();
         ValidarValor();
         ValidarTipoMovimento();

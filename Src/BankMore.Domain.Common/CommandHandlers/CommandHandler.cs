@@ -42,4 +42,14 @@ public class CommandHandler
             _bus.RaiseEvent(new DomainNotification(message.MessageType, error.ErrorMessage));
         }
     }
+
+    public async Task BeginTransactionAsync()
+    {
+        await _uow.BeginTransactionAsync();
+    }
+
+    public void RollbackTransaction()
+    {
+        _uow.RollbackTransaction();
+    }
 }

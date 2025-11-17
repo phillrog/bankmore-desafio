@@ -9,10 +9,9 @@ namespace BankMore.Application.ContasCorrentes.Commands;
 
 public class CadastrarNovaMovimentacaoCommand : MovimentoCommand, IRequest<Result<MovimentacaoRelaizadaDto>>
 {
-    public CadastrarNovaMovimentacaoCommand(Guid idContaCorrente, decimal valor, TipoMovimento tipo)
+    public CadastrarNovaMovimentacaoCommand(decimal valor, TipoMovimento tipo)
     {
         Id = Guid.NewGuid();
-        IdContaCorrente = idContaCorrente;
         Valor = valor;
         DataMovimento = DateTime.UtcNow;
         TipoMovimento = tipo; 
@@ -23,4 +22,8 @@ public class CadastrarNovaMovimentacaoCommand : MovimentoCommand, IRequest<Resul
         ValidationResult = new CadastrarNovaMovimentacaoValidation().Validate(this);
         return ValidationResult.IsValid;
     }
+
+    public bool EhDebito() => "D".Contains((char)TipoMovimento);
+
+    public void AtualizarIdContaCorrente(Guid id) => IdContaCorrente = id;
 }

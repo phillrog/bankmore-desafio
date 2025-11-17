@@ -42,11 +42,11 @@ public class ContaCorrenteMap : IEntityTypeConfiguration<ContaCorrente>
         builder.HasQueryFilter(p => !p.IsDeleted);
 
         builder.HasMany(i => i.Idempotencias)
-            .WithOne()
+            .WithOne(d => d.ContaCorrente)
             .HasForeignKey(i => i.IdContaCorrente);
 
         builder.HasMany(i => i.Movimentacoes)
-           .WithOne()
+           .WithOne(d => d.ContaCorrente)
            .HasForeignKey(i => i.IdContaCorrente);
     }
 }
