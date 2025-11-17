@@ -15,6 +15,9 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<ContaCorrente> ContaCorrente { get; set; }
+    public DbSet<Idempotencia> Idempotencia { get; set; }
+    public DbSet<Movimento> Movimento { get; set; }
+
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {

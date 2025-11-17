@@ -10,7 +10,7 @@ using MediatR;
 
 namespace BankMore.Application.ContasCorrentes.Commands;
 
-public class IdenmpotenciaHandler : CommandHandler,
+public class IdenmpotenciaCommandHandler : CommandHandler,
     IRequestHandler<CadastrarNovaIdempotenciaCommand, Result<bool>>
 {
     #region [ SERVICES ]
@@ -21,7 +21,7 @@ public class IdenmpotenciaHandler : CommandHandler,
 
     #region [ CONSTRUTOR ]
 
-    public IdenmpotenciaHandler(
+    public IdenmpotenciaCommandHandler(
         IUnitOfWork uow,
         IMediatorHandler bus,
         INotificationHandler<DomainNotification> notifications,

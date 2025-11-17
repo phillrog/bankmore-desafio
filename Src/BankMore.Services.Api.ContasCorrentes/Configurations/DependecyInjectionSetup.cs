@@ -25,18 +25,27 @@ public static class DependecyInjectionSetup
         // Application
         services.AddScoped<IContaCorrenteService, ContaCorrenteService>();
         services.AddScoped<IIdempotenciaService, IdempotenciaService>();
+        services.AddScoped<IMovimentoService, MovimentoService>();
 
         // Application - Commands
-        services.AddScoped<IRequestHandler<CadastrarNovaContaCorrenteCommand, Result<NumeroContaCorrenteDto>>, ContaCorrenteHandler>();
-        services.AddScoped<IRequestHandler<AlterarContaCorrenteCommand, bool>, ContaCorrenteHandler>();
+        services.AddScoped<IRequestHandler<CadastrarNovaContaCorrenteCommand, Result<NumeroContaCorrenteDto>>, ContaCorrenteCommandHandler>();
+        services.AddScoped<IRequestHandler<AlterarContaCorrenteCommand, bool>, ContaCorrenteCommandHandler>();
 
-        services.AddScoped<IRequestHandler<CadastrarNovaIdempotenciaCommand, Result<bool>>, IdenmpotenciaHandler>();
+        /// Idempotencia
+        services.AddScoped<IRequestHandler<CadastrarNovaIdempotenciaCommand, Result<bool>>, IdenmpotenciaCommandHandler>();
+
+        /// Movimento
+        services.AddScoped<IRequestHandler<CadastrarNovaMovimentacaoCommand, Result<MovimentacaoRelaizadaDto>>, MovimentoCommandHandler>();
 
         // Application - Querys
         services.AddScoped<IRequestHandler<InformacoesQuery, Result<InformacoesViewModel>>, InformacoesQueryHandler>();
 
+        /// Idempotencia
         services.AddScoped<IRequestHandler<IdempotenciaViewQuery, Result<IdempotenciaViewModel>>, IdempotenciaQueryHandler>();
         services.AddScoped<IRequestHandler<IdempotenciaExisteQuery, bool>, IdempotenciaQueryHandler>();
+
+        /// Movimento
+        services.AddScoped<IRequestHandler<MovimentoViewQuery, Result<MovimentoViewModel>>, MovimentoQueryHandler>();
 
         // Domain - Services
         services.AddScoped<IGeradorNumeroService, GeradorNumeroService>();
@@ -44,5 +53,6 @@ public static class DependecyInjectionSetup
         // Infra - Data
         services.AddScoped<IContaCorrenteRepository, ContaCorrenteRepository>();
         services.AddScoped<IIdempotenciaRepository, IdempotenciaRepository>();
+        services.AddScoped<IMovimentoRepository, MovimentoRepository>();
     }
 }

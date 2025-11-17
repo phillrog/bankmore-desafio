@@ -7,13 +7,11 @@ using BankMore.Domain.ContasCorrentes.Models;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Models;
 using BankMore.Domain.Core.Notifications;
-
-
 using MediatR;
 
 namespace BankMore.Application.ContasCorrentes.Commands;
 
-public class ContaCorrenteHandler : CommandHandler,
+public class ContaCorrenteCommandHandler : CommandHandler,
     IRequestHandler<CadastrarNovaContaCorrenteCommand, Result<NumeroContaCorrenteDto>>,
     IRequestHandler<AlterarContaCorrenteCommand, bool>
 {
@@ -26,7 +24,7 @@ public class ContaCorrenteHandler : CommandHandler,
 
     #region [ CONSTRUTOR ]
 
-    public ContaCorrenteHandler(
+    public ContaCorrenteCommandHandler(
         IContaCorrenteRepository contaCorrenteRepository,
         IGeradorNumeroService geradorNumeroService,
         IUnitOfWork uow,
@@ -56,7 +54,7 @@ public class ContaCorrenteHandler : CommandHandler,
             _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
             return Task.FromResult(Result<NumeroContaCorrenteDto>.Failure(erro, Erro.INVALID_DOCUMENT));
         }
-        
+
         var conta = new ContaCorrente(message.Id ?? Guid.NewGuid(), message.Nome, _geradorNumeroService.GerarNumeroConta(), message.Cpf, message.Senha);
         _contaCorrenteRepository.Add(conta);
 
