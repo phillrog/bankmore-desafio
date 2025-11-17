@@ -27,6 +27,7 @@
     <ProjectReference Include="..\BankMore.Infra.CrossCutting.Bus\BankMore.Infra.CrossCutting.Bus.csproj" />
     <ProjectReference Include="..\BankMore.Infra.CrossCutting.Identity\BankMore.Infra.CrossCutting.Identity.csproj" />
     <ProjectReference Include="..\BankMore.Infra.CrossCutting.IoC\BankMore.Infra.CrossCutting.IoC.csproj" />
+    <ProjectReference Include="..\BankMore.Infra.Kafka\BankMore.Infra.Kafka.csproj" />
   </ItemGroup>
 
 	<PropertyGroup>

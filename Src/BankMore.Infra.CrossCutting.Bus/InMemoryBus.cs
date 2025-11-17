@@ -1,9 +1,6 @@
-using System.Threading.Tasks;
-
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Commands;
 using BankMore.Domain.Core.Events;
-
 using MediatR;
 
 namespace BankMore.Infra.CrossCutting.Bus;

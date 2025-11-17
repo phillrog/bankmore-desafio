@@ -5,6 +5,5 @@ public static class DependecyInjectionSetup
     public static void AddServicesSetup(this IServiceCollection services)
     {
 
-     
     }
 }

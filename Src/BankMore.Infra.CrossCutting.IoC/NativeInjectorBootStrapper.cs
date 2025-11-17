@@ -43,5 +43,7 @@ public class NativeInjectorBootStrapper
         services.AddScoped<IUser, AspNetUser>();
         services.AddSingleton<IJwtFactory, JwtFactory>();
 
+        //services.AddScoped<DomainNotificationHandler>();
+
     }
 }

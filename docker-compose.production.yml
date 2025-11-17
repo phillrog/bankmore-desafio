@@ -1,5 +1,9 @@
 services:
   bankmore.services.api.identidade:
+    image: ${DOCKER_REGISTRY-}bankmoreservicesapiidentidade
+    build:
+      context: .
+      dockerfile: Src/BankMore.Services.Api.Identidade/Dockerfile
     depends_on:
       broker: 
         condition: service_healthy
@@ -13,6 +17,10 @@ services:
       - "5000:5000"
 
   bankmore.services.api.contascorrentes:
+    image: ${DOCKER_REGISTRY-}bankmoreservicesapicontascorrentes
+    build:
+      context: .
+      dockerfile: Src/BankMore.Services.Api.ContasCorrentes/Dockerfile
     depends_on:
       broker: 
         condition: service_healthy

@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace BankMore.Domain.Core.Events;
+namespace BankMore.Infra.Kafka.Events;
 
 [DataContract]  
 public class UsuarioCriadoEvent

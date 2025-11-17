@@ -1,25 +1,22 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-
-using BankMore.Domain.Core.Bus;
-using BankMore.Domain.Core.Events;
-using BankMore.Domain.Core.Notifications;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.Common.Providers.Hash;
-using BankMore.Infra.Apis.Producers;
+using BankMore.Domain.Core.Bus;
+using BankMore.Domain.Core.Notifications;
 using BankMore.Infra.CrossCutting.Identity.Data;
 using BankMore.Infra.CrossCutting.Identity.Models;
 using BankMore.Infra.CrossCutting.Identity.Models.AccountViewModels;
 using BankMore.Infra.CrossCutting.Identity.Services;
+using BankMore.Infra.Kafka.Events;
+using BankMore.Infra.Kafka.Producers;
+using BankMore.Infra.Kafka.Services;
 using BankMore.Services.Apis.Controllers;
-
 using KafkaFlow;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace BankMore.Services.Api.Identidade.Controllers.V1;
 
@@ -35,7 +32,8 @@ public class AccountController : ApiController
     private readonly IJwtFactory _jwtFactory;
     private readonly ILogger _logger;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly IMessageProducer<UsuarioCriadoProducer> _producer;
+    private readonly InformacoesContaService _informacoesContaService;
+    private readonly ContaCorrenteService _contaCorrenteService;
 
     public AccountController(
         UserManager<ApplicationUser> userManager,
@@ -48,7 +46,9 @@ public class AccountController : ApiController
         INotificationHandler<DomainNotification> notifications,
         IMediatorHandler mediator,
         IPasswordHasher passwordHasher,
-        IMessageProducer<UsuarioCriadoProducer> producer)
+        InformacoesContaService informacoesContaService,
+        ContaCorrenteService contaCorrenteService
+        )
         : base(notifications, mediator)
     {
         _userManager = userManager;
@@ -59,7 +59,8 @@ public class AccountController : ApiController
         _jwtFactory = jwtFactory;
         _logger = loggerFactory.CreateLogger<AccountController>();
         _passwordHasher = passwordHasher;
-        _producer = producer;
+        _informacoesContaService = informacoesContaService;
+        _contaCorrenteService = contaCorrenteService;
     }
 
     /// <summary>
@@ -100,7 +101,7 @@ public class AccountController : ApiController
             NotifyError("Falha", "Usuário ou senha inválidos.");
             return Response();
         }
-        
+
         _logger.LogInformation(1, "Usuário logado.");
         return Response(await GenerateToken(appUser));
     }
@@ -127,7 +128,7 @@ public class AccountController : ApiController
         }
 
         // Add User
-        var appUser = new ApplicationUser { UserName = model.Cpf, NormalizedUserName = model.Nome };
+        var appUser = new ApplicationUser { Cpf = model.Cpf, UserName = model.Cpf, NormalizedUserName = model.Nome };
 
         var identityResult = await _userManager.CreateAsync(appUser);
         if (!identityResult.Succeeded)
@@ -148,10 +149,15 @@ public class AccountController : ApiController
             Nome = model.Nome
         };
 
-
         /// ---- Envia para o topico no kafka ----
-        await _producer.ProduceAsync("usuario-criado", Guid.NewGuid().ToString(), evento);
+        var result = await _contaCorrenteService.CadastrarConta(evento);
 
+        if (!result.IsSuccess)
+        {
+            await _userManager.DeleteAsync(appUser);
+            return ResponseResult(result);
+        }
+        
         // Add UserRoles
         identityResult = await _userManager.AddToRoleAsync(appUser, "Admin");
         if (!identityResult.Succeeded)
@@ -176,7 +182,7 @@ public class AccountController : ApiController
         }
 
         _logger.LogInformation(3, "User created a new account with password.");
-        return Response();
+        return ResponseResult(result);
     }
 
     /// <summary>
@@ -264,10 +270,13 @@ public class AccountController : ApiController
             return new TokenViewModel();
         }
 
+        var result = await _informacoesContaService.BuscarNumeroConta(appUser.UserName);
+        
         // Init ClaimsIdentity
         var claimsIdentity = new ClaimsIdentity();
         claimsIdentity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, appUser.NormalizedUserName));
         claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, appUser.Id));
+        claimsIdentity.AddClaim(new Claim("numero_conta", result.Data.ToString()));
 
         // Get UserClaims
         var userClaims = await _userManager.GetClaimsAsync(appUser);

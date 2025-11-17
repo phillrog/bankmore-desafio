@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
+using BankMore.Domain.Core.Bus;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BankMore.Domain.Core.Notifications;
 

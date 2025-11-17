@@ -15,7 +15,7 @@ var apiNome = "API Conta Corrente";
 // END: Variables
 
 // START: Custom services
-builder.Services.AddKafkaSetup(builder.Configuration);
+
 // ----- Database -----
 builder.Services.AddDatabaseSetup(builder.Configuration, builder.Environment);
 
@@ -42,13 +42,16 @@ builder.Services.AddCustomizedHash(builder.Configuration);
 // .NET Native DI Abstraction
 NativeInjectorBootStrapper.RegisterServices(builder.Services);
 builder.Services.AddServicesSetup();
-
+builder.Services.AddKafkaSetup(builder.Configuration);
 
 builder.Services.AddControllers()
     .AddJsonOptions(x =>
     {
         x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-
+        x.JsonSerializerOptions.Encoder =
+            System.Text.Encodings.Web.JavaScriptEncoder.Create(
+                System.Text.Unicode.UnicodeRanges.BasicLatin,
+                System.Text.Unicode.UnicodeRanges.Latin1Supplement);
         x.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
 

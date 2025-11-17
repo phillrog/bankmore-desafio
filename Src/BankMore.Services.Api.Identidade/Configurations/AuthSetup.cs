@@ -23,7 +23,11 @@ public static class AuthSetup
 
         var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            options.User.RequireUniqueEmail = false;
+            options.User.AllowedUserNameCharacters = null;
+        })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<AuthDbContext>()
             .AddDefaultTokenProviders();

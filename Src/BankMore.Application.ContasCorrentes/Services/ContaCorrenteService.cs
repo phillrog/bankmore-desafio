@@ -4,6 +4,7 @@ using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.Querys;
 using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Domain.Core.Bus;
+using BankMore.Domain.Core.Models;
 
 namespace BankMore.Application.ContasCorrentes.Services;
 
@@ -27,11 +28,11 @@ public class ContaCorrenteService : IContaCorrenteService
     #endregion
 
     #region [ PESQUISAR ]
-    public async Task<InformacoesViewModel> BuscarInformcoes(string cpf)
+    public async Task<Result<InformacoesViewModel>> BuscarInformcoes(string cpf)
     {
         var query = new InformacoesQuery(cpf);
-        var perfil = await _bus.SendCommand<InformacoesQuery, InformacoesViewModel>(query);
-        return perfil;
+        var conta = await _bus.SendCommand<InformacoesQuery, Result<InformacoesViewModel>>(query);
+        return conta;
     }
     #endregion
 

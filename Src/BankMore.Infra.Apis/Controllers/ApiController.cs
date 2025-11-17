@@ -1,4 +1,5 @@
 using BankMore.Domain.Core.Bus;
+using BankMore.Domain.Core.Models;
 using BankMore.Domain.Core.Notifications;
 
 using MediatR;
@@ -37,6 +38,26 @@ public abstract class ApiController : ControllerBase
     protected bool IsValidOperation()
     {
         return !_notifications.HasNotifications();
+    }
+
+    protected IActionResult ResponseResult(dynamic result)
+    {        
+        if (result.IsSuccess)
+        {
+            return Ok(new
+            {
+                success = true,
+                data = result.Data,
+            });
+        }
+       
+        return BadRequest(new
+        {
+            success = false,
+            data = result.Data,
+            errors = (result as dynamic)?.Erros ?? new List<string>(),
+            errorType = result.ErroTipo
+        });
     }
 
     protected new IActionResult Response(object result = null)
@@ -80,5 +101,11 @@ public abstract class ApiController : ControllerBase
         }
     }
 
+    protected void AddError(string error, string description)
+    {
+        NotifyError(error, description);        
+    }
+
     #endregion
 }
+

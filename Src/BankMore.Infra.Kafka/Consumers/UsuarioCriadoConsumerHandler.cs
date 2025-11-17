@@ -1,19 +1,16 @@
-
 using BankMore.Application.ContasCorrentes.Commands;
 using BankMore.Domain.Core.Bus;
-using BankMore.Domain.Core.Events;
-
+using BankMore.Infra.Kafka.Events;
 using KafkaFlow;
-
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BankMore.Application.ContasCorrentes.Consumers;
+namespace BankMore.Infra.Kafka.Consumers;
 
-public class UsuarioCriadoHandler : IMessageHandler<UsuarioCriadoEvent>
+public class UsuarioCriadoConsumerHandler : IMessageHandler<UsuarioCriadoEvent>
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public UsuarioCriadoHandler(IServiceScopeFactory serviceScopeFactory)
+    public UsuarioCriadoConsumerHandler(IServiceScopeFactory serviceScopeFactory)
     {
         _serviceScopeFactory = serviceScopeFactory;
     }

@@ -42,25 +42,14 @@ public class ContaCorrenteController : ApiController
     /// <param name="cpf">O CPF do titular da conta.</param>
     /// <returns>Retorna os dados da conta (Nome, Número, Ativo) ou um erro.</returns>
     [HttpGet("informacoes/{cpf}")]
-    [Authorize(Policy = "CanWriteRead", Roles = Roles.Admin)]
     [ProducesResponseType(typeof(InformacoesViewModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)] 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Informacoes(string cpf)
     {
-        InformacoesViewModel informacoes = await _contaCorrenteService.BuscarInformcoes(cpf);
+        var result = await _contaCorrenteService.BuscarInformcoes(cpf);        
 
-        if (!IsValidOperation())
-        {
-            return Response();
-        }
-
-        if (informacoes == null)
-        {
-            return NotFound(new { success = false, message = "Conta não encontrada." });
-        }
-
-        return Response(informacoes);
+        return ResponseResult(result);
     }
     #endregion
 

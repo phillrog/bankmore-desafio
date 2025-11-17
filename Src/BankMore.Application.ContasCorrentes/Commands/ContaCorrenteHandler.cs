@@ -1,9 +1,11 @@
 using BankMore.Domain.Common.CommandHandlers;
 using BankMore.Domain.Common.Interfaces;
+using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Events;
 using BankMore.Domain.ContasCorrentes.Interfaces;
 using BankMore.Domain.ContasCorrentes.Models;
 using BankMore.Domain.Core.Bus;
+using BankMore.Domain.Core.Models;
 using BankMore.Domain.Core.Notifications;
 
 
@@ -12,7 +14,7 @@ using MediatR;
 namespace BankMore.Application.ContasCorrentes.Commands;
 
 public class ContaCorrenteHandler : CommandHandler,
-    IRequestHandler<CadastrarNovaContaCorrenteCommand, bool>,
+    IRequestHandler<CadastrarNovaContaCorrenteCommand, Result<NumeroContaCorrenteDto>>,
     IRequestHandler<AlterarContaCorrenteCommand, bool>
 {
     #region [ SERVICES ]
@@ -40,30 +42,31 @@ public class ContaCorrenteHandler : CommandHandler,
 
     #region [ HANDLERS ]       
 
-    public Task<bool> Handle(CadastrarNovaContaCorrenteCommand message, CancellationToken cancellationToken)
+    public Task<Result<NumeroContaCorrenteDto>> Handle(CadastrarNovaContaCorrenteCommand message, CancellationToken cancellationToken)
     {
         if (!message.IsValid())
         {
             NotifyValidationErrors(message);
-            return Task.FromResult(false);
+            return Task.FromResult(Result<NumeroContaCorrenteDto>.Failure(message, Erro.INVALID_DOCUMENT));
         }
 
         if (_contaCorrenteRepository.GetByCpf(message.Cpf) != null)
         {
-            _bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe uma conta com este CPF cadastrado."));
-            return Task.FromResult(false);
+            var erro = "Já existe uma conta com este CPF cadastrado.";
+            _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
+            return Task.FromResult(Result<NumeroContaCorrenteDto>.Failure(erro, Erro.INVALID_DOCUMENT));
         }
         
         var conta = new ContaCorrente(message.Id ?? Guid.NewGuid(), message.Nome, _geradorNumeroService.GerarNumeroConta(), message.Cpf, message.Senha);
-
         _contaCorrenteRepository.Add(conta);
 
         if (Commit())
         {
             _bus.RaiseEvent(new ContaCorrenteRegistradoEvent(conta.Id, conta.Nome, conta.Numero, conta.Cpf, conta.Senha));
+            return Task.FromResult(Result<NumeroContaCorrenteDto>.Success(new NumeroContaCorrenteDto(conta.Numero)));
         }
 
-        return Task.FromResult(true);
+        return Task.FromResult(Result<NumeroContaCorrenteDto>.Failure(new List<string> { "Ops! Algo deu errado" }, Erro.INVALID_TYPE));
     }
 
     public Task<bool> Handle(AlterarContaCorrenteCommand message, CancellationToken cancellationToken)

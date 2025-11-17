@@ -1,9 +1,11 @@
 using BankMore.Application.ContasCorrentes.Validations;
+using BankMore.Domain.ContasCorrentes.Dtos;
+using BankMore.Domain.Core.Models;
 using MediatR;
 
 namespace BankMore.Application.ContasCorrentes.Commands;
 
-public class CadastrarNovaContaCorrenteCommand : ContaCorrenteCommand
+public class CadastrarNovaContaCorrenteCommand : ContaCorrenteCommand, IRequest<Result<NumeroContaCorrenteDto>>
 {
     public CadastrarNovaContaCorrenteCommand(string nome, string senha, string cpf)
     {
