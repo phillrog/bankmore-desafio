@@ -47,6 +47,7 @@ public class ContaCorrenteController : ApiController
     /// </remarks>
     /// <param name="cpf">O CPF do titular da conta.</param>
     /// <returns>Retorna os dados da conta (Nome, Número, Ativo) ou um erro.</returns>
+    [Authorize(Policy = "CanReadData", Roles = Roles.Admin)]
     [HttpGet("informacoes/{cpf}")]
     [ProducesResponseType(typeof(InformacoesViewModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -58,7 +59,7 @@ public class ContaCorrenteController : ApiController
         return ResponseResult(result);
     }
 
-    [Authorize(Policy = "CanWriteData", Roles = Roles.Admin)]
+    [Authorize(Policy = "CanReadData", Roles = Roles.Admin)]
     [HttpGet("saldo")]
     [ProducesResponseType(typeof(InformacoesViewModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

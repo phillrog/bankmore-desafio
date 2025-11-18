@@ -94,8 +94,15 @@ public static class AuthSetup
                 .RequireRole("Admin")
                 .AddRequirements(new ClaimRequirement("Admin_Remove", "Remove"))
                 .Build();
+            var readPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireRole("Admin") 
+                .AddRequirements(new ClaimRequirement("Admin_Read", "Read")) 
+                .Build();
+
             options.AddPolicy("CanWriteData", policy1);
             options.AddPolicy("CanRemoveData", policy2);
+            options.AddPolicy("CanReadData", readPolicy);
         });
 
         return services;

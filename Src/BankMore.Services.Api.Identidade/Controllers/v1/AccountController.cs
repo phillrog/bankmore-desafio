@@ -171,6 +171,7 @@ public class AccountController : ApiController
         {
             new Claim("Admin_Write", "Write"),
             new Claim("Admin_Remove", "Remove"),
+            new Claim("Admin_Read", "Read"),
         };
         await _userManager.AddClaimsAsync(appUser, userClaims);
 

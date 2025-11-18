@@ -15,7 +15,8 @@ var apiNome = "API Identidade";
 // END: Variables
 
 // START:
-
+/// kafka 
+builder.Services.AddKafkaSetup(builder.Configuration);
 // ----- Database -----
 builder.Services.AddDatabaseSetup(builder.Configuration, builder.Environment);
 
@@ -42,16 +43,16 @@ builder.Services.AddCustomizedHash(builder.Configuration);
 // .NET Native DI Abstraction
 NativeInjectorBootStrapper.RegisterServices(builder.Services);
 builder.Services.AddServicesSetup();
-builder.Services.AddKafkaSetup(builder.Configuration);
+
 
 builder.Services.AddControllers()
     .AddJsonOptions(x =>
     {
         x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         x.JsonSerializerOptions.Encoder =
-            System.Text.Encodings.Web.JavaScriptEncoder.Create(
-                System.Text.Unicode.UnicodeRanges.BasicLatin,
-                System.Text.Unicode.UnicodeRanges.Latin1Supplement);
+           System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All);
+
+        x.JsonSerializerOptions.WriteIndented = true;
         x.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
 

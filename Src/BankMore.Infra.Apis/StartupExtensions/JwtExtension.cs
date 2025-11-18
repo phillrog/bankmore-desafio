@@ -65,8 +65,14 @@ public static class JwtExtension
                 .RequireRole("Admin")
                 .AddRequirements(new ClaimRequirement("Admin_Remove", "Remove"))
                 .Build();
+            var policy3 = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireRole("Admin")
+                .AddRequirements(new ClaimRequirement("Admin_Read", "Read"))
+                .Build();
             options.AddPolicy("CanWriteData", policy1);
             options.AddPolicy("CanRemoveData", policy2);
+            options.AddPolicy("CanReadData", policy3);
         });
 
         return services;
