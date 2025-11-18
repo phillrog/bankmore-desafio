@@ -27,7 +27,7 @@ public class ContaCorrenteRepository : Repository<ContaCorrente, ApplicationDbCo
         return _dbSet.AsNoTracking().FirstOrDefault(c => c.Numero == numero);
     }
 
-    public async Task<SaldoDetalhadoDto> BuscarSaldoPorNumeroAsync(int numeroConta)
+    public async Task<SaldoDto> BuscarSaldoPorNumeroAsync(int numeroConta)
     {
         #region [ SQL ]
 
@@ -54,12 +54,12 @@ public class ContaCorrenteRepository : Repository<ContaCorrente, ApplicationDbCo
         using (IDbConnection conexao = new SqlConnection(_db.Database.GetConnectionString()))
         {
 
-            var saldo = await conexao.QueryFirstOrDefaultAsync<SaldoDetalhadoDto>(
+            var saldo = await conexao.QueryFirstOrDefaultAsync<SaldoDto>(
                 sql,
                 new { NumeroConta = numeroConta }
             );
 
-            return saldo ?? new SaldoDetalhadoDto();
+            return saldo ?? new SaldoDto();
         }
     }
 }

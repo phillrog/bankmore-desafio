@@ -1,6 +1,7 @@
 using BankMore.Application.ContasCorrentes.Commands;
 using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.Querys;
+using BankMore.Application.ContasCorrentes.Querys.ContaCorrente;
 using BankMore.Application.ContasCorrentes.Services;
 using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Application.Idempotencia.Services;
@@ -47,7 +48,10 @@ public static class DependecyInjectionSetup
         
         // Application - Querys - Movimento
         services.AddScoped<IRequestHandler<MovimentoViewQuery, Result<MovimentoViewModel>>, MovimentoQueryHandler>();
-        
+
+        // Application - Querys - Saldo
+        services.AddScoped<IRequestHandler<SaldoQuery, Result<SaldoDto>>, InformacoesQueryHandler>();
+
         // Domain - Services
         services.AddScoped<IGeradorNumeroService, GeradorNumeroService>();
         services.AddScoped<ICorrentistaService, CorrentistaService>();

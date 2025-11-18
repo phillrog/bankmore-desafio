@@ -9,5 +9,17 @@
         public char Tipo { get; set; }
         public decimal Valor { get; set; }
         public decimal SaldoAposMovimentacao { get; set;  }
+
+        public MovimentacaoRelaizadaDto() {}
+        public MovimentacaoRelaizadaDto(Guid id, int numeroConta, string nome, DateTime dataHora, char tipo, decimal valor, decimal saldoAposMovimentacao)
+        {
+            Id = id;
+            NumeroConta = numeroConta;
+            Nome = nome;
+            DataHora = dataHora;
+            Tipo = tipo;
+            Valor = valor;
+            SaldoAposMovimentacao = saldoAposMovimentacao;
+        }
     }
 }

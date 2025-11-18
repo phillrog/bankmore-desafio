@@ -1,4 +1,3 @@
-using MediatR;
 using System.Runtime.Serialization;
 
 namespace BankMore.Infra.Kafka.Events;

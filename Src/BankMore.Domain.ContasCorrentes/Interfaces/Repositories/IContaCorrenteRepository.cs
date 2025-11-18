@@ -9,5 +9,5 @@ public interface IContaCorrenteRepository : IRepository<ContaCorrente>
 {
     ContaCorrente GetByCpf(string cpf);
     ContaCorrente GetByNumero(int numero);
-    Task<SaldoDetalhadoDto> BuscarSaldoPorNumeroAsync(int numeroConta);
+    Task<SaldoDto> BuscarSaldoPorNumeroAsync(int numeroConta);
 }

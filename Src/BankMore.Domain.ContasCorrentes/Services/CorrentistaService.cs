@@ -19,7 +19,7 @@ namespace BankMore.Domain.ContasCorrentes.Services
         {
             return await _contaCorrenteRepository.GetByExpressionAsync(d => d.Numero == numeroConta);
         }
-        public async Task<SaldoDetalhadoDto> Saldo(int numeroConta)
+        public async Task<SaldoDto> Saldo(int numeroConta)
         {
             return await _contaCorrenteRepository.BuscarSaldoPorNumeroAsync(numeroConta);
         }

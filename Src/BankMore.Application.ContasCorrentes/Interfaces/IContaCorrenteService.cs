@@ -1,4 +1,5 @@
 using BankMore.Application.ContasCorrentes.ViewModels;
+using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Models;
 using BankMore.Domain.Core.Models;
 
@@ -10,4 +11,5 @@ public interface IContaCorrenteService : IDisposable
     void Alterar(ContaCorrenteViewModel contaCorrenteViewModel);
     Task<Result<InformacoesViewModel>> BuscarInformcoes(string cpf);
     Task<InformacoesViewModel> BuscarPorNumero(int numero);
+    Task<SaldoDto> Saldo(int numero);
 }

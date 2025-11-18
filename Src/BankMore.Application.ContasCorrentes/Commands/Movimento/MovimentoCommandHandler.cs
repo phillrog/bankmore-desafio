@@ -68,7 +68,7 @@ public class MovimentoCommandHandler : CommandHandler,
     public async Task<Result<MovimentacaoRelaizadaDto>> Handle(CadastrarNovaMovimentacaoCommand message, CancellationToken cancellationToken)
     {
         #region [ VALIDAÇÕES]
-        var numeroConta = Convert.ToInt32(_user.Conta);
+        var numeroConta = _user.Conta is not null ? Convert.ToInt32(_user.Conta) : message.NumeroConta;
         if (!message.IsValid())
         {
             NotifyValidationErrors(message);
@@ -150,7 +150,7 @@ public class MovimentoCommandHandler : CommandHandler,
 
             decimal novoSaldo;
 
-            if (message.TipoMovimento == TipoMovimento.Credito)
+            if (message.TipoMovimento == TipoMovimento.C)
             {
                 novoSaldo = saldoDetalhado.SaldoAtualizado + movimento.Valor;
             }

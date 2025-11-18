@@ -6,6 +6,6 @@ namespace BankMore.Domain.ContasCorrentes.Interfaces.Services
     public interface ICorrentistaService
     {
         Task<ContaCorrente> BuscarConta(int numeroConta);
-        Task<SaldoDetalhadoDto> Saldo(int numeroConta);
+        Task<SaldoDto> Saldo(int numeroConta);
     }
 }

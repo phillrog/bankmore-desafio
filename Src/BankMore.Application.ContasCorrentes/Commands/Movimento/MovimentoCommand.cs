@@ -10,4 +10,5 @@ public abstract class MovimentoCommand : Command
     public DateTime DataMovimento { get; set; }
     public TipoMovimento TipoMovimento { get; set; }
     public decimal Valor { get; set; }
+    public int NumeroConta { get; set; }
 }

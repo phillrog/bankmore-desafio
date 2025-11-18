@@ -13,12 +13,12 @@ namespace BankMore.Domain.ContasCorrentes.Enums
         /// Crédito: Representa uma entrada de valor na conta.
         /// </summary>
         [Display(Name = "Crédito")]
-        Credito = 'C',
+        C = 'C',
 
         /// <summary>
         /// Débito: Representa uma saída de valor da conta.
         /// </summary>
         [Display(Name = "Débito")]
-        Debito = 'D'
+        D = 'D'
     }
 }

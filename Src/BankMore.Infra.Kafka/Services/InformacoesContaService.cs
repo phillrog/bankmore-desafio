@@ -9,11 +9,11 @@ namespace BankMore.Infra.Kafka.Services
     public class InformacoesContaService
     {
         private readonly IMessageProducer<IInforcacoesContaRequestProducer> _requestProducer;
-        private readonly NumeroContaResponseManager _responseManager;
+        private readonly NumeroContaReplyManager _responseManager;
         private const string ReplyTopic = "informacoes.conta.resposta"; 
 
         public InformacoesContaService(IMessageProducer<IInforcacoesContaRequestProducer> requestProducer,
-            NumeroContaResponseManager responseManager)
+            NumeroContaReplyManager responseManager)
         {
             _requestProducer = requestProducer;
             _responseManager = responseManager;

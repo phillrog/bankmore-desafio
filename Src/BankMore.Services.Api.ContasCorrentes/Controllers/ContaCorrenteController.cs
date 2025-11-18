@@ -1,9 +1,12 @@
 using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.ViewModels;
+using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
 using BankMore.Infra.CrossCutting.Identity.Authorization;
+using BankMore.Infra.Kafka.Services;
 using BankMore.Services.Apis.Controllers;
+using k8s.KubeConfigModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +20,7 @@ public class ContaCorrenteController : ApiController
 {
     #region [ SERVICES ]
     private readonly IContaCorrenteService _contaCorrenteService;
+    private readonly SaldoService _saldoService;
     #endregion
 
     #region [ CONSTRUTOR ]
@@ -24,10 +28,12 @@ public class ContaCorrenteController : ApiController
     public ContaCorrenteController(
         IContaCorrenteService contaCorrenteService,
         INotificationHandler<DomainNotification> notifications,
-        IMediatorHandler mediator)
+        IMediatorHandler mediator,
+        SaldoService saldoService)
         : base(notifications, mediator)
     {
         _contaCorrenteService = contaCorrenteService;
+        _saldoService = saldoService;
     }
     #endregion
 
@@ -43,11 +49,30 @@ public class ContaCorrenteController : ApiController
     /// <returns>Retorna os dados da conta (Nome, Número, Ativo) ou um erro.</returns>
     [HttpGet("informacoes/{cpf}")]
     [ProducesResponseType(typeof(InformacoesViewModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)] 
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Informacoes(string cpf)
     {
-        var result = await _contaCorrenteService.BuscarInformcoes(cpf);        
+        var result = await _contaCorrenteService.BuscarInformcoes(cpf);
+
+        return ResponseResult(result);
+    }
+
+    [Authorize(Policy = "CanWriteData", Roles = Roles.Admin)]
+    [HttpGet("saldo")]
+    [ProducesResponseType(typeof(InformacoesViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Saldo([FromServices] IUser user)
+    {
+        var conta = user.Conta;
+
+        if (conta is null)
+        {
+            return Response("Número conta não foi encontrado");
+        }
+
+        var result = await _saldoService.ConsultarSaldo(Convert.ToInt32(conta));
 
         return ResponseResult(result);
     }

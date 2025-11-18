@@ -6,11 +6,11 @@ using System.Collections.Concurrent;
 
 namespace BankMore.Infra.Kafka.Responses
 {
-    public class CadastroContaResponseManager : IMessageHandler<CadastrarContaCorrenteResponseEvent>
+    public class CadastroContaReplyManager : IMessageHandler<CadastrarContaCorrenteResponseEvent>
     {
         private readonly ConcurrentDictionary<Guid, TaskCompletionSource<Result<NumeroContaCorrenteDto>>> _pendingRequests = new();
 
-        private readonly TimeSpan Timeout = TimeSpan.FromSeconds(300);
+        private readonly TimeSpan Timeout = TimeSpan.FromSeconds(30);
         public Task<Result<NumeroContaCorrenteDto>> WaitForResponseAsync(Guid correlationId)
         {
             var tcs = new TaskCompletionSource<Result<NumeroContaCorrenteDto>>();

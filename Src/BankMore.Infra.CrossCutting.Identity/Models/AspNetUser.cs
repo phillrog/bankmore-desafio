@@ -26,5 +26,5 @@ public class AspNetUser : IUser
         return _accessor.HttpContext.User.Claims;
     }
 
-    public string Conta => _accessor.HttpContext.User?.Claims?.Where(c => c.Type.Equals("numero_conta")).FirstOrDefault()?.Value;
+    public string Conta => _accessor?.HttpContext?.User?.Claims?.Where(c => c.Type.Equals("numero_conta")).FirstOrDefault()?.Value;
 }

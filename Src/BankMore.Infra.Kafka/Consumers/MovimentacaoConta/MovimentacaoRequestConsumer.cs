@@ -3,36 +3,35 @@ using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Models;
 using BankMore.Domain.Core.Notifications;
-using BankMore.Infra.Kafka.Events.ContaCorrente;
+using BankMore.Infra.Kafka.Events.Movimento;
 using BankMore.Infra.Kafka.Producers;
 using KafkaFlow;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Diagnostics;
 
 namespace BankMore.Infra.Kafka.Consumers;
 
-public class CadastrarContaConsumerHandler : IMessageHandler<CadastrarContaCorrenteRequestEvent>,
+public class MovimentacaoRequestConsumer : IMessageHandler<MovimentacaoRequestEvent>,
     INotificationHandler<DomainNotification>
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IMessageProducer<IInforcacoesContaResponseProducer> _responseProducer;
-    private readonly ILogger<CadastrarContaConsumerHandler> _logger;
+    private readonly IMessageProducer<IMovimentacaoResponseProducer> _responseProducer;
+    private readonly ILogger<MovimentacaoRequestConsumer> _logger;
     private readonly List<DomainNotification> _notifications = new List<DomainNotification>();
 
-    public CadastrarContaConsumerHandler(
+    public MovimentacaoRequestConsumer(
         IServiceScopeFactory serviceScopeFactory,
-        IMessageProducer<IInforcacoesContaResponseProducer> producer,
-        ILogger<CadastrarContaConsumerHandler> logger)
+        IMessageProducer<IMovimentacaoResponseProducer> producer,
+        ILogger<MovimentacaoRequestConsumer> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
         _responseProducer = producer;
         _logger = logger;
     }
 
-    public async Task Handle(IMessageContext context, CadastrarContaCorrenteRequestEvent message)
+    public async Task Handle(IMessageContext context, MovimentacaoRequestEvent message)
     {
         var sw = Stopwatch.StartNew();
 
@@ -42,24 +41,30 @@ public class CadastrarContaConsumerHandler : IMessageHandler<CadastrarContaCorre
 
         var bus = serviceProvider.GetRequiredService<IMediatorHandler>();
 
-        var registerCommand = new CadastrarNovaContaCorrenteCommand(message.Id, message.Nome, message.Senha, message.Cpf);
-        var result = await bus.SendCommand<CadastrarNovaContaCorrenteCommand, Result<NumeroContaCorrenteDto>>(registerCommand);
+        var registerCommand = new CadastrarNovaMovimentacaoCommand(message.Valor, message.Tipo, message.Conta);
+        var result = await bus.SendCommand<CadastrarNovaMovimentacaoCommand, Result<MovimentacaoRelaizadaDto>>(registerCommand);
         _logger.LogInformation($"[Lógica] levou {sw.ElapsedMilliseconds}ms.");
 
-        CadastrarContaCorrenteResponseEvent responseEvent;
+        MovimentacaoResponseEvent responseEvent;
 
         if (result.IsSuccess)
         {
-            responseEvent = new CadastrarContaCorrenteResponseEvent
+            responseEvent = new MovimentacaoResponseEvent
             {
                 CorrelationId = message.CorrelationId,
                 IsSuccess = true,
                 NumeroConta = result.Data.NumeroConta,
+                Tipo = result.Data.Tipo,
+                Valor = result.Data.Valor,
+                DataHora = result.Data.DataHora,
+                Nome = result.Data.Nome,
+                Id = result.Data.Id,
+                SaldoAposMovimentacao = result.Data.SaldoAposMovimentacao
             };
         }
         else
         {
-            responseEvent = new CadastrarContaCorrenteResponseEvent
+            responseEvent = new MovimentacaoResponseEvent
             {
                 CorrelationId = message.CorrelationId,
                 IsSuccess = false,

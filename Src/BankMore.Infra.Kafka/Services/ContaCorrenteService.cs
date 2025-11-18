@@ -11,11 +11,11 @@ namespace BankMore.Infra.Kafka.Services
     public class ContaCorrenteService
     {
         private readonly IMessageProducer<ICadastroContaRequestProducer> _requestProducer;
-        private readonly CadastroContaResponseManager _responseManager;
+        private readonly CadastroContaReplyManager _responseManager;
         private const string ReplyTopic = "cadastrar.conta.resposta";
 
         public ContaCorrenteService(IMessageProducer<ICadastroContaRequestProducer> requestProducer,
-            CadastroContaResponseManager responseManager)
+            CadastroContaReplyManager responseManager)
         {
             _requestProducer = requestProducer;
             _responseManager = responseManager;

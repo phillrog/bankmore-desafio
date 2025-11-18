@@ -1,8 +1,10 @@
 using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.ViewModels;
+using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
 using BankMore.Infra.CrossCutting.Identity.Authorization;
+using BankMore.Infra.Kafka.Services;
 using BankMore.Services.Apis.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -15,26 +17,24 @@ namespace BankMore.Services.Api.ContasCorrentes.Controllers;
 [ApiVersion("1.0")]
 public class MovimentoController : ApiController
 {
-    #region [ SERVICES ]
-    private readonly IMovimentoService _movimentoService;
+    #region [ SERVICES ]    
+    private readonly MovimentarContaService _movimentarKafkaService;
+
     #endregion
 
     #region [ CONSTRUTOR ]
 
     public MovimentoController(
-        IMovimentoService movimentoService,
         INotificationHandler<DomainNotification> notifications,
-        IMediatorHandler mediator)
+        IMediatorHandler mediator,
+        MovimentarContaService movimentarKafkaService,
+        IUser user)
         : base(notifications, mediator)
     {
-        _movimentoService = movimentoService;
+        _movimentarKafkaService = movimentarKafkaService;
     }
     #endregion
-
-    #region [ GET ]
     
-    #endregion
-
     #region [ POST ]
     
     [HttpPost]
@@ -43,21 +43,18 @@ public class MovimentoController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Cadastrar([FromBody] MovimentoViewModel contaViewModel)
+    public async Task<IActionResult> Cadastrar([FromBody] MovimentoViewModel contaViewModel, [FromServices] IUser user)
     {
         if (!ModelState.IsValid)
         {
             NotifyModelStateErrors();
             return Response(contaViewModel);
         }
-
-        var retorno = await _movimentoService.Cadastrar(contaViewModel);
+        contaViewModel.Conta = user.Conta;
+        var retorno = await _movimentarKafkaService.Movimentar(contaViewModel);
 
         return ResponseResult(retorno);
     }
     #endregion
 
-    #region [ PUT ]
-   
-    #endregion
 }

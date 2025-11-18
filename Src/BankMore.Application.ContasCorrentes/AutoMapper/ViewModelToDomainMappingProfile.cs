@@ -29,12 +29,12 @@ public class ViewModelToDomainMappingProfile : Profile
                                                 c.Id,
                                                 c.IdContaCorrente,
                                                 c.DataMovimento,
-                                                (char)c.TipoMovimento.ToString()[0],
+                                                (char)c.TipoMovimento,
                                                 c.Valor
             ))
             .ForMember(
                 dest => dest.TipoMovimento,
-                opt => opt.MapFrom(src => (char) src.TipoMovimento.ToString()[0])
+                opt => opt.MapFrom(src => src.TipoMovimento.ToString())
             )
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())

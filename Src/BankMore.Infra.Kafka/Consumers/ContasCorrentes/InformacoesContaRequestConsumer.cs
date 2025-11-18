@@ -12,16 +12,16 @@ using System.Diagnostics;
 
 namespace BankMore.Infra.Kafka.Consumers
 {
-    public class InformacoesContaConsumerHandler : IMessageHandler<BuscarNumeroContaEvent>
+    public class InformacoesContaRequestConsumer : IMessageHandler<BuscarNumeroContaEvent>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IMessageProducer<IInforcacoesContaResponseProducer> _responseProducer;
-        private readonly ILogger<InformacoesContaConsumerHandler> _logger;
+        private readonly ILogger<InformacoesContaRequestConsumer> _logger;
 
-        public InformacoesContaConsumerHandler(
+        public InformacoesContaRequestConsumer(
             IServiceScopeFactory serviceScopeFactory,
             IMessageProducer<IInforcacoesContaResponseProducer> producer,
-            ILogger<InformacoesContaConsumerHandler> logger)
+            ILogger<InformacoesContaRequestConsumer> logger)
         {
             _serviceScopeFactory = serviceScopeFactory;
             _responseProducer = producer;

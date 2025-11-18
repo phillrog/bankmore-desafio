@@ -10,7 +10,6 @@ public static class KafkaSetup
 {
     public static void AddKafkaSetup(this IServiceCollection services, IConfiguration configuration)
     {
-        //const string topicName = "usuario-criado";
         var broker =  configuration.GetValue<string>("Kafka:Endereco");
         services.AddKafka(
             kafka => kafka
@@ -18,13 +17,6 @@ public static class KafkaSetup
                 .AddCluster(
                     cluster => cluster
                         .WithBrokers(new[] { broker })
-                        //.CreateTopicIfNotExists(topicName, 1, 1)
-                        //.AddProducer<UsuarioCriadoProducer>(
-                        //    producer => producer
-                        //        .DefaultTopic(topicName)
-                        //        .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
-
-                        //)
                         .CreateTopicIfNotExists("cadastrar.conta.requisicao", 1, 1)
                         .AddProducer<ICadastroContaRequestProducer>(
                             producer => producer
@@ -47,7 +39,7 @@ public static class KafkaSetup
                             .WithWorkersCount(10)
                             .AddMiddlewares(middlewares => middlewares
                                 .AddDeserializer<ProtobufNetDeserializer>()
-                                .AddTypedHandlers(handlers => handlers.AddHandler<CadastroContaResponseManager>())
+                                .AddTypedHandlers(handlers => handlers.AddHandler<CadastroContaReplyManager>())
                             )
                         )
                         .CreateTopicIfNotExists("informacoes.conta.resposta", 1, 1)
@@ -58,7 +50,7 @@ public static class KafkaSetup
                             .WithWorkersCount(10)
                             .AddMiddlewares(middlewares => middlewares
                                 .AddDeserializer<ProtobufNetDeserializer>()
-                                .AddTypedHandlers(handlers => handlers.AddHandler<NumeroContaResponseManager>())
+                                .AddTypedHandlers(handlers => handlers.AddHandler<NumeroContaReplyManager>())
                             )
                         )
                 )
@@ -67,7 +59,7 @@ public static class KafkaSetup
 
         /// ---- responses
         /// Tem que ser singleton se não o TryRemove não encontra a chave da mensagem
-        services.AddSingleton<CadastroContaResponseManager>();
+        services.AddSingleton<CadastroContaReplyManager>();
         /// ---- serviços
         services.AddScoped<InformacoesContaService>();
         services.AddScoped<ContaCorrenteService>();

@@ -17,6 +17,15 @@ public class CadastrarNovaMovimentacaoCommand : MovimentoCommand, IRequest<Resul
         TipoMovimento = tipo; 
     }
 
+    public CadastrarNovaMovimentacaoCommand(decimal valor, TipoMovimento tipo, string numero)
+    {
+        Id = Guid.NewGuid();
+        Valor = valor;
+        DataMovimento = DateTime.UtcNow;
+        TipoMovimento = tipo;
+        NumeroConta = Convert.ToInt32(numero);
+    }
+
     public override bool IsValid()
     {
         ValidationResult = new CadastrarNovaMovimentacaoValidation().Validate(this);
