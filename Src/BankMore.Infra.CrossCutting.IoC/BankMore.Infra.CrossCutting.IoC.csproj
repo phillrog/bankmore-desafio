@@ -1,5 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\BankMore.Infra.CrossCutting.Identity\BankMore.Infra.CrossCutting.Identity.csproj" />
   </ItemGroup>

@@ -1,13 +1,12 @@
-using System.Text;
-
+﻿using BankMore.Infra.Apis.Configurations;
 using BankMore.Infra.CrossCutting.Identity.Authorization;
 using BankMore.Infra.CrossCutting.Identity.Data;
 using BankMore.Infra.CrossCutting.Identity.Models;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BankMore.Services.Api.Identidade.Configurations;
 
@@ -37,7 +36,7 @@ public static class AuthSetup
             // 1. Configurar o CPF (UserName)
             // O CPF é case sensitive, mas o Identity por padrão é case insensitive para UserName.
             // Para CPF, é recomendado forçar CaseSensitivity, mas o padrão 'false' geralmente funciona.
-            options.User.RequireUniqueEmail = false; // Desativa a obrigatoriedade de e-mail único
+            options.User.RequireUniqueEmail = false; // Desativa a obrigatoriedade de e-mail Ãºnico
 
             // 2. Configurar o Email (Opcional)
             options.SignIn.RequireConfirmedEmail = false; // Não exige confirmação de e-mail no login
@@ -84,25 +83,7 @@ public static class AuthSetup
 
         services.AddAuthorization(options =>
         {
-            var policy1 = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .RequireRole("Admin")
-                .AddRequirements(new ClaimRequirement("Admin_Write", "Write"))
-                .Build();
-            var policy2 = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .RequireRole("Admin")
-                .AddRequirements(new ClaimRequirement("Admin_Remove", "Remove"))
-                .Build();
-            var readPolicy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .RequireRole("Admin") 
-                .AddRequirements(new ClaimRequirement("Admin_Read", "Read")) 
-                .Build();
-
-            options.AddPolicy("CanWriteData", policy1);
-            options.AddPolicy("CanRemoveData", policy2);
-            options.AddPolicy("CanReadData", readPolicy);
+            PolicySetup.AddCustomPolicies(options);
         });
 
         return services;

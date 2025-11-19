@@ -38,7 +38,7 @@ namespace BankMore.Infra.Kafka.Consumers
             var registerCommand = new InformacoesQuery(message.Cpf);
 
             var result = await bus.SendCommand<InformacoesQuery, Result<InformacoesViewModel>>(registerCommand);
-            _logger.LogInformation($"[Lógica] levou {sw.ElapsedMilliseconds}ms.");
+            _logger.LogInformation($"[LÃ³gica] levou {sw.ElapsedMilliseconds}ms.");
             int numeroConta = result?.Data.Numero ?? 0;
 
             var responseEvent = new NumeroContaEncontradoResponseEvent

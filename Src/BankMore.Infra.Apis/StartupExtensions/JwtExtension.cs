@@ -1,14 +1,12 @@
-using System.Text;
-using BankMore.Infra.CrossCutting.Identity.Authorization;
-using BankMore.Infra.CrossCutting.Identity.Data;
+using BankMore.Infra.Apis.Configurations;
+using BankMore.Infra.CrossCutting.Identity.Filters;
 using BankMore.Infra.CrossCutting.Identity.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BankMore.Services.Apis.StartupExtensions;
 
@@ -51,29 +49,14 @@ public static class JwtExtension
             configureOptions.ClaimsIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
             configureOptions.TokenValidationParameters = tokenValidationParameters;
             configureOptions.SaveToken = true;
+            configureOptions.Events = JwtEventsSetup.GetCustomEvents();
         });
-
+        
         services.AddAuthorization(options =>
         {
-            var policy1 = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .RequireRole("Admin")
-                .AddRequirements(new ClaimRequirement("Admin_Write", "Write"))
-                .Build();
-            var policy2 = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .RequireRole("Admin")
-                .AddRequirements(new ClaimRequirement("Admin_Remove", "Remove"))
-                .Build();
-            var policy3 = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .RequireRole("Admin")
-                .AddRequirements(new ClaimRequirement("Admin_Read", "Read"))
-                .Build();
-            options.AddPolicy("CanWriteData", policy1);
-            options.AddPolicy("CanRemoveData", policy2);
-            options.AddPolicy("CanReadData", policy3);
+            PolicySetup.AddCustomPolicies(options);
         });
+
 
         return services;
     }

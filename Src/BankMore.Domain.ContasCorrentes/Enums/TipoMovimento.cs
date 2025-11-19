@@ -16,7 +16,7 @@ namespace BankMore.Domain.ContasCorrentes.Enums
         C = 'C',
 
         /// <summary>
-        /// Débito: Representa uma saída de valor da conta.
+        /// Débito: Representa uma saÃ­da de valor da conta.
         /// </summary>
         [Display(Name = "Débito")]
         D = 'D'

@@ -58,9 +58,9 @@ public static class KafkaSetup
 
 
         /// ---- responses
-        /// Tem que ser singleton se n„o o TryRemove n„o encontra a chave da mensagem
+        /// Tem que ser singleton se n√£o o TryRemove n√£o encontra a chave da mensagem
         services.AddSingleton<CadastroContaReplyManager>();
-        /// ---- serviÁos
+        /// ---- servi√ßos
         services.AddScoped<InformacoesContaService>();
         services.AddScoped<ContaCorrenteService>();
     }

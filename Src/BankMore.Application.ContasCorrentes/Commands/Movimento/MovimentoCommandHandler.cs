@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Application.Idempotencia.Services;
@@ -67,7 +67,7 @@ public class MovimentoCommandHandler : CommandHandler,
 
     public async Task<Result<MovimentacaoRelaizadaDto>> Handle(CadastrarNovaMovimentacaoCommand message, CancellationToken cancellationToken)
     {
-        #region [ VALIDAÇÕES]
+        #region [ VALIDAÃÃES]
         var numeroConta = _user.Conta is not null ? Convert.ToInt32(_user.Conta) : message.NumeroConta;
         if (!message.IsValid())
         {
@@ -114,7 +114,7 @@ public class MovimentoCommandHandler : CommandHandler,
 
         if (message.EhDebito() && conta.Numero != numeroConta)
         {
-            var erro = "Apenas o tipo “crédito” pode ser aceito caso o número da conta seja diferente do usuário logado";
+            var erro = "Apenas o tipo âcréditoâ pode ser aceito caso o nÃºmero da conta seja diferente do usuário logado";
             _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
             return Result<MovimentacaoRelaizadaDto>.Failure(erro, Erro.INVALID_TYPE);
         }
@@ -137,7 +137,7 @@ public class MovimentoCommandHandler : CommandHandler,
 
         #endregion
 
-        #region [ TRANSAÇÃO]
+        #region [ TRANSAÃÃO]
 
         await BeginTransactionAsync();
         try
@@ -181,7 +181,7 @@ public class MovimentoCommandHandler : CommandHandler,
 
             if (!retornoIdempotencia.IsSuccess)
             {
-                var erro = "Falha ao gravar idempotência.";
+                var erro = "Falha ao gravar idempotÃªncia.";
                 _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
                 return Result<MovimentacaoRelaizadaDto>.Failure(erro, Erro.INERNAL_ERROR);
             }

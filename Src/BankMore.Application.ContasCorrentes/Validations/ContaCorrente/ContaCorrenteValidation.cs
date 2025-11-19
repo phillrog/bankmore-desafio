@@ -1,4 +1,4 @@
-using BankMore.Application.ContasCorrentes.Commands;
+﻿using BankMore.Application.ContasCorrentes.Commands;
 using FluentValidation;
 
 namespace BankMore.Application.ContasCorrentes.Validations;
@@ -18,18 +18,18 @@ public abstract class ContaCorrenteValidation<T> : AbstractValidator<T>
     {
         RuleFor(c => c.Senha)
             .NotEmpty().WithMessage("Por favor informe a senha")
-            .MinimumLength(6).WithMessage("A senha deve ter no mínimo 6 caracteres.");
+            .MinimumLength(6).WithMessage("A senha deve ter no mÃ­nimo 6 caracteres.");
     }
 
     protected void ValidarNovaSenha()
     {
         RuleFor(c => c.SenhaAnterior)
-        .MinimumLength(6).WithMessage("A senha anterior deve ter no mínimo 6 caracteres.")
+        .MinimumLength(6).WithMessage("A senha anterior deve ter no mÃ­nimo 6 caracteres.")
         .When(c => !string.IsNullOrEmpty(c.Senha));
 
         RuleFor(c => c.Senha)
             .NotEmpty().WithMessage("Por favor informe a senha")
-            .MinimumLength(6).WithMessage("A senha deve ter no mínimo 6 caracteres.")
+            .MinimumLength(6).WithMessage("A senha deve ter no mÃ­nimo 6 caracteres.")
             .When(c => !string.IsNullOrEmpty(c.SenhaAnterior));
     }
 
@@ -38,7 +38,7 @@ public abstract class ContaCorrenteValidation<T> : AbstractValidator<T>
     {
         RuleFor(c => c.Cpf)
             .NotEmpty().WithMessage("Por favor informe o CPF")
-            .IsValidCPF().WithMessage("Número de CPF é inválido.");
+            .IsValidCPF().WithMessage("NÃºmero de CPF é inválido.");
     }
 
     protected void ValidarId()
@@ -51,7 +51,7 @@ public abstract class ContaCorrenteValidation<T> : AbstractValidator<T>
     {
         RuleFor(c => c.Numero)
             .GreaterThan(0)
-            .WithMessage("Por favor informe o número da conta.");
+            .WithMessage("Por favor informe o nÃºmero da conta.");
     }
 
 }

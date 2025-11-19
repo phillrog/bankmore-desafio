@@ -13,7 +13,7 @@ namespace BankMore.Application.ContasCorrentes.Services;
 
 public class ContaCorrenteService : IContaCorrenteService
 {
-    #region [ SERVIÇOS ]
+    #region [ SERVIÃ‡OS ]
 
     private readonly IMapper _mapper;
     private readonly IMediatorHandler _bus;
@@ -34,9 +34,9 @@ public class ContaCorrenteService : IContaCorrenteService
     #endregion
 
     #region [ PESQUISAR ]
-    public async Task<Result<InformacoesViewModel>> BuscarInformcoes(string cpf)
+    public async Task<Result<InformacoesViewModel>> BuscarInformcoes(int numero)
     {
-        var query = new InformacoesQuery(cpf);
+        var query = new InformacoesQuery(numero);
         var conta = await _bus.SendCommand<InformacoesQuery, Result<InformacoesViewModel>>(query);
         return conta;
     }
@@ -56,10 +56,10 @@ public class ContaCorrenteService : IContaCorrenteService
 
     #region [ CADASTRAR ]
 
-    public void Cadastrar(ContaCorrenteViewModel contaCorrenteViewModel)
+    public async Task<Result<NumeroContaCorrenteDto>> Cadastrar(NovaCorrenteViewModel contaCorrenteViewModel)
     {
         var registerCommand = _mapper.Map<CadastrarNovaContaCorrenteCommand>(contaCorrenteViewModel);
-        _bus.SendCommand(registerCommand);
+        return await _bus.SendCommand<CadastrarNovaContaCorrenteCommand, Result<NumeroContaCorrenteDto>>(registerCommand);
     }
     #endregion
 

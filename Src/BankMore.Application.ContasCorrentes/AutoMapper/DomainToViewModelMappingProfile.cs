@@ -10,13 +10,14 @@ public class DomainToViewModelMappingProfile : Profile
     public DomainToViewModelMappingProfile()
     {
         /// Conta Corrente
+        CreateMap<ContaCorrente, NovaCorrenteViewModel>();
         CreateMap<ContaCorrente, ContaCorrenteViewModel>();
         CreateMap<ContaCorrente, InformacoesViewModel>();
 
         /// Idempotencia
         CreateMap<BankMore.Domain.ContasCorrentes.Models.Idempotencia, IdempotenciaViewModel>().ReverseMap();
 
-        /// Movimentações
+        /// MovimentaÃ§Ãµes
         CreateMap<Movimento, MovimentoViewModel>().ReverseMap();
     }
 }

@@ -10,10 +10,10 @@ public class ViewModelToDomainMappingProfile : Profile
     public ViewModelToDomainMappingProfile()
     {
         /// Commands Conta Corrente
-        CreateMap<ContaCorrenteViewModel, CadastrarNovaContaCorrenteCommand>()
+        CreateMap<NovaCorrenteViewModel, CadastrarNovaContaCorrenteCommand>()
             .ConstructUsing(c => new CadastrarNovaContaCorrenteCommand(c.Nome, c.Senha, c.Cpf));
         CreateMap<ContaCorrenteViewModel, AlterarContaCorrenteCommand>()
-            .ConstructUsing(c => new AlterarContaCorrenteCommand(c.Nome, c.Senha, c.SenhaAnterior, c.Cpf, c.Ativo ?? false));
+            .ConstructUsing(c => new AlterarContaCorrenteCommand(c.Nome, c.Senha, c.SenhaAnterior, c.Ativo ?? false));
 
         /// Commands Idempotencia
         CreateMap<IdempotenciaViewModel, CadastrarNovaIdempotenciaCommand>()
@@ -21,7 +21,7 @@ public class ViewModelToDomainMappingProfile : Profile
         CreateMap<CadastrarNovaIdempotenciaCommand, BankMore.Domain.ContasCorrentes.Models.Idempotencia>()
             .ConstructUsing(c => new BankMore.Domain.ContasCorrentes.Models.Idempotencia(c.Id, c.IdContaCorrente, c.Resultado, c.Requisicao));
 
-        /// Commands Movimentação
+        /// Commands MovimentaÃ§Ã£o
         CreateMap<MovimentoViewModel, CadastrarNovaMovimentacaoCommand>()
             .ConstructUsing(c => new CadastrarNovaMovimentacaoCommand( c.Valor, c.TipoMovimento));
         CreateMap<CadastrarNovaMovimentacaoCommand, Movimento>()

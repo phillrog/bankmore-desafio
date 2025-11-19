@@ -9,6 +9,7 @@ using BankMore.Infra.CrossCutting.Identity.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using BankMore.Infra.CrossCutting.Identity.Filters;
 
 namespace BankMore.Infra.CrossCutting.IoC;
 
@@ -27,6 +28,9 @@ public class NativeInjectorBootStrapper
 
         // ASP.NET Authorization Polices
         services.AddSingleton<IAuthorizationHandler, ClaimsRequirementHandler>();
+
+        /// ASP.NET Authorization Role - Handler para identificar quem está reuquisitando os recursos (Master, Admin)
+        services.AddSingleton<IAuthorizationHandler, MustBeOwnerOrMasterHandler>();
 
         // Domain - Events
         services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();

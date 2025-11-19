@@ -10,7 +10,7 @@ namespace BankMore.Application.ContasCorrentes.ViewModels
     public class MovimentoViewModel
     {       
         /// <summary>
-        /// Tipo de operação realizada. 'C' para Crédito (entrada) ou 'D' para Débito (saída).
+        /// Tipo de operação realizada. 'C' para Crédito (entrada) ou 'D' para Débito (saÃ­da).
         /// </summary>
         /// <example>C</example>
         /// 
@@ -23,7 +23,7 @@ namespace BankMore.Application.ContasCorrentes.ViewModels
         public decimal Valor { get; set; }
 
         /// <summary>
-        /// Número da conta do usuário
+        /// NÃºmero da conta do usuário
         /// </summary>
         /// <example>123456</example>
         [JsonIgnore]

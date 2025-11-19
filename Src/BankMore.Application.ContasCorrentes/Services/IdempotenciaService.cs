@@ -10,7 +10,7 @@ namespace BankMore.Application.Idempotencia.Services
 {
     public class IdempotenciaService : IIdempotenciaService
     {
-        #region [ SERVIÇOS ]
+        #region [ SERVIÃOS ]
 
         private readonly IMapper _mapper;
         private readonly IMediatorHandler _bus;

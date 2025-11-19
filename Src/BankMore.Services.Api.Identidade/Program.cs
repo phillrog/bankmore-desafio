@@ -1,13 +1,15 @@
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using BankMore.Infra.CrossCutting.IoC;
+﻿using BankMore.Infra.CrossCutting.IoC;
 using BankMore.Services.Api.Identidade.Configurations;
 using BankMore.Services.Api.Identidade.Controllers.V1;
 using BankMore.Services.Apis.StartupExtensions;
 using KafkaFlow;
 using MediatR;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using System.Globalization;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var apiNome = "API Identidade";
@@ -83,6 +85,15 @@ builder.Services.AddCustomizedSwagger(builder.Environment, apiNome, typeof(Accou
 // END: Custom services
 
 var app = builder.Build();
+
+// Globalization culture
+var supportedCultures = new[] { new CultureInfo("pt-BR") };
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("pt-BR"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
 
 // Configure the HTTP request pipeline.
 

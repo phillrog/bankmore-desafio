@@ -6,6 +6,7 @@ using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Interfaces;
 using BankMore.Domain.Core.Models;
 using MediatR;
+using Models = BankMore.Domain.ContasCorrentes.Models;
 
 namespace BankMore.Application.ContasCorrentes.Querys
 {
@@ -32,11 +33,14 @@ namespace BankMore.Application.ContasCorrentes.Querys
         }
         #endregion
 
-        #region [ INFORMAÇÕES DA CONTA ]
+        #region [ INFORMAÃÃES DA CONTA ]
 
         public async Task<Result<InformacoesViewModel>> Handle(InformacoesQuery request, CancellationToken cancellationToken)
         {
-            var conta = _contaCorrenteRepository.GetByCpf(request.Cpf);
+            Models.ContaCorrente conta;
+
+            if (request.Cpf is not null) conta = _contaCorrenteRepository.GetByCpf(request.Cpf);
+            else conta = _contaCorrenteRepository.GetByNumero(request.Numero);
 
             if (conta is null) return Result<InformacoesViewModel>.Failure("Conta não encontrada", Erro.INVALID_VALUE);
 
@@ -48,8 +52,8 @@ namespace BankMore.Application.ContasCorrentes.Querys
 
         public async Task<Result<SaldoDto>> Handle(SaldoQuery request, CancellationToken cancellationToken)
         {
-            #region [ VALIDAÇÕES ]
-            var conta = await _contaCorrenteRepository.GetByExpressionAsync( a => a.Numero == request.NumeroConta);
+            #region [ VALIDAÃÃES ]
+            var conta = await _contaCorrenteRepository.GetByExpressionAsync(a => a.Numero == request.NumeroConta);
 
             if (conta is null) return Result<SaldoDto>.Failure("Apenas contas correntes cadastradas podem consultar o saldo", Erro.INVALID_ACCOUNT);
             if (conta.Inativa()) return Result<SaldoDto>.Failure("Apenas contas correntes ativas podem consultar o saldo", Erro.INACTIVE_ACCOUNT);

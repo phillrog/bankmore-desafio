@@ -43,7 +43,7 @@ public class MovimentacaoRequestConsumer : IMessageHandler<MovimentacaoRequestEv
 
         var registerCommand = new CadastrarNovaMovimentacaoCommand(message.Valor, message.Tipo, message.Conta);
         var result = await bus.SendCommand<CadastrarNovaMovimentacaoCommand, Result<MovimentacaoRelaizadaDto>>(registerCommand);
-        _logger.LogInformation($"[Lógica] levou {sw.ElapsedMilliseconds}ms.");
+        _logger.LogInformation($"[LÃ³gica] levou {sw.ElapsedMilliseconds}ms.");
 
         MovimentacaoResponseEvent responseEvent;
 

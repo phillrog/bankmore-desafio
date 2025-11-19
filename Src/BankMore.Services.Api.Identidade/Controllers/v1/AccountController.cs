@@ -1,7 +1,8 @@
-using BankMore.Domain.Common.Interfaces;
+﻿using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.Common.Providers.Hash;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
+using BankMore.Infra.Apis.Configurations;
 using BankMore.Infra.CrossCutting.Identity.Data;
 using BankMore.Infra.CrossCutting.Identity.Models;
 using BankMore.Infra.CrossCutting.Identity.Models.AccountViewModels;
@@ -253,7 +254,7 @@ public class AccountController : ApiController
     /// <returns>Retorna o status de autenticação e a lista de claims (declarações) do usuário.</returns>
     [HttpGet]
     [Route("current")]
-    [ProducesResponseType(StatusCodes.Status200OK)] // Retorna um objeto anônimo com IsAuthenticated e ClaimsIdentity
+    [ProducesResponseType(StatusCodes.Status200OK)] // Retorna um objeto anónimo com IsAuthenticated e ClaimsIdentity
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public IActionResult GetCurrent()
     {
@@ -262,6 +263,54 @@ public class AccountController : ApiController
             IsAuthenticated = _user.IsAuthenticated(),
             ClaimsIdentity = _user.GetClaimsIdentity().Select(x => new { x.Type, x.Value }),
         });
+    }
+
+    /// <summary>
+    /// Atribui uma nova Role a um usuário existente. Apenas para usuários MASTER.
+    /// </summary>
+    /// <remarks>
+    /// Endpoint restrito para administradores MASTER.
+    /// </remarks>
+    /// <param name="cpf">O CPF (UserName) do usuário a ser modificado.</param>
+    /// <param name="roleName">O nome da Role a ser atribuÃ­da (ex: 'Master').</param>
+    /// <returns>Retorna um status de sucesso ou a lista de erros.</returns>
+    [HttpPost]
+    [Authorize(Policy = PolicySetup.MasterAccess)]
+    [Route("update-role")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> UpdateRole([FromQuery] string cpf, [FromQuery] string roleName)
+    {
+        if (string.IsNullOrWhiteSpace(cpf) || string.IsNullOrWhiteSpace(roleName))
+        {
+            NotifyError("Entrada inválida", "CPF e nome da Role são obrigatÃ³rios.");
+            return Response();
+        }
+
+        var appUser = await _userManager.FindByNameAsync(cpf);
+        if (appUser is null)
+        {
+            NotifyError("Não encontrado", $"Usuário com CPF {cpf} não existe.");
+            return Response();
+        }
+
+        if (!await _roleManager.RoleExistsAsync(roleName))
+        {
+            NotifyError("Role inválida", $"A Role '{roleName}' não está registrada no sistema.");
+            return Response();
+        }
+
+        var identityResult = await _userManager.AddToRoleAsync(appUser, roleName);
+
+        if (identityResult.Succeeded)
+        {
+            _logger.LogInformation(4, $"Role '{roleName}' atribuÃ­da com sucesso ao usuário {cpf}.");
+            return Response();
+        }
+
+        AddIdentityErrors(identityResult);
+        return Response();
     }
 
     private async Task<TokenViewModel> GenerateToken(ApplicationUser appUser)

@@ -6,9 +6,7 @@ public class AlterarContaCorrenteValidation : ContaCorrenteValidation<AlterarCon
 {
     public AlterarContaCorrenteValidation()
     {
-        ValidarNumero();
         ValidarNome();
-        ValidarCpf();
         ValidarNovaSenha();
     }
 }

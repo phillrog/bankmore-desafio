@@ -1,13 +1,15 @@
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using BankMore.Infra.CrossCutting.IoC;
+﻿using BankMore.Infra.CrossCutting.IoC;
 using BankMore.Services.Api.ContasCorrentes.Configurations;
-using BankMore.Services.Api.ContasCorrentes.Controllers;
+using BankMore.Services.Api.ContasCorrentes.Controllers.V1;
 using BankMore.Services.Apis.StartupExtensions;
 using KafkaFlow;
 using MediatR;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using System.Globalization;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var apiNome = "API Conta Corrente";
@@ -38,8 +40,6 @@ builder.Services.AddMediatR(cfg =>
 
 // ----- Hash -----
 builder.Services.AddCustomizedHash(builder.Configuration);
-
-
 
 // .NET Native DI Abstraction
 NativeInjectorBootStrapper.RegisterServices(builder.Services);
@@ -85,6 +85,15 @@ builder.Services.AddCustomizedHealthCheck(builder.Configuration, builder.Environ
 
 var app = builder.Build();
 
+// Globalization culture
+var supportedCultures = new[] { new CultureInfo("pt-BR") };
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("pt-BR"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
+
 // Configure the HTTP request pipeline.
 
 // START: Custom middlewares
@@ -116,6 +125,7 @@ HealthCheckSetup.UseCustomizedHealthCheck(app, builder.Environment);
 
 // ----- Swagger UI -----
 app.UseCustomizedSwagger(builder.Environment, apiNome);
+
 // END: Custom middlewares
 
 

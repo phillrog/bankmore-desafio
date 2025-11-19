@@ -456,3 +456,133 @@ CREATE TABLE idempotencia (
     -- Referencia a coluna 'id' na tabela 'contacorrente'
     FOREIGN KEY (idcontacorrente) REFERENCES contacorrente(id)
 );
+
+
+-- =========================================================
+-- CONFIGS
+-- =========================================================
+USE [BankMoreIdentidadeDB]
+GO
+
+DECLARE @CurrentDate DATETIME2(7) = GETDATE();
+-- O hash é calculado como Hash(SenhaPura + ID_do_usuario_em_minusculas)
+DECLARE @MasterPasswordHash NVARCHAR(MAX) = N'10000.VR8j+zDt3ROHip5f9SxUTg==.34T7hIZRHlFFrSZF989p8UxoOIMn10RDDbiF8EsUx3I='; 
+-- O 'salt' será o ID do usuário, que é a parte que foi concatenada na senha para gerar o hash
+DECLARE @MasterId NVARCHAR(100) = N'00000000-0000-0000-0000-000000000001';
+DECLARE @MasterRoleId NVARCHAR(450) = (SELECT ID FROM [dbo].[AspNetRoles] WHERE NAME = 'Master'); -- Busca o id da role master
+DECLARE @MasterLogin NVARCHAR(20) = N'00000000000';
+DECLARE @MasterNormalizedUserName NVARCHAR(256) = (select @MasterLogin);
+
+DECLARE @MasterCpf NVARCHAR(20) = (select @MasterLogin);
+DECLARE @MasterNome NVARCHAR(256) = N'MASTER';
+-- =========================================================
+-- 1. BANCO BankMoreIdentidadeDB (Identity)
+-- =========================================================
+
+
+PRINT 'Iniciando Seed no BankMoreIdentidadeDB...';
+
+-- Inserir o usuário Master na tabela AspNetUsers
+IF NOT EXISTS (SELECT 1 FROM [dbo].[AspNetUsers] WHERE Id = @MasterId)
+BEGIN
+    INSERT INTO [dbo].[AspNetUsers]
+    (
+        [Id],
+        [AccessFailedCount],
+        [ConcurrencyStamp],
+        [EmailConfirmed],
+        [LockoutEnabled],
+        [LockoutEnd],
+        [PhoneNumberConfirmed],
+        [TwoFactorEnabled],
+        [UserName],
+        [NormalizedUserName],
+        [Cpf],
+        [PasswordHash],
+        [SecurityStamp]
+    )
+    VALUES
+    (
+        @MasterId,
+        0,
+        NEWID(), 
+        1,       
+        1,       
+        NULL,
+        0,       
+        0,       
+        @MasterLogin,
+        @MasterNormalizedUserName,
+        @MasterLogin,
+        @MasterPasswordHash,
+        NEWID()
+    );
+
+	-- Atribuir a Role 'Master' ao usuário Master    
+    INSERT INTO [dbo].[AspNetUserRoles]
+    (
+        [UserId],
+        [RoleId]
+    )
+    VALUES
+    (
+        @MasterId,
+        @MasterRoleId
+    );
+
+    
+    PRINT 'Usuário Master inserido e Role Master atribuída no IdentityDB.';
+END
+ELSE
+BEGIN
+    PRINT 'O usuário Master já existe no IdentityDB. Pulando a inserção.';
+END
+GO
+
+
+-- =========================================================
+-- 2. BANCO BankMoreContaCorretenDB (Conta Corrente)
+-- =========================================================
+USE [BankMoreContaCorretenDB]
+GO
+
+DECLARE @CurrentDate DATETIME2(7) = GETDATE();
+-- O hash é calculado como Hash(SenhaPura + ID_do_usuario_em_minusculas)
+DECLARE @MasterPasswordHash NVARCHAR(MAX) = N'10000.VR8j+zDt3ROHip5f9SxUTg==.34T7hIZRHlFFrSZF989p8UxoOIMn10RDDbiF8EsUx3I='; 
+-- O 'salt' será o ID do usuário, que é a parte que foi concatenada na senha para gerar o hash
+DECLARE @MasterId NVARCHAR(100) = N'00000000-0000-0000-0000-000000000001';
+DECLARE @MasterCpf NVARCHAR(20) = N'00000000000';
+DECLARE @MasterNome NVARCHAR(256) = N'MASTER';
+
+PRINT 'Iniciando Seed no BankMoreContaCorretenDB...';
+
+-- Inserir o usuário Master na tabela contacorrente
+IF NOT EXISTS (SELECT 1 FROM [dbo].[contacorrente] WHERE id = @MasterId)
+BEGIN
+    INSERT INTO [dbo].[contacorrente]
+    (
+        id, numero, nome, ativo, senha, salt, cpf,
+        [CreatedAt], [CreatedBy], [UpdatedAt], [UpdatedBy], [IsDeleted]
+    )
+    VALUES
+    (
+        @MasterId,
+        -1, --- CONTA PARA DEVS NÚMERO NEGATIVO PARA NÃO MISTURAR COM USUÁRIO
+        @MasterNome,
+        1, -- Ativo = true
+        @MasterPasswordHash,
+        @MasterPasswordHash,
+        @MasterCpf,
+        @CurrentDate,
+        0, -- CreatedBy (Placeholder 0 para seed inicial)
+        @CurrentDate,
+        0, -- UpdatedBy (Placeholder 0 para seed inicial)
+        0  -- IsDeleted = false
+    );
+    PRINT 'Usuário Master (Conta Corrente) inserido no ContaCorrenteDB.';
+END
+ELSE
+BEGIN
+    PRINT 'O usuário Master (Conta Corrente) já existe no ContaCorrenteDB. Pulando a inserção.';
+END
+GO

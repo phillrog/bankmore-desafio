@@ -1,5 +1,4 @@
-﻿
-using BankMore.Domain.Core.Commands;
+﻿using BankMore.Domain.Core.Commands;
 
 namespace BankMore.Domain.Core.Models
 {

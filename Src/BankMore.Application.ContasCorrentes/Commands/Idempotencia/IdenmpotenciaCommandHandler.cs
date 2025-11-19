@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using BankMore.Domain.Common.CommandHandlers;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.ContasCorrentes.Events;

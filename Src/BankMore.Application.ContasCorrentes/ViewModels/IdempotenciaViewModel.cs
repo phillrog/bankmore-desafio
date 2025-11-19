@@ -1,19 +1,19 @@
 ﻿namespace BankMore.Application.ContasCorrentes.ViewModels
 {
     /// <summary>
-    /// Representa o registro de idempotência utilizado para prevenir o processamento duplicado 
-    /// de requisições.
+    /// Representa o registro de idempotÃªncia utilizado para prevenir o processamento duplicado 
+    /// de requisiçÃµes.
     /// </summary>
     public class IdempotenciaViewModel
     {
         /// <summary>
-        /// O ID da Idempotência.
+        /// O ID da IdempotÃªncia.
         /// </summary>
         /// <example>66185bcf-092e-4019-9c96-a6d264b57fab</example>
         public Guid Id { get; set; }
 
         /// <summary>
-        /// O ID da Conta Corrente à qual o registro de idempotência pertence.
+        /// O ID da Conta Corrente Ã  qual o registro de idempotÃªncia pertence.
         /// </summary>
         /// <example>66185bcf-092e-4019-9c96-a6d264b57fab</example>
         public Guid IdContaCorrente { get; set; }

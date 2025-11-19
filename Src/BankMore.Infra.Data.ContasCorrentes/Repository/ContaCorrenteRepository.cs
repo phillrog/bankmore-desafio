@@ -33,13 +33,13 @@ public class ContaCorrenteRepository : Repository<ContaCorrente, ApplicationDbCo
 
         var sql = @"
             SELECT
-                    -- Total de Créditos
+                    -- Total de CrÃ©ditos
                     ISNULL(SUM(CASE WHEN tipomovimento = 'C' THEN valor ELSE 0 END), 0) AS TotalCredito,
             
-                    -- Total de Débitos
+                    -- Total de DÃ©bitos
                     ISNULL(SUM(CASE WHEN tipomovimento = 'D' THEN valor ELSE 0 END), 0) AS TotalDebito,
             
-                    -- Saldo Atual (Crédito - Débito)
+                    -- Saldo Atual (CrÃ©dito - DÃ©bito)
                     ISNULL(SUM(CASE 
                         WHEN tipomovimento = 'C' THEN valor 
                         WHEN tipomovimento = 'D' THEN valor * -1

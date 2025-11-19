@@ -7,9 +7,9 @@ namespace BankMore.Application.ContasCorrentes.ViewModels;
 /// <summary>
 /// Modelo de dados para cadastro e alteração de conta corrente.
 /// </summary>
-public class ContaCorrenteViewModel
+public class NovaCorrenteViewModel
 {
-
+    
     /// <summary>
     /// Nome completo do titular da conta.
     /// </summary>
@@ -19,22 +19,17 @@ public class ContaCorrenteViewModel
     [DisplayName("Nome")]
     public string Nome { get; set; }
 
-    
+    /// <summary>
+    /// CPF do titular.
+    /// </summary>
+    [Required(ErrorMessage = "ObrigatÃ³rio")]
+    [DisplayName("Cpf")]
+    public string Cpf { get; set; }
+
     /// <summary>
     /// Senha de acesso.
     /// </summary>
     [Required(ErrorMessage = "ObrigatÃ³rio")]
     [DisplayName("Senha")]
-    public string Senha { get; set; }
-
-    /// <summary>
-    /// Senha anterior (necessária apenas para troca de senha ou PUT em alguns casos).
-    /// </summary>
-    public string SenhaAnterior { get; set; }
-
-
-    /// <summary>
-    /// Indica se a conta está ativa.
-    /// </summary>
-    public bool? Ativo { get; set; }
+    public string Senha { get; set; }    
 }

@@ -42,7 +42,7 @@ public class SaldoRequestConsumer : IMessageHandler<SaldoRequestEvent>
 
         var query = new SaldoQuery() { NumeroConta = message.NumeroConta };
         var result = await bus.SendCommand<SaldoQuery, Result<SaldoDto>>(query);
-        _logger.LogInformation($"[Lógica] levou {sw.ElapsedMilliseconds}ms.");
+        _logger.LogInformation($"[LÃ³gica] levou {sw.ElapsedMilliseconds}ms.");
 
         SaldoResponseEvent responseEvent;
 

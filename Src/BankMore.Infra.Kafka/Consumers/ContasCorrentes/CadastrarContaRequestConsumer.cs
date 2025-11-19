@@ -44,7 +44,7 @@ public class CadastrarContaRequestConsumer : IMessageHandler<CadastrarContaCorre
 
         var registerCommand = new CadastrarNovaContaCorrenteCommand(message.Id, message.Nome, message.Senha, message.Cpf);
         var result = await bus.SendCommand<CadastrarNovaContaCorrenteCommand, Result<NumeroContaCorrenteDto>>(registerCommand);
-        _logger.LogInformation($"[Lógica] levou {sw.ElapsedMilliseconds}ms.");
+        _logger.LogInformation($"[LÃ³gica] levou {sw.ElapsedMilliseconds}ms.");
 
         CadastrarContaCorrenteResponseEvent responseEvent;
 

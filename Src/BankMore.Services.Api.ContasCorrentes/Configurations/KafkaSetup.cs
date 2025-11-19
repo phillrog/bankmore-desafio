@@ -172,7 +172,7 @@ public static class KafkaSetup
             )
         );
 
-        /// Movimentações
+        /// MovimentaÃ§Ãµes
         services.AddSingleton<MovimentacaoReplyManager>();
         services.AddScoped<MovimentarContaService>();
         

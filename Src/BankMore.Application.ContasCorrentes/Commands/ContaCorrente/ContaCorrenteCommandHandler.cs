@@ -1,4 +1,4 @@
-using BankMore.Domain.Common.CommandHandlers;
+﻿using BankMore.Domain.Common.CommandHandlers;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Events;
@@ -69,7 +69,7 @@ public class ContaCorrenteCommandHandler : CommandHandler,
 
     public Task<bool> Handle(AlterarContaCorrenteCommand message, CancellationToken cancellationToken)
     {
-        #region [ VALIDAÇÕES ]
+        #region [ VALIDAÃÃES ]
 
         if (!message.IsValid())
         {
