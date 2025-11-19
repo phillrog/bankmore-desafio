@@ -1,8 +1,9 @@
-using AutoMapper;
+﻿using AutoMapper;
+using BankMore.Application.Common.Querys;
 using BankMore.Application.ContasCorrentes.Commands;
 using BankMore.Application.ContasCorrentes.Interfaces;
-using BankMore.Application.ContasCorrentes.Querys;
 using BankMore.Application.ContasCorrentes.ViewModels;
+using BankMore.Domain.Common;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Interfaces.Services;
 using BankMore.Domain.Core.Bus;
@@ -34,17 +35,17 @@ public class ContaCorrenteService : IContaCorrenteService
     #endregion
 
     #region [ PESQUISAR ]
-    public async Task<Result<InformacoesViewModel>> BuscarInformcoes(int numero)
+    public async Task<Result<InformacoesContaCorrenteDto>> BuscarInformcoes(int numero)
     {
-        var query = new InformacoesQuery(numero);
-        var conta = await _bus.SendCommand<InformacoesQuery, Result<InformacoesViewModel>>(query);
+        var query = new InformacoesContaCorrenteQuery(numero);
+        var conta = await _bus.SendCommand<InformacoesContaCorrenteQuery, Result<InformacoesContaCorrenteDto>>(query);
         return conta;
     }
 
-    public async Task<InformacoesViewModel> BuscarPorNumero(int numero)
+    public async Task<InformacoesContaCorrenteDto> BuscarPorNumero(int numero)
     {
-        var query = new InformacoesQuery(numero);
-        var conta = await _bus.SendCommand<InformacoesQuery, Result<InformacoesViewModel>>(query);
+        var query = new InformacoesContaCorrenteQuery(numero);
+        var conta = await _bus.SendCommand<InformacoesContaCorrenteQuery, Result<InformacoesContaCorrenteDto>>(query);
         return conta.Data;
     }
 

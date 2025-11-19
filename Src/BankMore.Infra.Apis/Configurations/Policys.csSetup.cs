@@ -67,7 +67,7 @@ namespace BankMore.Infra.Apis.Configurations
 
             #endregion
 
-            #region [ DEFINIÃÃO CENTRALIZADA DA POLÃTICA DE FILTRAGEM DE RECURSOS ]
+            #region [ DEFINIÇÕO CENTRALIZADA DA POLÃTICA DE FILTRAGEM DE RECURSOS ]
             
             // 1. POLÃTICA PARA ENDPOINTS COM {cpf} NA ROTA
             options.AddPolicy(OwnerOrMaster_CPF_Policy, policy => // Usando a constante

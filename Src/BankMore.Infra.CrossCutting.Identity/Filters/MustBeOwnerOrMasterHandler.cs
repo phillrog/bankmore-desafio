@@ -6,7 +6,7 @@ using Microsoft.Extensions.Primitives;
 namespace BankMore.Infra.CrossCutting.Identity.Filters
 {
     /// <summary>
-    /// O IAuthorizationHandler lida com a lÃ³gica de autorização. 
+    /// O IAuthorizationHandler lida com a lógica de autorização. 
     /// Utilizado no ContaCorrenteController
     /// </summary>
     public class MustBeOwnerOrMasterHandler : IAuthorizationHandler
@@ -24,7 +24,7 @@ namespace BankMore.Infra.CrossCutting.Identity.Filters
 
         public Task HandleAsync(AuthorizationHandlerContext context)
         {
-            #region [ VALIDAÃÃES ]
+            #region [ VALIDAÇÕES ]
 
             //  Obtém o Requisito MustBeOwnerOrMasterRequirement
             var ownerOrMasterRequirement = context.Requirements
@@ -33,15 +33,15 @@ namespace BankMore.Infra.CrossCutting.Identity.Filters
 
             if (ownerOrMasterRequirement == null)
             {
-                // Este handler sÃ³ lida com MustBeOwnerOrMasterRequirement então SAI
+                // Este handler só lida com MustBeOwnerOrMasterRequirement então SAI
                 return Task.CompletedTask;
             }
 
-            Console.WriteLine("--- [MustBeOwnerOrMasterHandler] INICIANDO VALIDAÃÃO IAuthorizationHandler ---");
+            Console.WriteLine("--- [MustBeOwnerOrMasterHandler] INICIANDO VALIDAÇÕO IAuthorizationHandler ---");
             var user = context.User;
 
             // BYPASS MASTER: Se a Role for Master, acesso concedido imediatamente.
-            // O Master pode consultar a prÃ³pria conta ou qualquer outra.
+            // O Master pode consultar a própria conta ou qualquer outra.
             if (user.IsInRole(MasterRoleName))
             {
                 Console.WriteLine("--- [MustBeOwnerOrMasterHandler] SUCESSO: Usuário é Master (BYPASS). Permissão total.");
@@ -49,7 +49,7 @@ namespace BankMore.Infra.CrossCutting.Identity.Filters
                 return Task.CompletedTask;
             }
 
-            //  VERIFICAÃÃO INICIAL DE ROLE: Se não for Master e nem Admin, falha.
+            //  VERIFICAÇÕO INICIAL DE ROLE: Se não for Master e nem Admin, falha.
             if (!user.IsInRole(AdminRoleName))
             {
                 Console.WriteLine("--- [MustBeOwnerOrMasterHandler] FALHA: Usuário não é Master e nem Admin. Bloqueado.");
@@ -57,7 +57,7 @@ namespace BankMore.Infra.CrossCutting.Identity.Filters
                 return Task.CompletedTask;
             }
 
-            // --- LÃ³gica de Comparação do Recurso (Aplicável APENAS para Admin) ---
+            // --- Lógica de Comparação do Recurso (Aplicável APENAS para Admin) ---
 
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
@@ -121,8 +121,8 @@ namespace BankMore.Infra.CrossCutting.Identity.Filters
             if (string.IsNullOrEmpty(requestedAccountValue))
             {
                 // Se o Admin não informou 'numeroConta', o Controller usará a conta dele.
-                // Isso é permitido, pois é a consulta da prÃ³pria conta.
-                Console.WriteLine("--- [MustBeOwnerOrMasterHandler] SUCESSO: Usuário Admin consultando a prÃ³pria conta (parÃ¢metro nulo/ausente). Permissão concedida.");
+                // Isso é permitido, pois é a consulta da própria conta.
+                Console.WriteLine("--- [MustBeOwnerOrMasterHandler] SUCESSO: Usuário Admin consultando a própria conta (parÃ¢metro nulo/ausente). Permissão concedida.");
                 context.Succeed(ownerOrMasterRequirement);
                 return Task.CompletedTask;
             }

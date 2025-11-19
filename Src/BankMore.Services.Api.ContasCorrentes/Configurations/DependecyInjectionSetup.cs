@@ -1,16 +1,18 @@
+﻿using BankMore.Application.Common.Querys;
 using BankMore.Application.ContasCorrentes.Commands;
 using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.Querys;
 using BankMore.Application.ContasCorrentes.Querys.ContaCorrente;
 using BankMore.Application.ContasCorrentes.Services;
 using BankMore.Application.ContasCorrentes.ViewModels;
-using BankMore.Application.Idempotencia.Services;
+using BankMore.Domain.Common;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Interfaces;
 using BankMore.Domain.ContasCorrentes.Interfaces.Services;
 using BankMore.Domain.ContasCorrentes.Services;
 using BankMore.Domain.Core.Models;
+using BankMore.Infra.Data.Common.Repository;
 using BankMore.Infra.Data.ContasCorrentes.Repository;
 using BankMore.Infra.Data.ContasCorrentes.UoW;
 using MediatR;
@@ -39,8 +41,9 @@ public static class DependecyInjectionSetup
         // Application - Commands - Movimento
         services.AddScoped<IRequestHandler<CadastrarNovaMovimentacaoCommand, Result<MovimentacaoRelaizadaDto>>, MovimentoCommandHandler>();
         
-        // Application - Querys
-        services.AddScoped<IRequestHandler<InformacoesQuery, Result<InformacoesViewModel>>, InformacoesQueryHandler>();
+        // Application Common - Querys
+        services.AddScoped<IRequestHandler<InformacoesContaCorrenteQuery, Result<InformacoesContaCorrenteDto>>, InformacoesContaCorrenteQueryHandler>();
+
 
         // Application - Querys - Idempotencia
         services.AddScoped<IRequestHandler<IdempotenciaViewQuery, Result<IdempotenciaViewModel>>, IdempotenciaQueryHandler>();
@@ -60,5 +63,8 @@ public static class DependecyInjectionSetup
         services.AddScoped<IContaCorrenteRepository, ContaCorrenteRepository>();
         services.AddScoped<IIdempotenciaRepository, IdempotenciaRepository>();
         services.AddScoped<IMovimentoRepository, MovimentoRepository>();
+
+        // Infra - Data Common
+        services.AddScoped<IInformacoesContaRespository, InformacoesContaRespository>();
     }
 }

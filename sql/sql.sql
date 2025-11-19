@@ -340,68 +340,68 @@ GO
 ---- BANCO CONTACORRENTE
 USE [master]
 GO
-/****** Object:  Database [BankMoreContaCorretenDB]    Script Date: 15/11/2025 10:00:46 ******/
-CREATE DATABASE [BankMoreContaCorretenDB]
+/****** Object:  Database [BankMoreContaCorrenteDB]    Script Date: 15/11/2025 10:00:46 ******/
+CREATE DATABASE [BankMoreContaCorrenteDB]
 GO
 IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
 begin
-EXEC [BankMoreContaCorretenDB].[dbo].[sp_fulltext_database] @action = 'enable'
+EXEC [BankMoreContaCorrenteDB].[dbo].[sp_fulltext_database] @action = 'enable'
 end
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET ANSI_NULL_DEFAULT OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET ANSI_NULL_DEFAULT OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET ANSI_NULLS OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET ANSI_NULLS OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET ANSI_PADDING OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET ANSI_PADDING OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET ANSI_WARNINGS OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET ANSI_WARNINGS OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET ARITHABORT OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET ARITHABORT OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET AUTO_CLOSE OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET AUTO_CLOSE OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET AUTO_SHRINK OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET AUTO_SHRINK OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET AUTO_UPDATE_STATISTICS ON
+ALTER DATABASE [BankMoreContaCorrenteDB] SET AUTO_UPDATE_STATISTICS ON
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET CURSOR_CLOSE_ON_COMMIT OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET CURSOR_CLOSE_ON_COMMIT OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET CURSOR_DEFAULT  GLOBAL
+ALTER DATABASE [BankMoreContaCorrenteDB] SET CURSOR_DEFAULT  GLOBAL
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET CONCAT_NULL_YIELDS_NULL OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET CONCAT_NULL_YIELDS_NULL OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET NUMERIC_ROUNDABORT OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET NUMERIC_ROUNDABORT OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET QUOTED_IDENTIFIER OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET QUOTED_IDENTIFIER OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET RECURSIVE_TRIGGERS OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET RECURSIVE_TRIGGERS OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET  ENABLE_BROKER
+ALTER DATABASE [BankMoreContaCorrenteDB] SET  ENABLE_BROKER
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET AUTO_UPDATE_STATISTICS_ASYNC OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET AUTO_UPDATE_STATISTICS_ASYNC OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET DATE_CORRELATION_OPTIMIZATION OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET DATE_CORRELATION_OPTIMIZATION OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET TRUSTWORTHY OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET TRUSTWORTHY OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET ALLOW_SNAPSHOT_ISOLATION ON
+ALTER DATABASE [BankMoreContaCorrenteDB] SET ALLOW_SNAPSHOT_ISOLATION ON
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET PARAMETERIZATION SIMPLE
+ALTER DATABASE [BankMoreContaCorrenteDB] SET PARAMETERIZATION SIMPLE
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET READ_COMMITTED_SNAPSHOT ON
+ALTER DATABASE [BankMoreContaCorrenteDB] SET READ_COMMITTED_SNAPSHOT ON
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET HONOR_BROKER_PRIORITY OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET HONOR_BROKER_PRIORITY OFF
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET RECOVERY FULL
+ALTER DATABASE [BankMoreContaCorrenteDB] SET RECOVERY FULL
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET  MULTI_USER
+ALTER DATABASE [BankMoreContaCorrenteDB] SET  MULTI_USER
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET PAGE_VERIFY CHECKSUM
+ALTER DATABASE [BankMoreContaCorrenteDB] SET PAGE_VERIFY CHECKSUM
 GO
-ALTER DATABASE [BankMoreContaCorretenDB] SET DB_CHAINING OFF
+ALTER DATABASE [BankMoreContaCorrenteDB] SET DB_CHAINING OFF
 GO
 
-USE [BankMoreContaCorretenDB]
+USE [BankMoreContaCorrenteDB]
 GO
 
 
@@ -466,9 +466,9 @@ GO
 
 DECLARE @CurrentDate DATETIME2(7) = GETDATE();
 -- O hash é calculado como Hash(SenhaPura + ID_do_usuario_em_minusculas)
-DECLARE @MasterPasswordHash NVARCHAR(MAX) = N'10000.VR8j+zDt3ROHip5f9SxUTg==.34T7hIZRHlFFrSZF989p8UxoOIMn10RDDbiF8EsUx3I='; 
+DECLARE @MasterPasswordHash NVARCHAR(MAX) = N'10000.X/U7c07ZcDj4uqlwc/Lqeg==.P1+C3lcGxoTfKtj/127MqWCi/JcR9T/cgpEAcC8cd2M='; 
 -- O 'salt' será o ID do usuário, que é a parte que foi concatenada na senha para gerar o hash
-DECLARE @MasterId NVARCHAR(100) = N'00000000-0000-0000-0000-000000000001';
+DECLARE @MasterId NVARCHAR(100) = N'76ca4c28-fc87-45f2-a5b8-91bf4655aa5a';
 DECLARE @MasterRoleId NVARCHAR(450) = (SELECT ID FROM [dbo].[AspNetRoles] WHERE NAME = 'Master'); -- Busca o id da role master
 DECLARE @MasterLogin NVARCHAR(20) = N'00000000000';
 DECLARE @MasterNormalizedUserName NVARCHAR(256) = (select @MasterLogin);
@@ -541,20 +541,20 @@ GO
 
 
 -- =========================================================
--- 2. BANCO BankMoreContaCorretenDB (Conta Corrente)
+-- 2. BANCO BankMoreContaCorrenteDB (Conta Corrente)
 -- =========================================================
-USE [BankMoreContaCorretenDB]
+USE [BankMoreContaCorrenteDB]
 GO
 
 DECLARE @CurrentDate DATETIME2(7) = GETDATE();
 -- O hash é calculado como Hash(SenhaPura + ID_do_usuario_em_minusculas)
-DECLARE @MasterPasswordHash NVARCHAR(MAX) = N'10000.VR8j+zDt3ROHip5f9SxUTg==.34T7hIZRHlFFrSZF989p8UxoOIMn10RDDbiF8EsUx3I='; 
+DECLARE @MasterPasswordHash NVARCHAR(MAX) = N'10000.X/U7c07ZcDj4uqlwc/Lqeg==.P1+C3lcGxoTfKtj/127MqWCi/JcR9T/cgpEAcC8cd2M='; 
 -- O 'salt' será o ID do usuário, que é a parte que foi concatenada na senha para gerar o hash
-DECLARE @MasterId NVARCHAR(100) = N'00000000-0000-0000-0000-000000000001';
+DECLARE @MasterId NVARCHAR(100) = N'76ca4c28-fc87-45f2-a5b8-91bf4655aa5a';
 DECLARE @MasterCpf NVARCHAR(20) = N'00000000000';
 DECLARE @MasterNome NVARCHAR(256) = N'MASTER';
 
-PRINT 'Iniciando Seed no BankMoreContaCorretenDB...';
+PRINT 'Iniciando Seed no BankMoreContaCorrenteDB...';
 
 -- Inserir o usuário Master na tabela contacorrente
 IF NOT EXISTS (SELECT 1 FROM [dbo].[contacorrente] WHERE id = @MasterId)
@@ -585,4 +585,104 @@ ELSE
 BEGIN
     PRINT 'O usuário Master (Conta Corrente) já existe no ContaCorrenteDB. Pulando a inserção.';
 END
+GO
+
+----------------------------------------------------------------------------------------------
+---- BANCO CONTACORRENTE
+USE [master]
+GO
+/****** Object:  Database [BankMoreTransferenciaB]    Script Date: 19/11/2025 01:22:46 ******/
+CREATE DATABASE [BankMoreTransferencia]
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [BankMoreTransferencia].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [BankMoreTransferencia] SET ANSI_NULL_DEFAULT OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET ANSI_NULLS OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET ANSI_PADDING OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET ANSI_WARNINGS OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET ARITHABORT OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET AUTO_CLOSE OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET AUTO_SHRINK OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET AUTO_UPDATE_STATISTICS ON
+GO
+ALTER DATABASE [BankMoreTransferencia] SET CURSOR_CLOSE_ON_COMMIT OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET CURSOR_DEFAULT  GLOBAL
+GO
+ALTER DATABASE [BankMoreTransferencia] SET CONCAT_NULL_YIELDS_NULL OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET NUMERIC_ROUNDABORT OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET QUOTED_IDENTIFIER OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET RECURSIVE_TRIGGERS OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET  ENABLE_BROKER
+GO
+ALTER DATABASE [BankMoreTransferencia] SET AUTO_UPDATE_STATISTICS_ASYNC OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET DATE_CORRELATION_OPTIMIZATION OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET TRUSTWORTHY OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET ALLOW_SNAPSHOT_ISOLATION ON
+GO
+ALTER DATABASE [BankMoreTransferencia] SET PARAMETERIZATION SIMPLE
+GO
+ALTER DATABASE [BankMoreTransferencia] SET READ_COMMITTED_SNAPSHOT ON
+GO
+ALTER DATABASE [BankMoreTransferencia] SET HONOR_BROKER_PRIORITY OFF
+GO
+ALTER DATABASE [BankMoreTransferencia] SET RECOVERY FULL
+GO
+ALTER DATABASE [BankMoreTransferencia] SET  MULTI_USER
+GO
+ALTER DATABASE [BankMoreTransferencia] SET PAGE_VERIFY CHECKSUM
+GO
+ALTER DATABASE [BankMoreTransferencia] SET DB_CHAINING OFF
+GO
+
+USE [BankMoreTransferencia]
+GO
+
+CREATE TABLE transferencia (
+    id UNIQUEIDENTIFIER PRIMARY KEY, -- identificacao unica da transferencia (GUID/UUID)
+    idcontacorrenteorigem UNIQUEIDENTIFIER NOT NULL, -- identificacao unica da conta corrente de origem (GUID/UUID)
+    idcontacorrentedestino UNIQUEIDENTIFIER NOT NULL, -- identificacao unica da conta corrente de destino (GUID/UUID)
+    datamovimento DATETIME2 NOT NULL, -- data e hora exata da transferencia
+    valor DECIMAL(10, 2) NOT NULL, -- valor da transferencia. Usar duas casas decimais.
+	status INTEGER NOT NULL,
+	dataultimaalteracao DATETIME2 NULL,
+	erro VARCHAR(MAX)
+);
+
+CREATE TABLE idempotencia (
+    id UNIQUEIDENTIFIER PRIMARY KEY,        -- Chave de Idempotência (GUID/UUID)
+    idcontacorrente UNIQUEIDENTIFIER NOT NULL, -- NOVO: FK para a conta que iniciou a requisição
+    requisicao NVARCHAR(MAX),               -- Dados de Requisição (Body/Headers)
+    resultado NVARCHAR(MAX),                -- Dados de Retorno (Resposta HTTP)
+    
+    FOREIGN KEY (idcontacorrente) REFERENCES contacorrente(id)
+);
+
+ALTER TABLE transferencia
+ADD CONSTRAINT FK_Transferencia_ContaOrigem
+FOREIGN KEY (idcontacorrente_origem)
+REFERENCES contacorrente (id);
+GO
+
+ALTER TABLE transferencia
+ADD CONSTRAINT FK_Transferencia_ContaDestino
+FOREIGN KEY (idcontacorrente_destino)
+REFERENCES contacorrente (id);
 GO

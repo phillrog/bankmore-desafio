@@ -19,12 +19,22 @@ namespace BankMore.Infra.Kafka.Services
             _responseManager = responseManager;
         }
 
-        public async Task<Result<int>> BuscarNumeroConta(string cpf)
+        public async Task<Result<int>> ObterNumeroContaPorCpf(string cpf)
         {
             var correlationId = Guid.NewGuid();
             var requestEvent = new BuscarNumeroContaEvent(cpf, correlationId, ReplyTopic);
 
             await _requestProducer.ProduceAsync("informacoes.conta.requisicao", cpf, requestEvent); 
+
+            return await _responseManager.WaitForResponseAsync(correlationId);
+        }
+
+        public async Task<Result<int>> ObterNumeroContaPorNumero(int numero)
+        {
+            var correlationId = Guid.NewGuid();
+            var requestEvent = new BuscarNumeroContaEvent(numero, correlationId, ReplyTopic);
+
+            await _requestProducer.ProduceAsync("informacoes.conta.requisicao", numero, requestEvent);
 
             return await _responseManager.WaitForResponseAsync(correlationId);
         }

@@ -58,6 +58,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.4 - Kafka", "5.4 - Kafka"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankMore.Infra.Kafka", "Src\BankMore.Infra.Kafka\BankMore.Infra.Kafka.csproj", "{EEEC5F6D-245C-4745-9072-DE84F0FD2828}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankMore.Services.Api.Transferencias", "Src\BankMore.Services.Api.Transferencias\BankMore.Services.Api.Transferencias.csproj", "{B6C8D9C4-AC6D-4DC9-B61B-B52A04E1B85D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankMore.Domain.Transferencias", "Src\BankMore.Domain.Transferencias\BankMore.Domain.Transferencias.csproj", "{29C2E3B2-2C7E-5B45-0DF6-52EB477625D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankMore.Infra.Data.Transferencias", "Src\BankMore.Infra.Data.Transferencias\BankMore.Infra.Data.Transferencias.csproj", "{0F44AEED-2D09-6FF6-5732-F53FC4C33EC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankMore.Application.Transferencia", "Src\BankMore.Application.Transferencias\BankMore.Application.Transferencia.csproj", "{41672590-A3EB-4BAD-EA0A-4B9E56045A0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankMore.Application.Common", "Src\BankMore.Application.Common\BankMore.Application.Common.csproj", "{57FD2B0B-C7D9-4256-838B-BE2922028A31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +130,26 @@ Global
 		{EEEC5F6D-245C-4745-9072-DE84F0FD2828}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEEC5F6D-245C-4745-9072-DE84F0FD2828}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEEC5F6D-245C-4745-9072-DE84F0FD2828}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6C8D9C4-AC6D-4DC9-B61B-B52A04E1B85D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C8D9C4-AC6D-4DC9-B61B-B52A04E1B85D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6C8D9C4-AC6D-4DC9-B61B-B52A04E1B85D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C8D9C4-AC6D-4DC9-B61B-B52A04E1B85D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29C2E3B2-2C7E-5B45-0DF6-52EB477625D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29C2E3B2-2C7E-5B45-0DF6-52EB477625D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29C2E3B2-2C7E-5B45-0DF6-52EB477625D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29C2E3B2-2C7E-5B45-0DF6-52EB477625D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F44AEED-2D09-6FF6-5732-F53FC4C33EC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F44AEED-2D09-6FF6-5732-F53FC4C33EC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F44AEED-2D09-6FF6-5732-F53FC4C33EC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F44AEED-2D09-6FF6-5732-F53FC4C33EC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41672590-A3EB-4BAD-EA0A-4B9E56045A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41672590-A3EB-4BAD-EA0A-4B9E56045A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41672590-A3EB-4BAD-EA0A-4B9E56045A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41672590-A3EB-4BAD-EA0A-4B9E56045A0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57FD2B0B-C7D9-4256-838B-BE2922028A31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57FD2B0B-C7D9-4256-838B-BE2922028A31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57FD2B0B-C7D9-4256-838B-BE2922028A31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57FD2B0B-C7D9-4256-838B-BE2922028A31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,6 +176,11 @@ Global
 		{5C865476-8C60-4165-BA23-CE34F21DCEF1} = {8B5F8FF8-52CE-4C81-B09F-E65E14078090}
 		{43D92C87-4234-4E97-8B58-DC8241C6F0EA} = {AFFE13FA-84A7-45C9-92B3-A0C37235A2C5}
 		{EEEC5F6D-245C-4745-9072-DE84F0FD2828} = {43D92C87-4234-4E97-8B58-DC8241C6F0EA}
+		{B6C8D9C4-AC6D-4DC9-B61B-B52A04E1B85D} = {4540A7C6-2383-4D11-A481-A6CC8D7905E5}
+		{29C2E3B2-2C7E-5B45-0DF6-52EB477625D5} = {0048019B-DA55-4A04-9264-39545EF4B06C}
+		{0F44AEED-2D09-6FF6-5732-F53FC4C33EC1} = {8B5F8FF8-52CE-4C81-B09F-E65E14078090}
+		{41672590-A3EB-4BAD-EA0A-4B9E56045A0D} = {7A204D13-BCDC-405D-85B5-353EE2C9A10A}
+		{57FD2B0B-C7D9-4256-838B-BE2922028A31} = {7A204D13-BCDC-405D-85B5-353EE2C9A10A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3BBAE7F9-CB34-4464-B09A-C32C57579682}

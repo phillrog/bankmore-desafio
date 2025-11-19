@@ -1,6 +1,7 @@
-using AutoMapper;
+﻿using AutoMapper;
 
 using BankMore.Application.ContasCorrentes.ViewModels;
+using BankMore.Domain.Common;
 using BankMore.Domain.ContasCorrentes.Models;
 
 namespace BankMore.Application.ContasCorrentes.AutoMapper;
@@ -12,7 +13,7 @@ public class DomainToViewModelMappingProfile : Profile
         /// Conta Corrente
         CreateMap<ContaCorrente, NovaCorrenteViewModel>();
         CreateMap<ContaCorrente, ContaCorrenteViewModel>();
-        CreateMap<ContaCorrente, InformacoesViewModel>();
+        CreateMap<ContaCorrente, InformacoesContaCorrenteDto>();
 
         /// Idempotencia
         CreateMap<BankMore.Domain.ContasCorrentes.Models.Idempotencia, IdempotenciaViewModel>().ReverseMap();

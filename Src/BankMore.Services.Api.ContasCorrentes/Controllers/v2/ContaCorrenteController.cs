@@ -1,4 +1,4 @@
-using BankMore.Application.ContasCorrentes.Interfaces;
+﻿using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
 using BankMore.Infra.Kafka.Services;

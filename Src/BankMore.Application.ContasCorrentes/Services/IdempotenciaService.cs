@@ -6,7 +6,7 @@ using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Models;
 
-namespace BankMore.Application.Idempotencia.Services
+namespace BankMore.Application.ContasCorrentes.Services
 {
     public class IdempotenciaService : IIdempotenciaService
     {

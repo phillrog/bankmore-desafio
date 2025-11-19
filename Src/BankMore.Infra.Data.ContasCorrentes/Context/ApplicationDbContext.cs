@@ -1,4 +1,4 @@
-using BankMore.Domain.ContasCorrentes.Models;
+﻿using BankMore.Domain.ContasCorrentes.Models;
 using BankMore.Domain.Core.Models;
 using BankMore.Infra.Data.ContasCorrentes.Mappings;
 
@@ -33,7 +33,7 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new ContaCorrenteMap());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
     }

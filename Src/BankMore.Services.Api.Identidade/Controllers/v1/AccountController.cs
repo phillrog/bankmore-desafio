@@ -284,7 +284,7 @@ public class AccountController : ApiController
     {
         if (string.IsNullOrWhiteSpace(cpf) || string.IsNullOrWhiteSpace(roleName))
         {
-            NotifyError("Entrada inválida", "CPF e nome da Role são obrigatÃ³rios.");
+            NotifyError("Entrada inválida", "CPF e nome da Role são obrigatórios.");
             return Response();
         }
 
@@ -320,7 +320,7 @@ public class AccountController : ApiController
             return new TokenViewModel();
         }
 
-        var result = await _informacoesContaService.BuscarNumeroConta(appUser.UserName);
+        var result = await _informacoesContaService.ObterNumeroContaPorCpf(appUser.UserName);
         
         // Init ClaimsIdentity
         var claimsIdentity = new ClaimsIdentity();

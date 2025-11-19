@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.ViewModels;
-using BankMore.Application.Idempotencia.Services;
 using BankMore.Domain.Common.CommandHandlers;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.ContasCorrentes.Dtos;
@@ -10,17 +9,12 @@ using BankMore.Domain.ContasCorrentes.Events;
 using BankMore.Domain.ContasCorrentes.Interfaces;
 using BankMore.Domain.ContasCorrentes.Interfaces.Services;
 using BankMore.Domain.ContasCorrentes.Models;
-using BankMore.Domain.ContasCorrentes.Services;
 using BankMore.Domain.Core.Bus;
-using BankMore.Domain.Core.Events;
 using BankMore.Domain.Core.Models;
 using BankMore.Domain.Core.Notifications;
-using BankMore.Infra.Data.ContasCorrentes.Repository;
 using MediatR;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using System.Transactions;
 
 
 namespace BankMore.Application.ContasCorrentes.Commands;
@@ -67,7 +61,7 @@ public class MovimentoCommandHandler : CommandHandler,
 
     public async Task<Result<MovimentacaoRelaizadaDto>> Handle(CadastrarNovaMovimentacaoCommand message, CancellationToken cancellationToken)
     {
-        #region [ VALIDAÃÃES]
+        #region [ VALIDAÇÕES]
         var numeroConta = _user.Conta is not null ? Convert.ToInt32(_user.Conta) : message.NumeroConta;
         if (!message.IsValid())
         {
@@ -137,7 +131,7 @@ public class MovimentoCommandHandler : CommandHandler,
 
         #endregion
 
-        #region [ TRANSAÃÃO]
+        #region [ TRANSAÇÕO]
 
         await BeginTransactionAsync();
         try

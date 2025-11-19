@@ -5,4 +5,8 @@
 	 <PackageReference Include="MediatR" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
 </Project>

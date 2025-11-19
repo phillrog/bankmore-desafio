@@ -13,7 +13,7 @@ public class ContaCorrenteViewModel
     /// <summary>
     /// Nome completo do titular da conta.
     /// </summary>
-    [Required(ErrorMessage = "ObrigatÃ³rio")]
+    [Required(ErrorMessage = "Obrigatório")]
     [MinLength(2)]
     [MaxLength(100)]
     [DisplayName("Nome")]
@@ -23,7 +23,7 @@ public class ContaCorrenteViewModel
     /// <summary>
     /// Senha de acesso.
     /// </summary>
-    [Required(ErrorMessage = "ObrigatÃ³rio")]
+    [Required(ErrorMessage = "Obrigatório")]
     [DisplayName("Senha")]
     public string Senha { get; set; }
 

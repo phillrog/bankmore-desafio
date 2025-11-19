@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\BankMore.Application.Common\BankMore.Application.Common.csproj" />
+		<ProjectReference Include="..\BankMore.Application.Transferencias\BankMore.Application.Transferencia.csproj" />
+		<ProjectReference Include="..\BankMore.Domain.Transferencias\BankMore.Domain.Transferencias.csproj" />
+		<ProjectReference Include="..\BankMore.Infra.Apis\BankMore.Infra.Apis.csproj" />
+		<ProjectReference Include="..\BankMore.Infra.CrossCutting.Bus\BankMore.Infra.CrossCutting.Bus.csproj" />
+		<ProjectReference Include="..\BankMore.Infra.CrossCutting.IoC\BankMore.Infra.CrossCutting.IoC.csproj" />
+		<ProjectReference Include="..\BankMore.Infra.Data.Transferencias\BankMore.Infra.Data.Transferencias.csproj" />
+		<ProjectReference Include="..\BankMore.Infra.Kafka\BankMore.Infra.Kafka.csproj" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+		<DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+	</PropertyGroup>
+
+</Project>

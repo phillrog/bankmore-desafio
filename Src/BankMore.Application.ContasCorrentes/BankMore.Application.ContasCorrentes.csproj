@@ -5,6 +5,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\BankMore.Application.Common\BankMore.Application.Common.csproj" />
     <ProjectReference Include="..\BankMore.Domain.ContasCorrentes\BankMore.Domain.ContasCorrentes.csproj" />
     <ProjectReference Include="..\BankMore.Infra.Data.ContasCorrentes\BankMore.Infra.Data.ContasCorrentes.csproj" />
   </ItemGroup>

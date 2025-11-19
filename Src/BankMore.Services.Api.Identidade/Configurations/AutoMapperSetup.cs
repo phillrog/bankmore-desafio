@@ -1,3 +1,5 @@
+﻿using BankMore.Application.ContasCorrentes.AutoMapper;
+
 namespace BankMore.Services.Api.Identidade.Configurations;
 
 public static class AutoMapperSetup
@@ -8,6 +10,6 @@ public static class AutoMapperSetup
         {
             throw new ArgumentNullException(nameof(services));
         }
-
+        services.AddAutoMapper(AutoMapperConfig.RegisterMappings());
     }
 }

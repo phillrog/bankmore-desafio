@@ -9,7 +9,7 @@ public abstract class MovimentoValidation<T> : AbstractValidator<T>
     protected void ValidarId()
     {
         RuleFor(c => c.Id)
-            .NotEmpty().WithMessage("O identificador da idempotência é obrigatÃ³rio.")
+            .NotEmpty().WithMessage("O identificador da idempotência é obrigatório.")
             .Must(id => id != Guid.Empty).WithMessage("O identificador da idempotência não pode ser um GUID vazio.")
             .Must(id =>
             {
@@ -40,7 +40,7 @@ public abstract class MovimentoValidation<T> : AbstractValidator<T>
     {
         RuleFor(c => c.TipoMovimento)
             .NotEmpty()
-            .WithMessage("O tipo de movimento é obrigatÃ³rio.")
+            .WithMessage("O tipo de movimento é obrigatório.")
             .Must(tipoMovimento =>
             {
                 var nome = tipoMovimento.ToString();

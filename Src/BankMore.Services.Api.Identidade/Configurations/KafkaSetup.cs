@@ -1,4 +1,4 @@
-using BankMore.Infra.Kafka.Producers;
+﻿using BankMore.Infra.Kafka.Producers;
 using BankMore.Infra.Kafka.Responses;
 using BankMore.Infra.Kafka.Services;
 using KafkaFlow;

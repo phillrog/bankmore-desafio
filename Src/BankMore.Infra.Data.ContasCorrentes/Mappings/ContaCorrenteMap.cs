@@ -1,4 +1,4 @@
-using BankMore.Domain.ContasCorrentes.Models;
+﻿using BankMore.Domain.ContasCorrentes.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,7 +13,6 @@ public class ContaCorrenteMap : IEntityTypeConfiguration<ContaCorrente>
 
         builder.Property(c => c.Numero)
             .HasColumnType("integer")
-            .HasMaxLength(100)
             .IsRequired();
 
         builder.Property(c => c.Ativo)

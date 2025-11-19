@@ -1,14 +1,14 @@
-﻿namespace BankMore.Application.ContasCorrentes.ViewModels
+﻿namespace BankMore.Domain.Common
 {
     /// <summary>
-    /// Modelo de dados para vizualização de informaçÃµes da conta.
+    /// Modelo de dados para vizualização de informações da conta.
     /// </summary>
-    public class InformacoesViewModel
+    public class InformacoesContaCorrenteDto
     {
         /// <summary>
         /// Id do titular da conta.
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Cpf do titular da conta.

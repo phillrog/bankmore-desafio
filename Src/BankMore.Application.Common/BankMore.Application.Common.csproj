@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">	
+	<ItemGroup>
+	  <ProjectReference Include="..\BankMore.Domain.Core\BankMore.Domain.Core.csproj" />
+	  <ProjectReference Include="..\BankMore.Infra.Data.Common\BankMore.Infra.Data.Common.csproj" />
+	</ItemGroup>
+</Project>

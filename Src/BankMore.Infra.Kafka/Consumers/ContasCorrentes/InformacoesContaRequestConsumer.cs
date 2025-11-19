@@ -1,5 +1,6 @@
-﻿using BankMore.Application.ContasCorrentes.Querys;
-using BankMore.Application.ContasCorrentes.ViewModels;
+﻿using BankMore.Application.Common.Querys;
+using BankMore.Application.ContasCorrentes.Querys;
+using BankMore.Domain.Common;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Models;
 using BankMore.Infra.Kafka.Events;
@@ -35,10 +36,10 @@ namespace BankMore.Infra.Kafka.Consumers
             using IServiceScope scope = _serviceScopeFactory.CreateScope();
 
             var bus = scope.ServiceProvider.GetRequiredService<IMediatorHandler>();
-            var registerCommand = new InformacoesQuery(message.Cpf);
+            var registerCommand = new InformacoesContaCorrenteQuery(message.Cpf);
 
-            var result = await bus.SendCommand<InformacoesQuery, Result<InformacoesViewModel>>(registerCommand);
-            _logger.LogInformation($"[LÃ³gica] levou {sw.ElapsedMilliseconds}ms.");
+            var result = await bus.SendCommand<InformacoesContaCorrenteQuery, Result<InformacoesContaCorrenteDto>>(registerCommand);
+            _logger.LogInformation($"[Lógica] levou {sw.ElapsedMilliseconds}ms.");
             int numeroConta = result?.Data.Numero ?? 0;
 
             var responseEvent = new NumeroContaEncontradoResponseEvent

@@ -69,7 +69,7 @@ public class ContaCorrenteCommandHandler : CommandHandler,
 
     public Task<bool> Handle(AlterarContaCorrenteCommand message, CancellationToken cancellationToken)
     {
-        #region [ VALIDAÃÃES ]
+        #region [ VALIDAÇÕES ]
 
         if (!message.IsValid())
         {

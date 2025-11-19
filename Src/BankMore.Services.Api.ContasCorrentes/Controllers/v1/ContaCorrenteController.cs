@@ -1,17 +1,15 @@
-using BankMore.Application.ContasCorrentes.Interfaces;
+﻿using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.ViewModels;
+using BankMore.Domain.Common;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
 using BankMore.Infra.Apis.Configurations;
-using BankMore.Infra.CrossCutting.Identity.Authorization;
 using BankMore.Infra.Kafka.Services;
 using BankMore.Services.Apis.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
-
 
 namespace BankMore.Services.Api.ContasCorrentes.Controllers.V1;
 
@@ -53,7 +51,7 @@ public class ContaCorrenteController : ApiController
     /// <returns>Retorna os dados da conta (Nome, Número, Ativo) ou um erro.</returns>
     [Authorize(Policy = "OwnerOrMaster_Conta")]
     [HttpGet("informacoes")]
-    [ProducesResponseType(typeof(InformacoesViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(InformacoesContaCorrenteDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -84,7 +82,7 @@ public class ContaCorrenteController : ApiController
     /// <returns>Retorna um SaldoDto contendo o saldo atualizado e os totais de crédito/débito, ou um erro.</returns>
     [Authorize(Policy = "OwnerOrMaster_Conta")]
     [HttpGet("saldo")]
-    [ProducesResponseType(typeof(InformacoesViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(InformacoesContaCorrenteDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

@@ -1,4 +1,4 @@
-using BankMore.Application.ContasCorrentes.ViewModels;
+﻿using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Domain.Core.Models;
 
 namespace BankMore.Application.ContasCorrentes.Interfaces;
