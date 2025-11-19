@@ -1,4 +1,4 @@
-﻿namespace BankMore.Application.Transferencia.ViewModels
+﻿namespace BankMore.Application.Transferencias.ViewModels
 {
     public class RealizarTransferenciaViewModel
     {

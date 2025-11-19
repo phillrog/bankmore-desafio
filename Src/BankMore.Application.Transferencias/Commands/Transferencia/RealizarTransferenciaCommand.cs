@@ -1,16 +1,19 @@
-﻿using BankMore.Application.Transferencias.Commands;
-using BankMore.Application.Transferencias.Validations;
+﻿using BankMore.Application.Transferencias.Validations;
 using BankMore.Domain.Core.Models;
 using BankMore.Domain.Transferencias.Dtos;
 using MediatR;
 
-namespace BankMore.Application.Transferencia.Commands.Transferencia
+namespace BankMore.Application.Transferencias.Commands
 {
-    internal class RealizarTransferenciaCommand : TransferenciaCommand, IRequest<Result<TransferenciaDto>>
+    public class RealizarTransferenciaCommand : TransferenciaCommand, IRequest<Result<TransferenciaDto>>
     {
-        public RealizarTransferenciaCommand(int numeroContaCorrenteOrigem, int numneroContaCorrenteDestino, decimal valor) :
-            base(numeroContaCorrenteOrigem, numneroContaCorrenteDestino, valor)
+        public RealizarTransferenciaCommand(int numeroContaCorrenteOrigem, int numneroContaCorrenteDestino, decimal valor)
         {
+            Id = Guid.NewGuid();
+            DataMovimento = DateTime.UtcNow;
+            Valor = valor;
+            NumeroContaCorrenteOrigem = numeroContaCorrenteOrigem;
+            NumneroContaCorrenteDestino = numneroContaCorrenteDestino;
         }
 
         public override bool IsValid()

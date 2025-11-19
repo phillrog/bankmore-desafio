@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-
+using BankMore.Application.Transferencias.Commands;
 using BankMore.Application.Transferencias.ViewModels;
 using BankMore.Domain.Transferencias.Models;
 
@@ -13,5 +13,7 @@ public class DomainToViewModelMappingProfile : Profile
         /// Idempotencia
         CreateMap<Idempotencia, IdempotenciaViewModel>().ReverseMap();
 
+        /// Transferencia
+        CreateMap<Transferencia, RealizarTransferenciaCommand>().ReverseMap();
     }
 }

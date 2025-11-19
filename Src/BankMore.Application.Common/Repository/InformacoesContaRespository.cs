@@ -10,7 +10,7 @@ namespace BankMore.Infra.Data.Common.Repository;
 
 public class InformacoesContaRespository : IInformacoesContaRespository
 {
-    private const string ConnectionStringName = "DefaultConnection";
+    private const string ConnectionStringName = "BankMoreContaCorrenteDBConnection";
     private readonly IConfiguration _configuration;
 
     public InformacoesContaRespository(IConfiguration configuration)
@@ -18,10 +18,12 @@ public class InformacoesContaRespository : IInformacoesContaRespository
         _configuration = configuration;
     }
 
-    public InformacoesContaCorrenteDto GetByCpf(string cpf)
+    public async Task<InformacoesContaCorrenteDto> GetByCpf(string cpf)
     {
         var connectionString = _configuration.GetConnectionString(ConnectionStringName);
         using IDbConnection db = new SqlConnection(connectionString);
+
+        if (connectionString is null) return new InformacoesContaCorrenteDto();
 
         db.Open();
 
@@ -34,14 +36,16 @@ public class InformacoesContaRespository : IInformacoesContaRespository
                       FROM contacorrente 
                      WHERE Cpf = @Cpf";
 
-        var resultado = db.QueryFirstOrDefault<InformacoesContaCorrenteDto>(sql, new { Cpf = cpf });
+        var resultado = await db.QueryFirstOrDefaultAsync<InformacoesContaCorrenteDto>(sql, new { Cpf = cpf });
 
         return resultado;
     }
 
-    public InformacoesContaCorrenteDto GetByNumero(int numero)
+    public async Task<InformacoesContaCorrenteDto> GetByNumero(int numero)
     {
         var connectionString = _configuration.GetConnectionString(ConnectionStringName);
+        
+        if (connectionString is null) return new InformacoesContaCorrenteDto();
 
         using IDbConnection db = new SqlConnection(connectionString);
 
@@ -56,7 +60,7 @@ public class InformacoesContaRespository : IInformacoesContaRespository
                       FROM contacorrente 
                      WHERE Numero = @Numero";
 
-        var resultado = db.QueryFirstOrDefault<InformacoesContaCorrenteDto>(sql, new { Numero = numero });
+        var resultado = await db.QueryFirstOrDefaultAsync<InformacoesContaCorrenteDto>(sql, new { Numero = numero });
 
         return resultado;
     }

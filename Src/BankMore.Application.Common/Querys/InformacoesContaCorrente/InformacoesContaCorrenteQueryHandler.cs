@@ -33,8 +33,8 @@ namespace BankMore.Application.Common.Querys
 
             try
             {
-                if (request.Cpf is not null) conta = _contaCorrenteRepository.GetByCpf(request.Cpf);
-                else conta = _contaCorrenteRepository.GetByNumero(request.Numero);
+                if (request.Cpf is not null) conta = await _contaCorrenteRepository.GetByCpf(request.Cpf);
+                else conta = await _contaCorrenteRepository.GetByNumero(request.Numero);
 
                 if (conta is null) return Result<InformacoesContaCorrenteDto>.Failure("Conta não encontrada", Erro.INVALID_VALUE);
 

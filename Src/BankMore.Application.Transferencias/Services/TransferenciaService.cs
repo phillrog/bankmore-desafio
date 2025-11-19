@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BankMore.Application.Transferencia.ViewModels;
+using BankMore.Application.Transferencias.ViewModels;
 using BankMore.Application.Transferencias.Commands;
 using BankMore.Application.Transferencias.Interfaces;
 using BankMore.Domain.Core.Bus;
@@ -36,8 +36,8 @@ public class TransferenciaService : ITransferenciaService
 
     public async Task<Result<TransferenciaDto>> Cadastrar(RealizarTransferenciaViewModel realizarTransferenciaViewModel)
     {
-        var registerCommand = _mapper.Map<TransferenciaCommand>(realizarTransferenciaViewModel);
-        return await _bus.SendCommand<TransferenciaCommand, Result<TransferenciaDto>>(registerCommand);
+        var registerCommand = _mapper.Map<RealizarTransferenciaCommand>(realizarTransferenciaViewModel);
+        return await _bus.SendCommand<RealizarTransferenciaCommand, Result<TransferenciaDto>>(registerCommand);
     }
     #endregion
 

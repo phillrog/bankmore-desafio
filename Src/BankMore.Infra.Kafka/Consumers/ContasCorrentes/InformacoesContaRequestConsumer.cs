@@ -7,8 +7,10 @@ using BankMore.Infra.Kafka.Events;
 using BankMore.Infra.Kafka.Events.ContaCorrente;
 using BankMore.Infra.Kafka.Producers;
 using KafkaFlow;
+using MathNet.Numerics.Statistics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NPOI.SS.Formula.Functions;
 using System.Diagnostics;
 
 namespace BankMore.Infra.Kafka.Consumers
@@ -36,21 +38,39 @@ namespace BankMore.Infra.Kafka.Consumers
             using IServiceScope scope = _serviceScopeFactory.CreateScope();
 
             var bus = scope.ServiceProvider.GetRequiredService<IMediatorHandler>();
-            var registerCommand = new InformacoesContaCorrenteQuery(message.Cpf);
+            InformacoesContaCorrenteQuery registerCommand;
+
+            if (!string.IsNullOrEmpty(message.Cpf))
+            {
+                registerCommand = new InformacoesContaCorrenteQuery(message.Cpf);
+            }
+            else
+            {
+                registerCommand = new InformacoesContaCorrenteQuery(message.Numero);
+            }
 
             var result = await bus.SendCommand<InformacoesContaCorrenteQuery, Result<InformacoesContaCorrenteDto>>(registerCommand);
             _logger.LogInformation($"[Lógica] levou {sw.ElapsedMilliseconds}ms.");
-            int numeroConta = result?.Data.Numero ?? 0;
 
-            var responseEvent = new NumeroContaEncontradoResponseEvent
+            var responseEvent = new NumeroContaEncontradoResponseEvent();
+            if (result.IsSuccess)
             {
-                CorrelationId = message.CorrelationId,
-                NumeroConta = numeroConta
-            };
+                responseEvent.CorrelationId = message.CorrelationId;
+                responseEvent.NumeroConta = result?.Data.Numero ?? 0;
+                responseEvent.IsSuccess = true;
+                responseEvent.IdContaCorrente = result?.Data.Id ?? Guid.Empty;
+            }
+            else
+            {
+                responseEvent.CorrelationId = message.CorrelationId;
+                responseEvent.IsSuccess = false;
+                responseEvent.ErrorMessage = string.Join(" ,", result.Erros);
+                responseEvent.ErrorType = result.ErroTipo;
+            }
 
             await _responseProducer.ProduceAsync(
-                message.ReplyTopic, 
-                message.CorrelationId.ToString(), 
+                message.ReplyTopic,
+                message.CorrelationId.ToString(),
                 responseEvent
             );
 

@@ -5,7 +5,6 @@ namespace BankMore.Domain.Transferencias.Models
 {
     public class Transferencia : EntityAudit
     {       
-        public int Id { get; set; }
         public Guid IdContaCorrenteOrigem { get; set; }
         public Guid IdContaCorrenteDestino { get; set; }
         public DateTime DataMovimento { get; set; }
@@ -14,6 +13,9 @@ namespace BankMore.Domain.Transferencias.Models
         public DateTime? DataUltimaAlteracao { get; set; }
         public string Erro { get; set; }
 
-        public ICollection<Idempotencia> Idempotencias { get; set; }
+        public void AtualizarContaOrigem(Guid id) => IdContaCorrenteOrigem = id;
+        public void AtualizarContaDestino(Guid id) => IdContaCorrenteDestino = id;
+        public void AtualizarStatus(StatusEnum status) => Status = status;
+        public void AtualizarDataUltimaAlteracao(DateTime data) => DataUltimaAlteracao = data;
     }
 }

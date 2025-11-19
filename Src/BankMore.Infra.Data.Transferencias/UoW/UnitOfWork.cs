@@ -1,5 +1,4 @@
 ﻿using BankMore.Domain.Common.Interfaces;
-using BankMore.Infra.Data.Transferencias.Context;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Transactions;
 

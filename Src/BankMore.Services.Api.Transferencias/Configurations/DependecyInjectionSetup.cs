@@ -30,7 +30,7 @@ public static class DependecyInjectionSetup
         services.AddScoped<IIdempotenciaService, IdempotenciaService>();
 
         // Application - Commands
-        services.AddScoped<IRequestHandler<TransferenciaCommand, Result<TransferenciaDto>>, RealizarTransferenciaCommandHandler>();
+        services.AddScoped<IRequestHandler<RealizarTransferenciaCommand, Result<TransferenciaDto>>, RealizarTransferenciaCommandHandler>();
 
         // Application Common - Querys
         services.AddScoped<IRequestHandler<InformacoesContaCorrenteQuery, Result<InformacoesContaCorrenteDto>>, InformacoesContaCorrenteQueryHandler>();

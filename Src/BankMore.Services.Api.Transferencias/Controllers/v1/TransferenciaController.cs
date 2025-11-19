@@ -1,5 +1,5 @@
-﻿using BankMore.Application.Transferencia.ViewModels;
-using BankMore.Application.Transferencias.Interfaces;
+﻿using BankMore.Application.Transferencias.Interfaces;
+using BankMore.Application.Transferencias.ViewModels;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
 using BankMore.Infra.Apis.Configurations;
@@ -25,8 +25,7 @@ public class TransferenciaController : ApiController
     public TransferenciaController(
         ITransferenciaService TransferenciasService,
         INotificationHandler<DomainNotification> notifications,
-        IMediatorHandler mediator,
-        SaldoService saldoService)
+        IMediatorHandler mediator)
         : base(notifications, mediator)
     {
         _transferenciasService = TransferenciasService;

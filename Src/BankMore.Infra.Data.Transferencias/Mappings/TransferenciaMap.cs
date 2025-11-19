@@ -8,8 +8,11 @@ public class TransferenciaMap : IEntityTypeConfiguration<Transferencia>
 {
     public void Configure(EntityTypeBuilder<Transferencia> builder)
     {
+        builder.ToTable("transferencia");
+
+        builder.HasKey(c => c.Id);
         builder.Property(c => c.Id)
-            .HasColumnName("Id");
+            .HasColumnName("Id").ValueGeneratedNever();
 
         builder.Property(c => c.DataMovimento)
             .HasColumnType("DATETIME2(0)")
@@ -29,7 +32,7 @@ public class TransferenciaMap : IEntityTypeConfiguration<Transferencia>
             .IsRequired();
 
         builder.Property(m => m.Valor)
-                   .HasColumnType("DECIMAL(18, 2)")
+                   .HasColumnType("DECIMAL(10, 2)")
                    .IsRequired();
 
         builder.Property(c => c.DataUltimaAlteracao)
@@ -37,7 +40,8 @@ public class TransferenciaMap : IEntityTypeConfiguration<Transferencia>
             .IsRequired(false);
 
         builder.Property(c => c.Erro)
-            .HasColumnType("varchar(max)");
+            .HasColumnType("varchar(max)")
+            .IsRequired(false);
 
     }
 }

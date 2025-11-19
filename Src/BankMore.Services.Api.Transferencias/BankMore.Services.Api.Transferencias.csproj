@@ -6,7 +6,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BankMore.Application.Common\BankMore.Application.Common.csproj" />
-		<ProjectReference Include="..\BankMore.Application.Transferencias\BankMore.Application.Transferencia.csproj" />
+		<ProjectReference Include="..\BankMore.Application.Transferencias\BankMore.Application.Transferencias.csproj" />		
 		<ProjectReference Include="..\BankMore.Domain.Transferencias\BankMore.Domain.Transferencias.csproj" />
 		<ProjectReference Include="..\BankMore.Infra.Apis\BankMore.Infra.Apis.csproj" />
 		<ProjectReference Include="..\BankMore.Infra.CrossCutting.Bus\BankMore.Infra.CrossCutting.Bus.csproj" />

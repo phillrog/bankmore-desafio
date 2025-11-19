@@ -74,14 +74,7 @@ public class MovimentoCommandHandler : CommandHandler,
             var erro = "Movimentação já cadastrada.";
             _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
             return Result<MovimentacaoRelaizadaDto>.Failure(erro, Erro.INVALID_DOCUMENT);
-        }
-
-        if (message.Valor <= 0)
-        {
-            var erro = "Apenas valores positivos podem ser recebidos";
-            _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
-            return Result<MovimentacaoRelaizadaDto>.Failure(erro, Erro.INVALID_VALUE);
-        }
+        }        
 
         if (message.Valor <= 0)
         {
@@ -131,7 +124,7 @@ public class MovimentoCommandHandler : CommandHandler,
 
         #endregion
 
-        #region [ TRANSAÇÕO]
+        #region [ TRANSAÇÃO ]
 
         await BeginTransactionAsync();
         try
@@ -202,8 +195,6 @@ public class MovimentoCommandHandler : CommandHandler,
             _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
             return Result<MovimentacaoRelaizadaDto>.Failure(erro, Erro.INTERNAL_ERROR);
         }
-
-
         #endregion
     }
 

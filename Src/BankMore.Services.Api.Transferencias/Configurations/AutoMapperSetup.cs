@@ -1,4 +1,4 @@
-﻿using BankMore.Application.ContasCorrentes.AutoMapper;
+﻿using BankMore.Application.Transferencias.AutoMapper;
 
 namespace BankMore.Services.Api.Transferencias;
 

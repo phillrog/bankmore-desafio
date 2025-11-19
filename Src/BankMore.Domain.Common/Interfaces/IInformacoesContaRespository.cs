@@ -2,7 +2,7 @@
 {
     public interface IInformacoesContaRespository
     {
-        InformacoesContaCorrenteDto GetByCpf(string cpf);
-        InformacoesContaCorrenteDto GetByNumero(int numero);
+        Task<InformacoesContaCorrenteDto> GetByCpf(string cpf);
+        Task<InformacoesContaCorrenteDto> GetByNumero(int numero);
     }
 }

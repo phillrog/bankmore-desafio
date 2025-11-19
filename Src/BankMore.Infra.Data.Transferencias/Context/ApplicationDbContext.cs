@@ -3,7 +3,7 @@ using BankMore.Domain.Transferencias.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace BankMore.Infra.Data.Transferencias.Context;
+namespace BankMore.Infra.Data.Transferencias;
 
 public class ApplicationDbContext : DbContext
 {
@@ -12,8 +12,8 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<Transferencia> Transferencia { get; set; }
-    public DbSet<Idempotencia> Idempotencia { get; set; }
+    public DbSet<Transferencia> Transferencias { get; set; }
+    public DbSet<Idempotencia> Idempotencias { get; set; }
 
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)

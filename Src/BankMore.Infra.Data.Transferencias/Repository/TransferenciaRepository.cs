@@ -1,7 +1,7 @@
 ﻿using BankMore.Domain.Transferencias.Interfaces;
 using BankMore.Domain.Transferencias.Models;
 using BankMore.Infra.Data.Common.Repository;
-using BankMore.Infra.Data.Transferencias.Context;
+using BankMore.Infra.Data.Transferencias;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;

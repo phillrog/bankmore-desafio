@@ -1,4 +1,4 @@
-﻿using BankMore.Infra.Data.Transferencias.Context;
+﻿using BankMore.Infra.Data.Transferencias;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankMore.Services.Api.Transferencias;

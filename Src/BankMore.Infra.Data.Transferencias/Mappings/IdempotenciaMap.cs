@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BankMore.Infra.Data.Transferencias.Mappings
+namespace BankMore.Infra.Data.Transferencias
 {
     public class IdempotenciaMap : IEntityTypeConfiguration<Idempotencia>
     {

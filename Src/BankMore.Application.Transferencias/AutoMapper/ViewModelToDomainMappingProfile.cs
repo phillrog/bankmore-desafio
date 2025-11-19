@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using BankMore.Application.Transferencia.Commands.Transferencia;
-using BankMore.Application.Transferencia.ViewModels;
 using BankMore.Application.Transferencias.Commands;
+using BankMore.Application.Transferencias.ViewModels;
 using BankMore.Application.Transferencias.ViewModels;
 using BankMore.Domain.Transferencias.Models;
 
@@ -11,8 +10,8 @@ public class ViewModelToDomainMappingProfile : Profile
 {
     public ViewModelToDomainMappingProfile()
     {
-        /// Commands Conta Corrente
-        CreateMap<RealizarTransferenciaViewModel, TransferenciaCommand>()
+        /// Commands Conta Transferencia
+        CreateMap<RealizarTransferenciaViewModel, RealizarTransferenciaCommand>()
             .ConstructUsing(c => new RealizarTransferenciaCommand(c.NumeroContaCorrenteOrigem, c.NumneroContaCorrenteDestino, c.Valor));
                 
         /// Commands Idempotencia

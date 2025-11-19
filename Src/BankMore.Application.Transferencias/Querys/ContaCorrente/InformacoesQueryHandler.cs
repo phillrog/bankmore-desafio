@@ -3,7 +3,7 @@ using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.ContasCorrentes.Interfaces;
 
-namespace BankMore.Application.Transferencia.Querys
+namespace BankMore.Application.Transferencias.Querys
 {
     public class InformacoesQueryHandler
     {

@@ -1,4 +1,5 @@
-﻿using BankMore.Domain.Core.Models;
+﻿using BankMore.Domain.Common.Interfaces;
+using BankMore.Domain.Core.Models;
 using BankMore.Infra.Kafka.Events;
 using BankMore.Infra.Kafka.Producers;
 using BankMore.Infra.Kafka.Responses;
@@ -13,7 +14,8 @@ namespace BankMore.Infra.Kafka.Services
         private const string ReplyTopic = "informacoes.conta.resposta"; 
 
         public InformacoesContaService(IMessageProducer<IInforcacoesContaRequestProducer> requestProducer,
-            NumeroContaReplyManager responseManager)
+            NumeroContaReplyManager responseManager,
+            IInformacoesContaRespository informacoesContaRespository)
         {
             _requestProducer = requestProducer;
             _responseManager = responseManager;
@@ -24,7 +26,7 @@ namespace BankMore.Infra.Kafka.Services
             var correlationId = Guid.NewGuid();
             var requestEvent = new BuscarNumeroContaEvent(cpf, correlationId, ReplyTopic);
 
-            await _requestProducer.ProduceAsync("informacoes.conta.requisicao", cpf, requestEvent); 
+            await _requestProducer.ProduceAsync("informacoes.conta.requisicao", correlationId.ToString(), requestEvent); 
 
             return await _responseManager.WaitForResponseAsync(correlationId);
         }
@@ -34,7 +36,7 @@ namespace BankMore.Infra.Kafka.Services
             var correlationId = Guid.NewGuid();
             var requestEvent = new BuscarNumeroContaEvent(numero, correlationId, ReplyTopic);
 
-            await _requestProducer.ProduceAsync("informacoes.conta.requisicao", numero, requestEvent);
+            await _requestProducer.ProduceAsync("informacoes.conta.requisicao", correlationId.ToString(), requestEvent);
 
             return await _responseManager.WaitForResponseAsync(correlationId);
         }

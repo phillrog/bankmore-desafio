@@ -1,4 +1,4 @@
-﻿using BankMore.Infra.Data.Transferencias.Context;
+﻿using BankMore.Infra.Data.Transferencias;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;

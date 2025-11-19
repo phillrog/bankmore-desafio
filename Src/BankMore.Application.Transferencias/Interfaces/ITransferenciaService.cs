@@ -1,6 +1,6 @@
 ﻿using BankMore.Domain.Transferencias.Dtos;
 using BankMore.Domain.Core.Models;
-using BankMore.Application.Transferencia.ViewModels;
+using BankMore.Application.Transferencias.ViewModels;
 
 namespace BankMore.Application.Transferencias.Interfaces;
 
