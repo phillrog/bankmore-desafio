@@ -181,9 +181,9 @@ public class MovimentoCommandHandler : CommandHandler,
 
             if (!retornoIdempotencia.IsSuccess)
             {
-                var erro = "Falha ao gravar idempotÃªncia.";
+                var erro = "Falha ao gravar idempotência.";
                 _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
-                return Result<MovimentacaoRelaizadaDto>.Failure(erro, Erro.INERNAL_ERROR);
+                return Result<MovimentacaoRelaizadaDto>.Failure(erro, Erro.INTERNAL_ERROR);
             }
 
             if (Commit())
@@ -199,12 +199,14 @@ public class MovimentoCommandHandler : CommandHandler,
                 return Result<MovimentacaoRelaizadaDto>.Success(retorno);
             }
 
-            return Result<MovimentacaoRelaizadaDto>.Failure("Ops! Algo deu errado ao salvar movimento", Erro.INERNAL_ERROR);
+            return Result<MovimentacaoRelaizadaDto>.Failure("Ops! Algo deu errado ao salvar movimento", Erro.INTERNAL_ERROR);
         }
         catch (Exception)
         {
             RollbackTransaction();
-            throw;
+            var erro = "Ops! Algo deu errado ao salvar movimento. Por favor tente mais tarde!";
+            _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
+            return Result<MovimentacaoRelaizadaDto>.Failure(erro, Erro.INTERNAL_ERROR);
         }
 
 

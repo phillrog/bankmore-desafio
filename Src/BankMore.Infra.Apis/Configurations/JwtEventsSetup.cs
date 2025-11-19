@@ -40,7 +40,7 @@ namespace BankMore.Infra.Apis.Configurations
                         Type = "https://bankmore.com/errors/forbidden",
                         Title = "Acesso Negado (Forbidden)",
                         Status = StatusCodes.Status403Forbidden,
-                        Detail = "VocÃª não possui permissão para acessar o recurso solicitado.",
+                        Detail = "Você não possui permissão para acessar o recurso solicitado.",
                     };
 
                     context.Response.ContentType = "application/problem+json";

@@ -9,8 +9,8 @@ public abstract class IdempotenciaValidation<T> : AbstractValidator<T>
     protected void ValidarId()
     {
         RuleFor(c => c.Id)
-            .NotEmpty().WithMessage("O identificador da idempotÃªncia é obrigatÃ³rio.")
-            .Must(id => id != Guid.Empty).WithMessage("O identificador da idempotÃªncia não pode ser um GUID vazio.")
+            .NotEmpty().WithMessage("O identificador da idempotência é obrigatÃ³rio.")
+            .Must(id => id != Guid.Empty).WithMessage("O identificador da idempotência não pode ser um GUID vazio.")
             .Must(id =>
             {
                 if (Guid.TryParse(id.ToString(), out Guid result))
@@ -18,7 +18,7 @@ public abstract class IdempotenciaValidation<T> : AbstractValidator<T>
                     return true;
                 }
                 return false;
-            }).WithMessage("O identificador da idempotÃªncia informado não é um GUID válido.");
+            }).WithMessage("O identificador da idempotência informado não é um GUID válido.");
      
     }
 
