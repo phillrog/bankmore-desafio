@@ -9,8 +9,9 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 USER $APP_UID
 WORKDIR /app
-EXPOSE 5000
-ENV ASPNETCORE_URLS=http://+:5000
+EXPOSE 5002
+ENV ASPNETCORE_URLS=http://+:5002
+
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -19,28 +20,30 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["nuget.config", "."]
-COPY ["Src/BankMore.Services.Api.Identidade/BankMore.Services.Api.Identidade.csproj", "Src/BankMore.Services.Api.Identidade/"]
+COPY ["Src/BankMore.Services.Api.Transferencias/BankMore.Services.Api.Transferencias.csproj", "Src/BankMore.Services.Api.Transferencias/"]
+COPY ["Src/BankMore.Application.ContasCorrentes/BankMore.Application.ContasCorrentes.csproj", "Src/BankMore.Application.ContasCorrentes/"]
 COPY ["Src/BankMore.Domain.ContasCorrentes/BankMore.Domain.ContasCorrentes.csproj", "Src/BankMore.Domain.ContasCorrentes/"]
 COPY ["Src/BankMore.Domain.Common/BankMore.Domain.Common.csproj", "Src/BankMore.Domain.Common/"]
 COPY ["Src/BankMore.Domain.Core/BankMore.Domain.Core.csproj", "Src/BankMore.Domain.Core/"]
 COPY ["Src/BankMore.Infra.Data.Common/BankMore.Infra.Data.Common.csproj", "Src/BankMore.Infra.Data.Common/"]
+COPY ["Src/BankMore.Infra.Data.ContasCorrentes/BankMore.Infra.Data.ContasCorrentes.csproj", "Src/BankMore.Infra.Data.ContasCorrentes/"]
 COPY ["Src/BankMore.Infra.CrossCutting.Bus/BankMore.Infra.CrossCutting.Bus.csproj", "Src/BankMore.Infra.CrossCutting.Bus/"]
 COPY ["Src/BankMore.Infra.CrossCutting.Identity/BankMore.Infra.CrossCutting.Identity.csproj", "Src/BankMore.Infra.CrossCutting.Identity/"]
 COPY ["Src/BankMore.Infra.CrossCutting.IoC/BankMore.Infra.CrossCutting.IoC.csproj", "Src/BankMore.Infra.CrossCutting.IoC/"]
 COPY ["Src/BankMore.Infra.Apis/BankMore.Infra.Apis.csproj", "Src/BankMore.Infra.Apis/"]
 COPY ["Src/BankMore.Infra.Kafka/BankMore.Infra.Kafka.csproj", "Src/BankMore.Infra.Kafka/"]
-RUN dotnet restore "./Src/BankMore.Services.Api.Identidade/BankMore.Services.Api.Identidade.csproj"
+RUN dotnet restore "./Src/BankMore.Services.Api.Transferencias/BankMore.Services.Api.Transferencias.csproj"
 COPY . .
-WORKDIR "/src/Src/BankMore.Services.Api.Identidade"
-RUN dotnet build "./BankMore.Services.Api.Identidade.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Src/BankMore.Services.Api.Transferencias"
+RUN dotnet build --no-cache "./BankMore.Services.Api.Transferencias.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./BankMore.Services.Api.Identidade.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./BankMore.Services.Api.Transferencias.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "BankMore.Services.Api.Identidade.dll"]
+ENTRYPOINT ["dotnet", "BankMore.Services.Api.Transferencias.dll"]

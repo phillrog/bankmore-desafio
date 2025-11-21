@@ -22,4 +22,6 @@ public interface IRepository<TEntity> : IDisposable
     void Remove(Guid id);
 
     int SaveChanges();
+
+    Task<IEnumerable<TEntity>> GetAllByExpressionAsync(Expression<Func<TEntity, bool>> predicate);
 }

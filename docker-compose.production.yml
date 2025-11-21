@@ -1,4 +1,4 @@
-services:
+﻿services:
   bankmore.services.api.identidade:
     image: ${DOCKER_REGISTRY-}bankmoreservicesapiidentidade
     build:
@@ -32,6 +32,23 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:5001
     ports:
       - "5001:5001"
+ 
+  bankmore.services.api.transferencias:
+    image: ${DOCKER_REGISTRY-}bankmoreservicesapicontastransferencias
+    build:
+      context: .
+      dockerfile: Src/BankMore.Services.Api.Transferencias/Dockerfile
+    depends_on:
+      broker: 
+        condition: service_healthy
+      mssql:
+        condition: service_healthy 
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=5002
+      - ASPNETCORE_URLS=http://0.0.0.0:5002
+    ports:
+      - "5002:5002"
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2017-latest

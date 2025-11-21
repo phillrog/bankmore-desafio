@@ -28,7 +28,7 @@ namespace BankMore.Application.ContasCorrentes.Commands.Transferencia
             try
             {
                 var novoId = Guid.NewGuid();
-                var movimento = new Movimento(novoId, command.IdContaCorrenteDestino, command.DataMovimento, 'D', command.Valor);
+                var movimento = new Movimento(novoId, command.IdContaCorrenteOrigem, command.DataMovimento, 'D', command.Valor);
                 movimento.DefinirIdTransferencia(command.Id);
 
                 _movimentoRepository.Add(movimento);

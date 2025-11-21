@@ -43,7 +43,7 @@ namespace BankMore.Transferencias.Workers
 
             // Injeção dos serviços necessários
             var outboxRepo = scope.ServiceProvider.GetRequiredService<IOutboxRepository>();
-            // Assumindo que você tem um serviço para publicar no Kafka
+            // Pega um serviço para publicar no Kafka
             var sagaProducerService = scope.ServiceProvider.GetRequiredService<ISagaTransferenciaProducerDispatcher>();
 
             var successfullySent = new List<OutboxMessageWrapper>();
@@ -65,7 +65,7 @@ namespace BankMore.Transferencias.Workers
 
                     try
                     {
-                        // 💡 Assumindo que o sagaProducerService tem um método PublishAsync
+                        // Dispara o método PublishAsync
                         // Ele usará o Type e o Payload do evento para montar a mensagem
                         await sagaProducerService.PublishAsync(message.Event, SagaTopico.IniciarTranferencia);
 

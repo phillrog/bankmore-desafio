@@ -457,7 +457,7 @@ CREATE TABLE idempotencia (
     FOREIGN KEY (idcontacorrente) REFERENCES contacorrente(id)
 );
 
-CREATE TABLE OutboxMessages (
+CREATE TABLE outboxMessages (
     Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,     
     CreatedOn DATETIME2(7) NOT NULL,    
     Type NVARCHAR(255) NOT NULL,
@@ -704,7 +704,7 @@ CREATE TABLE idempotencia (
 GO
 
 
-CREATE TABLE OutboxMessages (
+CREATE TABLE outboxMessages (
     Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,     
     CreatedOn DATETIME2(7) NOT NULL,    
     Type NVARCHAR(255) NOT NULL,

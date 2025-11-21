@@ -1,6 +1,7 @@
 ﻿using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Domain.Common;
+using BankMore.Domain.Common.Dtos;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
@@ -19,7 +20,8 @@ public class ContaCorrenteController : ApiController
 {
     #region [ SERVICES ]
     private readonly IContaCorrenteService _contaCorrenteService;
-    private readonly SaldoService _saldoService;
+    private readonly ISaldoService _saldoService;
+    private readonly IExtratoService _extratoService;
     #endregion
 
     #region [ CONSTRUTOR ]
@@ -28,11 +30,13 @@ public class ContaCorrenteController : ApiController
         IContaCorrenteService contaCorrenteService,
         INotificationHandler<DomainNotification> notifications,
         IMediatorHandler mediator,
-        SaldoService saldoService)
+        ISaldoService saldoService,
+        IExtratoService extratoService)
         : base(notifications, mediator)
     {
         _contaCorrenteService = contaCorrenteService;
         _saldoService = saldoService;
+        _extratoService = extratoService;
     }
     #endregion
 
@@ -99,6 +103,37 @@ public class ContaCorrenteController : ApiController
         var result = await _saldoService.ConsultarSaldo(conta);
 
         return ResponseResult(result);
+    }
+
+    /// <summary>
+    /// Gera o extrato de movimentações (débitos e créditos) de uma conta corrente.
+    /// </summary>
+    /// <remarks>
+    /// Permite a consulta do próprio extrato ou o extrato de terceiros (para Masters/Admins).
+    /// Se o parâmetro `numeroConta` for omitido, a consulta é feita na conta do usuário logado (obtida via token).
+    /// </remarks>
+    /// <param name="numeroConta">O número da conta cujo extrato será consultado (opcional).</param>
+    /// <param name="user">Objeto de usuário injetado para obter dados do token.</param>
+    /// <returns>Retorna uma lista de ExtratoDto contendo todas as movimentações.</returns>
+    [Authorize(Policy = "OwnerOrMaster_Conta")]
+    [HttpGet("extrato")]    
+    [ProducesResponseType(typeof(IEnumerable<ExtratoDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetExtrato([FromQuery] int? numeroConta, [FromServices] IUser user)
+    {
+        var conta = numeroConta ?? Convert.ToInt32(user.Conta);
+
+        if (conta == 0)
+        {
+            return Response("Número conta não foi encontrado");
+        }
+
+        var result = await _extratoService.Gerar(conta);
+        
+        return Response(result);
     }
     #endregion
 

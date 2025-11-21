@@ -24,7 +24,7 @@ public static class KafkaSetup
         services.AddSingleton<ICreditarContaProducerDispatcher, CreditarContaProducerDispatcher>();
         services.AddSingleton<IEstornoDebitoContaProducerDispatch, EstornoDebitoContaProducerDispatch>();
         services.AddScoped<ISaldoService, SaldoService>();
-
+        services.AddScoped<IExtratoService, ExtratoService>();
         const string topicName = "usuario-criado";
         var broker = configuration.GetValue<string>("Kafka:Endereco");
         services.AddKafka(kafka => kafka

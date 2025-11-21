@@ -1,4 +1,4 @@
-services:
+﻿services:
   bankmore.services.api.identidade:
     image: ${docker_registry-}bankmoreservicesapiidentidade
     build:
@@ -10,6 +10,12 @@ services:
     build:
       context: .
       dockerfile: src/bankmore.services.api.contascorrentes/dockerfile
+
+  bankmore.services.api.transferencias:
+    image: ${docker_registry-}bankmoreservicesapitransferencias
+    build:
+      context: .
+      dockerfile: src/BankMore.Services.Api.Transferencias/dockerfile
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2017-latest

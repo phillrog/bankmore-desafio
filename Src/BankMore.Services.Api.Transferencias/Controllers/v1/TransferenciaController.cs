@@ -11,8 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankMore.Services.Api.Transferencias.Controllers.V1;
 
+/// <summary>
+/// Gerencia a criação e o processamento de novas transferências entre contas correntes.
+/// </summary>
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
+// [ApiController(Name = "Transferências")])
 public class TransferenciaController : ApiController
 {
     #region [ SERVICES ]
@@ -33,6 +37,15 @@ public class TransferenciaController : ApiController
 
     #region [ POST ]
 
+    /// <summary>
+    /// 💸 Realiza uma nova transferência de valor entre a conta do usuário autenticado e uma conta destino.
+    /// </summary>
+    /// <remarks>
+    /// Esta operação inicia a saga de transferência, que envolve verificação de saldo, criação de movimentos e atualização de saldos.
+    /// O resultado deve ser monitorado.
+    /// </remarks>
+    /// <param name="realizarTransferenciaViewModel">Dados necessários para a transferência: Valor, Conta Destino e Senha da conta de origem.</param>
+    /// <returns>Retorna os dados da transferência registrada (incluindo seu ID) e o status da operação.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(RealizarTransferenciaViewModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

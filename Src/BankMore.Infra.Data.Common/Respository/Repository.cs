@@ -1,6 +1,7 @@
 ﻿using BankMore.Domain.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Linq;
 
 namespace BankMore.Infra.Data.Common.Repository;
 
@@ -71,5 +72,10 @@ public abstract class Repository<TEntity, TContext> : IRepository<TEntity> where
     private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> spec)
     {
         return SpecificationEvaluator<TEntity>.GetQuery(_dbSet.AsQueryable(), spec);
+    }
+
+    public async Task<IEnumerable<TEntity>> GetAllByExpressionAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
     }
 }
