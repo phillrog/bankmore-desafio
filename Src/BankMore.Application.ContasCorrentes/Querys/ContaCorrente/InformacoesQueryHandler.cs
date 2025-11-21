@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using BankMore.Application.Common.Querys.ContaCorrente;
 using BankMore.Application.ContasCorrentes.Interfaces;
-using BankMore.Application.ContasCorrentes.Querys.ContaCorrente;
+using BankMore.Domain.Common.Dtos;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Interfaces;

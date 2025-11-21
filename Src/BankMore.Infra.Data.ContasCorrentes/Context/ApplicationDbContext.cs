@@ -1,6 +1,5 @@
 ﻿using BankMore.Domain.ContasCorrentes.Models;
 using BankMore.Domain.Core.Models;
-using BankMore.Infra.Data.ContasCorrentes.Mappings;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;

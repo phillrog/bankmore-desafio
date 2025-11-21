@@ -4,6 +4,7 @@ using BankMore.Application.ContasCorrentes.Commands;
 using BankMore.Application.ContasCorrentes.Interfaces;
 using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Domain.Common;
+using BankMore.Domain.Common.Dtos;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Interfaces.Services;
 using BankMore.Domain.Core.Bus;
@@ -51,7 +52,7 @@ public class ContaCorrenteService : IContaCorrenteService
 
     public async Task<SaldoDto> Saldo(int numero)
     {
-        return await _correntistaService.Saldo(numero);        
+        return await _correntistaService.Saldo(numero);
     }
     #endregion
 

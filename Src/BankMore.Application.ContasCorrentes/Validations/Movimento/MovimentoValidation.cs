@@ -19,8 +19,8 @@ public abstract class MovimentoValidation<T> : AbstractValidator<T>
                 }
                 return false;
             }).WithMessage("O identificador da idempotência informado não é um GUID válido.");
-     
-    }    
+
+    }
 
     protected void ValidarDataMovimento()
     {

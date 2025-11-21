@@ -12,6 +12,6 @@ namespace BankMore.Application.Transferencias.Querys
         }
 
         public Guid Id { get; set; }
-        
+
     }
 }

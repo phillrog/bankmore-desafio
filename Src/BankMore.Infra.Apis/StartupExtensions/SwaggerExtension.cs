@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -18,7 +17,7 @@ public static class SwaggerExtension
     /// Configura dinamicamente o SwaggerGen para criar um documento para cada versão de API.
     /// </summary>
     public static IServiceCollection AddCustomizedSwagger(this IServiceCollection services, IWebHostEnvironment env, string api, params Type[] assemblyAnchorTypes)
-    {        
+    {
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
         services.AddSwaggerGen(c =>
@@ -45,7 +44,7 @@ public static class SwaggerExtension
                     c.IncludeXmlComments(() => new XPathDocument(streamReader), true);
                 }
             }
-            
+
             // Configuração de Segurança (Permanece aqui, pois é genérica)
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {

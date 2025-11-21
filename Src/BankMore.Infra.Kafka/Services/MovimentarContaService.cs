@@ -2,19 +2,19 @@
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.Core.Models;
 using BankMore.Infra.Kafka.Events.Movimento;
-using BankMore.Infra.Kafka.Producers;
 using BankMore.Infra.Kafka.Responses;
+using BankMore.Infra.Kafka.Tags;
 using KafkaFlow;
 
 namespace BankMore.Infra.Kafka.Services
 {
     public class MovimentarContaService
     {
-        private readonly IMessageProducer<IMovimentacaoRequestProducer> _requestProducer;
+        private readonly IMessageProducer<IMovimentacaoRequestProducerTag> _requestProducer;
         private readonly MovimentacaoReplyManager _responseManager;
         private const string ReplyTopic = "movimentar.conta.resposta";
 
-        public MovimentarContaService(IMessageProducer<IMovimentacaoRequestProducer> requestProducer,
+        public MovimentarContaService(IMessageProducer<IMovimentacaoRequestProducerTag> requestProducer,
             MovimentacaoReplyManager responseManager)
         {
             _requestProducer = requestProducer;
@@ -24,7 +24,8 @@ namespace BankMore.Infra.Kafka.Services
         public async Task<Result<MovimentacaoRelaizadaDto>> Movimentar(MovimentoViewModel message)
         {
             var correlationId = Guid.NewGuid();
-            var requestEvent = new MovimentacaoRequestEvent() {
+            var requestEvent = new MovimentacaoRequestEvent()
+            {
                 Valor = message.Valor,
                 Tipo = message.TipoMovimento,
                 CorrelationId = correlationId,

@@ -2,7 +2,7 @@
 {
     public class NumeroContaCorrenteDto
     {
-        public int NumeroConta { get;  }
+        public int NumeroConta { get; }
         public NumeroContaCorrenteDto(int numero)
         {
             NumeroConta = numero;

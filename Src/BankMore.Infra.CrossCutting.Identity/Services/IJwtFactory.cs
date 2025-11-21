@@ -1,5 +1,4 @@
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 
 namespace BankMore.Infra.CrossCutting.Identity.Services;
 

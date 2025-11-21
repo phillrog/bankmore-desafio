@@ -1,4 +1,4 @@
-﻿using BankMore.Domain.ContasCorrentes.Dtos;
+﻿using BankMore.Domain.Common.Dtos;
 using BankMore.Domain.Core.Models;
 using BankMore.Infra.Kafka.Events.ContaCorrente;
 using KafkaFlow;

@@ -1,6 +1,4 @@
-using BankMore.Domain.Core.Bus;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
+﻿using MediatR;
 
 namespace BankMore.Domain.Core.Notifications;
 

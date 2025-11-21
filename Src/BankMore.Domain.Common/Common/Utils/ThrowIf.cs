@@ -1,6 +1,4 @@
-using System;
-
-namespace BankMore.Domain.Common.Utils;
+﻿namespace BankMore.Domain.Common.Utils;
 
 public static class ThrowIf
 {

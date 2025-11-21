@@ -1,4 +1,4 @@
-using BankMore.Application.ContasCorrentes.Commands;
+﻿using BankMore.Application.ContasCorrentes.Commands;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Models;
@@ -9,7 +9,6 @@ using KafkaFlow;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Diagnostics;
 
 namespace BankMore.Infra.Kafka.Consumers;
@@ -18,13 +17,13 @@ public class CadastrarContaRequestConsumer : IMessageHandler<CadastrarContaCorre
     INotificationHandler<DomainNotification>
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IMessageProducer<IInforcacoesContaResponseProducer> _responseProducer;
+    private readonly IMessageProducer<IInforcacoesContaResponseProducerTag> _responseProducer;
     private readonly ILogger<CadastrarContaRequestConsumer> _logger;
     private readonly List<DomainNotification> _notifications = new List<DomainNotification>();
 
     public CadastrarContaRequestConsumer(
         IServiceScopeFactory serviceScopeFactory,
-        IMessageProducer<IInforcacoesContaResponseProducer> producer,
+        IMessageProducer<IInforcacoesContaResponseProducerTag> producer,
         ILogger<CadastrarContaRequestConsumer> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;

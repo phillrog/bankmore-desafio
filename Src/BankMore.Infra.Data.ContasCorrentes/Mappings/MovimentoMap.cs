@@ -29,6 +29,9 @@ namespace BankMore.Infra.Data.ContasCorrentes.Mappings
                    .HasColumnType("DECIMAL(18, 2)")
                    .IsRequired();
 
+            builder.Property(i => i.IdTransferencia)
+                   .IsRequired(false);
+
             builder.HasOne(m => m.ContaCorrente)
                    .WithMany(d => d.Movimentacoes)
                    .HasForeignKey(m => m.IdContaCorrente)

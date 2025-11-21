@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
+﻿using BankMore.Domain.Common.Interfaces;
 using System.Linq.Expressions;
-
-using BankMore.Domain.Common.Interfaces;
 
 namespace BankMore.Domain.Common.Specifications;
 

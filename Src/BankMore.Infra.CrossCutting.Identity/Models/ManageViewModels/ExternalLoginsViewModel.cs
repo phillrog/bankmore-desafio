@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
 namespace BankMore.Infra.CrossCutting.Identity.Models.ManageViewModels;

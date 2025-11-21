@@ -1,3 +1,4 @@
+﻿using BankMore.Domain.Common.Dtos;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Interfaces;
 using BankMore.Domain.ContasCorrentes.Models;
@@ -57,6 +58,42 @@ public class ContaCorrenteRepository : Repository<ContaCorrente, ApplicationDbCo
             var saldo = await conexao.QueryFirstOrDefaultAsync<SaldoDto>(
                 sql,
                 new { NumeroConta = numeroConta }
+            );
+
+            return saldo ?? new SaldoDto();
+        }
+    }
+
+    public async Task<SaldoDto> BuscarSaldoPorIdAsync(Guid id)
+    {
+        #region [ SQL ]
+
+        var sql = @"
+            SELECT
+                    -- Total de Créditos
+                    ISNULL(SUM(CASE WHEN tipomovimento = 'C' THEN valor ELSE 0 END), 0) AS TotalCredito,
+            
+                    -- Total de Débitos
+                    ISNULL(SUM(CASE WHEN tipomovimento = 'D' THEN valor ELSE 0 END), 0) AS TotalDebito,
+            
+                    -- Saldo Atual (Crédito - Débito)
+                    ISNULL(SUM(CASE 
+                        WHEN tipomovimento = 'C' THEN valor 
+                        WHEN tipomovimento = 'D' THEN valor * -1
+                        ELSE 0
+                    END), 0) AS SaldoAtualizado
+               FROM movimento M
+          LEFT JOIN CONTACORRENTE C ON M.idcontacorrente = C.Id
+              WHERE C.Id = @Id
+           GROUP BY C.ID";
+        #endregion
+
+        using (IDbConnection conexao = new SqlConnection(_db.Database.GetConnectionString()))
+        {
+
+            var saldo = await conexao.QueryFirstOrDefaultAsync<SaldoDto>(
+                sql,
+                new { Id = id }
             );
 
             return saldo ?? new SaldoDto();

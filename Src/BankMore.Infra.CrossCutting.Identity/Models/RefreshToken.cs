@@ -1,5 +1,4 @@
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BankMore.Infra.CrossCutting.Identity.Models;
 

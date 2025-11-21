@@ -1,6 +1,4 @@
-using System;
-
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BankMore.Infra.CrossCutting.Identity.Data.Migrations;

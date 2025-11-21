@@ -433,7 +433,7 @@ CREATE TABLE movimento (
     UpdatedAt DATETIME2(7) NOT NULL,
     UpdatedBy INT NOT NULL,
     IsDeleted BIT NOT NULL,
-    
+    idtransferencia UNIQUEIDENTIFIER NULL, -- ID da transferencia quando tiver
     -- Definição da Chave Estrangeira
     -- Referencia a coluna 'id' na tabela 'contacorrente'
     FOREIGN KEY (idcontacorrente) REFERENCES contacorrente(id) 
@@ -444,7 +444,7 @@ CREATE TABLE idempotencia (
     idcontacorrente UNIQUEIDENTIFIER NULL, -- ID da conta (Adicionado para suportar a FK)
     requisicao NVARCHAR(MAX) NULL, -- Dados de requisição (JSON/XML/String)
     resultado NVARCHAR(MAX) NULL, -- Dados de retorno (JSON/XML/String)
-    
+    idtransferencia UNIQUEIDENTIFIER NULL, -- ID da transferencia quando tiver
     -- Colunas de Auditoria
     CreatedAt DATETIME2(7) NOT NULL,
     CreatedBy INT NOT NULL,
@@ -456,6 +456,23 @@ CREATE TABLE idempotencia (
     -- Referencia a coluna 'id' na tabela 'contacorrente'
     FOREIGN KEY (idcontacorrente) REFERENCES contacorrente(id)
 );
+
+CREATE TABLE OutboxMessages (
+    Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,     
+    CreatedOn DATETIME2(7) NOT NULL,    
+    Type NVARCHAR(255) NOT NULL,
+    Payload NVARCHAR(MAX) NOT NULL,
+    
+    IsProcessed BIT NOT NULL DEFAULT 0,
+  
+    CorrelationId UNIQUEIDENTIFIER NULL 
+);
+GO
+
+CREATE NONCLUSTERED INDEX IX_Outbox_Pending 
+ON OutboxMessages (IsProcessed, CreatedOn)
+WHERE IsProcessed = 0;
+GO
 
 
 -- =========================================================
@@ -670,6 +687,7 @@ CREATE TABLE transferencia (
     [UpdatedBy] INT NOT NULL,
     [IsDeleted] BIT NOT NULL
 );
+GO
 
 CREATE TABLE idempotencia (
     id UNIQUEIDENTIFIER PRIMARY KEY,        -- Chave de Idempotência (GUID/UUID)
@@ -680,9 +698,25 @@ CREATE TABLE idempotencia (
     [CreatedBy] INT NOT NULL,
     [UpdatedAt] [datetime2](7) NOT NULL,
     [UpdatedBy] INT NOT NULL,
-    [IsDeleted] BIT NOT NULL,
-    
-    FOREIGN KEY (idcontacorrente) REFERENCES contacorrente(id)
+    [IsDeleted] BIT NOT NULL,   
 );
 
+GO
+
+
+CREATE TABLE OutboxMessages (
+    Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,     
+    CreatedOn DATETIME2(7) NOT NULL,    
+    Type NVARCHAR(255) NOT NULL,
+    Payload NVARCHAR(MAX) NOT NULL,
+    
+    IsProcessed BIT NOT NULL DEFAULT 0,
+  
+    CorrelationId UNIQUEIDENTIFIER NULL 
+);
+GO
+
+CREATE NONCLUSTERED INDEX IX_Outbox_Pending 
+ON OutboxMessages (IsProcessed, CreatedOn)
+WHERE IsProcessed = 0;
 GO

@@ -1,6 +1,4 @@
-using System;
-
-namespace BankMore.Domain.Core.Models;
+﻿namespace BankMore.Domain.Core.Models;
 
 public abstract class Entity
 {

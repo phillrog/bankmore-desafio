@@ -1,4 +1,5 @@
-﻿using BankMore.Domain.ContasCorrentes.Dtos;
+﻿using BankMore.Domain.Common.Dtos;
+using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Interfaces;
 using BankMore.Domain.ContasCorrentes.Interfaces.Services;
 using BankMore.Domain.ContasCorrentes.Models;
@@ -19,9 +20,20 @@ namespace BankMore.Domain.ContasCorrentes.Services
         {
             return await _contaCorrenteRepository.GetByExpressionAsync(d => d.Numero == numeroConta);
         }
+
+        public async Task<ContaCorrente> BuscarContaPorId(Guid id)
+        {
+            return await _contaCorrenteRepository.GetByExpressionAsync(d => d.Id == id);
+        }
+
         public async Task<SaldoDto> Saldo(int numeroConta)
         {
             return await _contaCorrenteRepository.BuscarSaldoPorNumeroAsync(numeroConta);
+        }
+
+        public async Task<SaldoDto> SaldoPorId(Guid id)
+        {
+            return await _contaCorrenteRepository.BuscarSaldoPorIdAsync(id);
         }
     }
 }

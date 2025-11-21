@@ -1,37 +1,40 @@
 ﻿using AutoMapper;
-using BankMore.Application.Transferencias.Interfaces;
-using BankMore.Application.Transferencias.ViewModels;
+using BankMore.Application.Common.Querys.ContaCorrente;
+using BankMore.Application.Common.Topicos.Saga;
 using BankMore.Domain.Common.CommandHandlers;
+using BankMore.Domain.Common.Dtos;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.ContasCorrentes.Dtos;
-using BankMore.Domain.ContasCorrentes.Enums;
-using BankMore.Domain.ContasCorrentes.Events;
-using BankMore.Domain.ContasCorrentes.Models;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Models;
 using BankMore.Domain.Core.Notifications;
 using BankMore.Domain.Transferencias.Dtos;
+using BankMore.Domain.Transferencias.Events;
 using BankMore.Domain.Transferencias.Interfaces;
 using BankMore.Domain.Transferencias.Models;
-using BankMore.Infra.Data.Common.Repository;
-using BankMore.Infra.Kafka.Services;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace BankMore.Application.Transferencias.Commands
 {
     public class RealizarTransferenciaCommandHandler : CommandHandler,
         IRequestHandler<RealizarTransferenciaCommand, Result<TransferenciaDto>>
     {
+        #region [ PRIVATE VARIÁVEIS ]
+        private const string ConnectionStringName = "DefaultConnection";
+        #endregion
         #region [ SERVICES ]
 
         private readonly IMediatorHandler _bus;
         private readonly IUser _user;
         private readonly IMapper _mapper;
-        private readonly IIdempotenciaService _idempotenciaService;
+        private readonly IIdempotenciaRepository _idempotenciaRepository;
         private readonly IInformacoesContaRespository _informacoesContaRespository;
         private readonly ITransferenciaRepository _transferenciaRepository;
+        private readonly IOutboxRepository _outboxRepository;
+        private readonly IConfiguration _configuration;
+        private readonly ISaldoService _saldoService;
 
         #endregion
 
@@ -40,20 +43,27 @@ namespace BankMore.Application.Transferencias.Commands
         public RealizarTransferenciaCommandHandler(
             IUnitOfWork uow,
             IMediatorHandler bus,
-            INotificationHandler<DomainNotification> notifications,            
+            INotificationHandler<DomainNotification> notifications,
             IUser user,
             IMapper mapper,
-            IIdempotenciaService idempotenciaService,
+            IIdempotenciaRepository idempotenciaRepository,
             IInformacoesContaRespository informacoesContaRespository,
-            ITransferenciaRepository transferenciaRepository)
+            ITransferenciaRepository transferenciaRepository,
+            IOutboxRepository outboxRepository,
+            IConfiguration configuration,
+            ISaldoService saldoService
+            )
             : base(uow, bus, notifications)
         {
             _bus = bus;
             _user = user;
             _mapper = mapper;
-            _idempotenciaService = idempotenciaService;
+            _idempotenciaRepository = idempotenciaRepository;
             _informacoesContaRespository = informacoesContaRespository;
             _transferenciaRepository = transferenciaRepository;
+            _outboxRepository = outboxRepository;
+            _configuration = configuration;
+            _saldoService = saldoService;
         }
 
         #endregion
@@ -74,12 +84,42 @@ namespace BankMore.Application.Transferencias.Commands
             }
 
             var contaOrigem = await _informacoesContaRespository.GetByNumero(message.NumeroContaCorrenteOrigem);
-
+            
             if (contaOrigem is null || contaOrigem.Id == Guid.Empty)
             {
-                var erro = $"Conta corrente de origem {message.NumeroContaCorrenteOrigem} inválida.";
+                var erro = $"Conta corrente de origem {message.NumeroContaCorrenteOrigem} é inválida.";
                 _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
                 return Result<TransferenciaDto>.Failure(erro, Erro.INVALID_ACCOUNT);
+            }
+
+            if (contaOrigem.Numero != Convert.ToUInt32(_user.Conta))
+            {
+                var erro = $"O número da conta origem {message.NumeroContaCorrenteOrigem} é inválida. Não pertence ao cliente.";
+                _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
+                return Result<TransferenciaDto>.Failure(erro, Erro.INVALID_ACCOUNT);
+            }
+
+            if (!contaOrigem.Ativo)
+            {
+                var erro = "Apenas contas correntes ativas podem realizar transferências.Por favor verifique a conta origem.";
+                _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
+                return Result<TransferenciaDto>.Failure(erro, Erro.INVALID_ACCOUNT);
+            }
+
+            var consultaSaldo = await _saldoService.ConsultarSaldo(Convert.ToInt32(_user.Conta));
+
+            if (!consultaSaldo.IsSuccess)
+            {
+                var erro = string.Join(", ", consultaSaldo.Erros);
+                _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
+                return Result<TransferenciaDto>.Failure(erro, Erro.INVALID_VALUE);
+            }
+
+            if (consultaSaldo.Data.SaldoAtualizado == 0)
+            {
+                var erro = "Saldo na conta insuficiente";
+                _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
+                return Result<TransferenciaDto>.Failure(erro, Erro.INSUFFICIENT_FUNDS);
             }
 
             if (!contaOrigem.Ativo)
@@ -105,7 +145,7 @@ namespace BankMore.Application.Transferencias.Commands
                 return Result<TransferenciaDto>.Failure(message, Erro.INVALID_ACCOUNT);
             }
 
-            if (await _idempotenciaService.Existe(message.Id))
+            if (_idempotenciaRepository.Exist(message.Id))
             {
                 var erro = $"Transferência com ID [{message.Id}] já foi efetuada!";
                 _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
@@ -114,16 +154,11 @@ namespace BankMore.Application.Transferencias.Commands
 
             #endregion
 
-            await BeginTransactionAsync();
             try
             {
                 var transferencia = _mapper.Map<Transferencia>(message);
-
                 transferencia.AtualizarContaOrigem(contaOrigem.Id);
                 transferencia.AtualizarContaDestino(contaDestino.Id);
-
-                _transferenciaRepository.Add(transferencia);
-                _transferenciaRepository.SaveChanges();
 
                 var retorno = new TransferenciaDto
                 {
@@ -135,33 +170,44 @@ namespace BankMore.Application.Transferencias.Commands
                 var requisicao = ParseJson(message);
                 var resultado = ParseJson(retorno);
 
-                var retornoIdempotencia = await _idempotenciaService.Cadastrar(new IdempotenciaViewModel(
+                _transferenciaRepository.Add(transferencia);
+
+                var novaIdempotencia = new Idempotencia(transferencia.Id, contaOrigem.Id, requisicao, resultado);
+
+                _idempotenciaRepository.Add(novaIdempotencia);
+
+                var eventoIniciado = new TransferenciaIniciadaEvent(
                     transferencia.Id,
-                    contaOrigem.Id,
-                    requisicao,
-                    resultado
-                 ));
+                    transferencia.Id,
+                    transferencia.IdContaCorrenteOrigem,
+                    transferencia.IdContaCorrenteDestino,
+                    transferencia.Valor,
+                    (int)transferencia.Status,
+                    transferencia.DataMovimento
+                );
+                eventoIniciado.Topico = SagaTopico.IniciarTranferencia;
 
-                if (!retornoIdempotencia.IsSuccess)
+                var payload = ParseJson(retorno);
+                _transferenciaRepository.SaveChanges();
+                _outboxRepository.Add(eventoIniciado);
+
+                var gravouRegistros = _transferenciaRepository.Exist(transferencia.Id)
+                    && _idempotenciaRepository.Exist(transferencia.Id)
+                    && await _outboxRepository.ExistTransfer(eventoIniciado.Id);
+
+                if (!gravouRegistros)
                 {
-                    var erro = "Falha ao gravar idempotência.";
+                    var erro = $"Ops! Falaha ao gravar dados já foi efetuada!";
                     _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
-                    return Result<TransferenciaDto>.Failure(erro, Erro.INTERNAL_ERROR);
+                    return Result<TransferenciaDto>.Failure(erro, Erro.INVALID_TYPE);
                 }
-
-                if (Commit())
-                {
-
-                    return Result<TransferenciaDto>.Success(retorno);
-                }
-
-                return Result<TransferenciaDto>.Failure("Ops! Algo deu errado ao salvar transferência", Erro.INTERNAL_ERROR);
+                return Result<TransferenciaDto>.Success(retorno);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                RollbackTransaction();
-                var erro = "Ops! Algo deu errado ao salvar movimento. Por favor tente mais tarde!";
+                var erro = "Ops! Falha crítica ao salvar transferência. Tente mais tarde!";
                 _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
+
                 return Result<TransferenciaDto>.Failure(erro, Erro.INTERNAL_ERROR);
             }
         }
@@ -171,7 +217,7 @@ namespace BankMore.Application.Transferencias.Commands
         {
             var options = new JsonSerializerOptions
             {
-                ReferenceHandler = ReferenceHandler.Preserve
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
             return JsonSerializer.Serialize(obj, options);
         }

@@ -87,7 +87,7 @@ public class ContaCorrenteController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetSaldo([FromQuery]int? numeroConta, [FromServices] IUser user)
+    public async Task<IActionResult> GetSaldo([FromQuery] int? numeroConta, [FromServices] IUser user)
     {
         var conta = numeroConta ?? Convert.ToInt32(user.Conta);
 
@@ -111,7 +111,7 @@ public class ContaCorrenteController : ApiController
     /// </remarks>
     /// <param name="contaViewModel">Dados da conta a ser cadastrada (inclui informações do titular e iniciais da conta).</param>
     /// <returns>Retorna a conta cadastrada em caso de sucesso.</returns>
-    [HttpPost]    
+    [HttpPost]
     [ProducesResponseType(typeof(NovaCorrenteViewModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

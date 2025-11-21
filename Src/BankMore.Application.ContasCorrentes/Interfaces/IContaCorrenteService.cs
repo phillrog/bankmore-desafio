@@ -1,6 +1,7 @@
 ﻿
 using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Domain.Common;
+using BankMore.Domain.Common.Dtos;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.Core.Models;
 

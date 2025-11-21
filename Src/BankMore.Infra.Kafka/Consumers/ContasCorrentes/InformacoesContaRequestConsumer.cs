@@ -1,5 +1,4 @@
 ﻿using BankMore.Application.Common.Querys;
-using BankMore.Application.ContasCorrentes.Querys;
 using BankMore.Domain.Common;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Models;
@@ -7,10 +6,8 @@ using BankMore.Infra.Kafka.Events;
 using BankMore.Infra.Kafka.Events.ContaCorrente;
 using BankMore.Infra.Kafka.Producers;
 using KafkaFlow;
-using MathNet.Numerics.Statistics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NPOI.SS.Formula.Functions;
 using System.Diagnostics;
 
 namespace BankMore.Infra.Kafka.Consumers
@@ -18,12 +15,12 @@ namespace BankMore.Infra.Kafka.Consumers
     public class InformacoesContaRequestConsumer : IMessageHandler<BuscarNumeroContaEvent>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IMessageProducer<IInforcacoesContaResponseProducer> _responseProducer;
+        private readonly IMessageProducer<IInforcacoesContaResponseProducerTag> _responseProducer;
         private readonly ILogger<InformacoesContaRequestConsumer> _logger;
 
         public InformacoesContaRequestConsumer(
             IServiceScopeFactory serviceScopeFactory,
-            IMessageProducer<IInforcacoesContaResponseProducer> producer,
+            IMessageProducer<IInforcacoesContaResponseProducerTag> producer,
             ILogger<InformacoesContaRequestConsumer> logger)
         {
             _serviceScopeFactory = serviceScopeFactory;

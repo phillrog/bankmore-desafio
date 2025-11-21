@@ -1,6 +1,4 @@
-using System;
-
-namespace BankMore.Domain.Common.Exceptions;
+﻿namespace BankMore.Domain.Common.Exceptions;
 
 public class EntityAlreadyExistsException : Exception
 {

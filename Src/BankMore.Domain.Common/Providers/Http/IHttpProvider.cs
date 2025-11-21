@@ -1,9 +1,4 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
-
-namespace BankMore.Domain.Common.Providers.Http;
+﻿namespace BankMore.Domain.Common.Providers.Http;
 
 public interface IHttpProvider
 {

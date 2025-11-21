@@ -2,6 +2,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+		<PackageReference Include="KafkaFlow.Serializer.NewtonsoftJson" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+		<PackageReference Include="Newtonsoft.Json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -13,6 +16,7 @@
 		<ProjectReference Include="..\BankMore.Infra.CrossCutting.IoC\BankMore.Infra.CrossCutting.IoC.csproj" />
 		<ProjectReference Include="..\BankMore.Infra.Data.Transferencias\BankMore.Infra.Data.Transferencias.csproj" />
 		<ProjectReference Include="..\BankMore.Infra.Kafka\BankMore.Infra.Kafka.csproj" />
+		<ProjectReference Include="..\BankMore.Transferencias.Workers\BankMore.Transferencias.Workers.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>

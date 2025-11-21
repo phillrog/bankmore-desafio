@@ -20,7 +20,8 @@ using System.Text.Json.Serialization;
 namespace BankMore.Application.ContasCorrentes.Commands;
 
 public class MovimentoCommandHandler : CommandHandler,
-    IRequestHandler<CadastrarNovaMovimentacaoCommand, Result<MovimentacaoRelaizadaDto>>
+    IRequestHandler<CadastrarNovaMovimentacaoCommand, Result<MovimentacaoRelaizadaDto>>,
+    IRequestHandler<BankMore.Application.ContasCorrentes.Commands.TransferenciaCommand, bool>
 {
     #region [ SERVICES ]
 
@@ -31,6 +32,7 @@ public class MovimentoCommandHandler : CommandHandler,
     private readonly IMapper _mapper;
     private readonly IIdempotenciaService _idempotenciaService;
     private readonly ICorrentistaService _correntistaService;
+    private readonly IOutboxRepository _outboxRepository;
     #endregion
 
     #region [ CONSTRUTOR ]
@@ -44,7 +46,8 @@ public class MovimentoCommandHandler : CommandHandler,
         IIdempotenciaService idempotenciaService,
         IUser user,
         IMapper mapper,
-        ICorrentistaService correntistaService)
+        ICorrentistaService correntistaService,
+        IOutboxRepository outboxRepository)
         : base(uow, bus, notifications)
     {
         _bus = bus;
@@ -54,6 +57,7 @@ public class MovimentoCommandHandler : CommandHandler,
         _mapper = mapper;
         _idempotenciaService = idempotenciaService;
         _correntistaService = correntistaService;
+        _outboxRepository = outboxRepository;
     }
     #endregion
 
@@ -74,7 +78,7 @@ public class MovimentoCommandHandler : CommandHandler,
             var erro = "Movimentação já cadastrada.";
             _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
             return Result<MovimentacaoRelaizadaDto>.Failure(erro, Erro.INVALID_DOCUMENT);
-        }        
+        }
 
         if (message.Valor <= 0)
         {
@@ -196,6 +200,47 @@ public class MovimentoCommandHandler : CommandHandler,
             return Result<MovimentacaoRelaizadaDto>.Failure(erro, Erro.INTERNAL_ERROR);
         }
         #endregion
+    }
+
+    public async Task<bool> Handle(TransferenciaCommand message, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var conta = await _correntistaService.BuscarContaPorId(message.IdContaCorrente);
+            var saldoDetalhado = await _correntistaService.SaldoPorId(message.IdContaCorrente);
+
+            if (message.TipoMovimento == TipoMovimento.D && saldoDetalhado.SaldoInsuficiente(message.Valor))
+            {
+                return false;
+            }
+
+            var movimento = _mapper.Map<Movimento>(message);
+
+            _movimentoRepository.Add(movimento);
+            _movimentoRepository.SaveChanges();
+
+
+            var requisicao = ParseJson(message);
+            var resultado = ParseJson(movimento);
+
+            var retornoIdempotencia = await _idempotenciaService.Cadastrar(new IdempotenciaViewModel(
+                movimento.Id,
+                movimento.IdContaCorrente,
+                requisicao,
+                resultado
+             ));
+
+            if (!retornoIdempotencia.IsSuccess) return false;
+
+            Commit();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+        }
+
+        return false;
     }
 
     #endregion

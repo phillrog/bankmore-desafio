@@ -1,6 +1,6 @@
-using System.Linq.Expressions;
-using BankMore.Domain.Common.Interfaces;
+﻿using BankMore.Domain.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BankMore.Infra.Data.Common.Repository;
 

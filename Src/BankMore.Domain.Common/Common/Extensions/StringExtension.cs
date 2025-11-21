@@ -1,6 +1,4 @@
-using System;
-
-namespace BankMore.Domain.Common.Extensions;
+﻿namespace BankMore.Domain.Common.Extensions;
 
 public static class StringExtension
 {

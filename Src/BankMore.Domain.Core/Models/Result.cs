@@ -24,7 +24,7 @@ namespace BankMore.Domain.Core.Models
 
         public static Result<T> Success(T data)
         {
-            return new Result<T> { IsSuccess = true, Data = data }; 
+            return new Result<T> { IsSuccess = true, Data = data };
         }
 
         public static Result<T> Failure(List<string> errors, Erro? tipo = null)

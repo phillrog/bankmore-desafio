@@ -1,6 +1,4 @@
-using System;
-
-using BankMore.Domain.Core.Events;
+﻿using BankMore.Domain.Core.Events;
 
 using FluentValidation.Results;
 

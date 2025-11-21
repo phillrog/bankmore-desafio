@@ -43,5 +43,6 @@ public class TransferenciaMap : IEntityTypeConfiguration<Transferencia>
             .HasColumnType("varchar(max)")
             .IsRequired(false);
 
+        builder.Ignore(c => c.StatusDescricao);
     }
 }

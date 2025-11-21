@@ -1,5 +1,5 @@
+﻿using BankMore.Domain.Common.Providers.Hash;
 using BankMore.Domain.ContasCorrentes.Interfaces;
-using BankMore.Domain.Common.Providers.Hash;
 
 namespace BankMore.Domain.ContasCorrentes.Services;
 

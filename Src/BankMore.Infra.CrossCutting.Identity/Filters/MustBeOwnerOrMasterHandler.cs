@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 using Microsoft.Extensions.Primitives;
+using System.Security.Claims;
 
 namespace BankMore.Infra.CrossCutting.Identity.Filters
 {
@@ -79,7 +79,7 @@ namespace BankMore.Infra.CrossCutting.Identity.Filters
             #endregion
 
             #region [ EXTRAI VALORES DA QUERY ]
-            
+
             // Busca pelo nome da chave exato (case sensitive)
             if (httpContext.Request.Query.TryGetValue(queryParameterKey, out StringValues value))
             {
@@ -102,7 +102,7 @@ namespace BankMore.Infra.CrossCutting.Identity.Filters
             #endregion
 
             #region [ DESTINA O REQUEST ]
-            
+
             // Obtém o IDENTIFICADOR do USUÃRIO do JWT (CPF/Conta)
             var userIdentifier = user.FindFirstValue(ownerOrMasterRequirement.OwnerClaimType);
 
@@ -139,7 +139,7 @@ namespace BankMore.Infra.CrossCutting.Identity.Filters
                 Console.WriteLine($"--- [MustBeOwnerOrMasterHandler] FALHA DE FILTRO: {requestedAccountValue} != {userIdentifier}. Admin tentando acessar conta de terceiros. Bloqueado (403 ESPERADO).");
                 context.Fail();
             }
-            
+
             return Task.CompletedTask;
 
             #endregion

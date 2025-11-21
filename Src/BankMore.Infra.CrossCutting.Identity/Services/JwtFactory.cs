@@ -1,12 +1,8 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-using BankMore.Infra.CrossCutting.Identity.Models;
-
+﻿using BankMore.Infra.CrossCutting.Identity.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace BankMore.Infra.CrossCutting.Identity.Services;
 

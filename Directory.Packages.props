@@ -9,12 +9,15 @@
     <PackageVersion Include="KafkaFlow.LogHandler.Console" Version="4.0.1" />
     <PackageVersion Include="KafkaFlow.Microsoft.DependencyInjection" Version="4.0.1" />
     <PackageVersion Include="KafkaFlow.Serializer.JsonCore" Version="4.0.1" />
+    <PackageVersion Include="KafkaFlow.Serializer.NewtonsoftJson" Version="4.0.1" />
     <PackageVersion Include="KafkaFlow.Serializer.ProtobufNet" Version="4.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="8.0.22" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.20" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="NPOI" Version="2.6.2" />
-    <PackageVersion Include="Refit.HttpClientFactory" Version="6.0.38" />
+    <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.22" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
@@ -32,7 +35,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="8.0.22" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
     <!-- <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />

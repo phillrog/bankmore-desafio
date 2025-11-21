@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 namespace BankMore.Domain.Common.Interfaces;
 

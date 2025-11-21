@@ -8,10 +8,8 @@ using BankMore.Infra.CrossCutting.Identity.Models;
 using BankMore.Infra.CrossCutting.Identity.Models.AccountViewModels;
 using BankMore.Infra.CrossCutting.Identity.Services;
 using BankMore.Infra.Kafka.Events;
-using BankMore.Infra.Kafka.Producers;
 using BankMore.Infra.Kafka.Services;
 using BankMore.Services.Apis.Controllers;
-using KafkaFlow;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -158,7 +156,7 @@ public class AccountController : ApiController
             await _userManager.DeleteAsync(appUser);
             return ResponseResult(result);
         }
-        
+
         // Add UserRoles
         identityResult = await _userManager.AddToRoleAsync(appUser, "Admin");
         if (!identityResult.Succeeded)
@@ -321,7 +319,7 @@ public class AccountController : ApiController
         }
 
         var result = await _informacoesContaService.ObterNumeroContaPorCpf(appUser.UserName);
-        
+
         // Init ClaimsIdentity
         var claimsIdentity = new ClaimsIdentity();
         claimsIdentity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, appUser.NormalizedUserName));

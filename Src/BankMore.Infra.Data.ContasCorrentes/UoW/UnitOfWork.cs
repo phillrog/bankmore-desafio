@@ -1,6 +1,5 @@
-using BankMore.Domain.Common.Interfaces;
+﻿using BankMore.Domain.Common.Interfaces;
 using BankMore.Infra.Data.ContasCorrentes.Context;
-using MediatR;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Transactions;
 
@@ -28,7 +27,7 @@ public class UnitOfWork : IUnitOfWork
         try
         {
             _context.SaveChanges();
-            _currentTransaction?.Commit(); 
+            _currentTransaction?.Commit();
 
             _currentTransaction?.Dispose();
             _currentTransaction = null;

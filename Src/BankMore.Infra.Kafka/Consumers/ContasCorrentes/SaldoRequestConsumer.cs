@@ -1,12 +1,11 @@
-using BankMore.Application.ContasCorrentes.Querys.ContaCorrente;
-using BankMore.Domain.ContasCorrentes.Dtos;
+﻿using BankMore.Application.Common.Querys.ContaCorrente;
+using BankMore.Domain.Common.Dtos;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Models;
 using BankMore.Domain.Core.Notifications;
 using BankMore.Infra.Kafka.Events.ContaCorrente;
-using BankMore.Infra.Kafka.Producers;
+using BankMore.Infra.Kafka.Tags;
 using KafkaFlow;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -16,13 +15,13 @@ namespace BankMore.Infra.Kafka.Consumers;
 public class SaldoRequestConsumer : IMessageHandler<SaldoRequestEvent>
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IMessageProducer<ISaldoResponseProducer> _responseProducer;
+    private readonly IMessageProducer<ISaldoResponseProducerTag> _responseProducer;
     private readonly ILogger<SaldoRequestConsumer> _logger;
     private readonly List<DomainNotification> _notifications = new List<DomainNotification>();
 
     public SaldoRequestConsumer(
         IServiceScopeFactory serviceScopeFactory,
-        IMessageProducer<ISaldoResponseProducer> producer,
+        IMessageProducer<ISaldoResponseProducerTag> producer,
         ILogger<SaldoRequestConsumer> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;

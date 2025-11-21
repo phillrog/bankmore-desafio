@@ -1,9 +1,9 @@
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace BankMore.Infra.Kafka.Events;
 
-[DataContract]  
-public class BuscarNumeroContaEvent 
+[DataContract]
+public class BuscarNumeroContaEvent
 {
     [DataMember(Order = 1)]
     public string Cpf { get; set; }
@@ -16,7 +16,7 @@ public class BuscarNumeroContaEvent
     [DataMember(Order = 4)]
     public int Numero { get; set; }
 
-    public BuscarNumeroContaEvent(){}
+    public BuscarNumeroContaEvent() { }
 
     public BuscarNumeroContaEvent(string cpf, Guid correlationId, string replyTopic)
     {

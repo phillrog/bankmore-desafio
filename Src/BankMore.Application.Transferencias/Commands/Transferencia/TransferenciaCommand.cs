@@ -8,6 +8,6 @@ namespace BankMore.Application.Transferencias.Commands
         public int NumeroContaCorrenteOrigem { get; protected set; }
         public int NumneroContaCorrenteDestino { get; protected set; }
         public DateTime DataMovimento { get; protected set; }
-        public decimal Valor { get; protected set; }        
+        public decimal Valor { get; protected set; }
     }
 }

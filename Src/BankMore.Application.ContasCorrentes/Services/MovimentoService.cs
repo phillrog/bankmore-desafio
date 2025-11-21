@@ -39,7 +39,7 @@ namespace BankMore.Application.ContasCorrentes.Services
 
         #region [ CADASTRAR ]
 
-        public  async Task<Result<MovimentacaoRelaizadaDto>> Cadastrar(MovimentoViewModel movimento)
+        public async Task<Result<MovimentacaoRelaizadaDto>> Cadastrar(MovimentoViewModel movimento)
         {
             var registerCommand = _mapper.Map<CadastrarNovaMovimentacaoCommand>(movimento);
             return await _bus.SendCommand<CadastrarNovaMovimentacaoCommand, Result<MovimentacaoRelaizadaDto>>(registerCommand);

@@ -3,9 +3,11 @@
 		<PackageReference Include="AutoMapper" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\BankMore.Application.Common\BankMore.Application.Common.csproj" />
 	  <ProjectReference Include="..\BankMore.Domain.Common\BankMore.Domain.Common.csproj" />
 	  <ProjectReference Include="..\BankMore.Domain.Core\BankMore.Domain.Core.csproj" />
 	  <ProjectReference Include="..\BankMore.Domain.Transferencias\BankMore.Domain.Transferencias.csproj" />
-	  <ProjectReference Include="..\BankMore.Infra.Kafka\BankMore.Infra.Kafka.csproj" />
+	  <ProjectReference Include="..\BankMore.Infra.Data.Common\BankMore.Infra.Data.Common.csproj" />
+	  <ProjectReference Include="..\BankMore.Infra.Data.Transferencias\BankMore.Infra.Data.Transferencias.csproj" />
 	</ItemGroup>
 </Project>

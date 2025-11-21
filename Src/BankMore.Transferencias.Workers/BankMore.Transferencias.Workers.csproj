@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<PackageReference Include="KafkaFlow.LogHandler.Console" />
+		<PackageReference Include="KafkaFlow.Serializer.ProtobufNet" />
+		<PackageReference Include="MediatR" />
+		<PackageReference Include="KafkaFlow" />
+		<PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" />
+		<PackageReference Include="KafkaFlow.Serializer.JsonCore" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BankMore.Infra.Data.Common\BankMore.Infra.Data.Common.csproj" />
+    <ProjectReference Include="..\BankMore.Infra.Kafka\BankMore.Infra.Kafka.csproj" />
+  </ItemGroup>
+
+</Project>

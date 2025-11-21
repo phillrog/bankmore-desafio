@@ -1,4 +1,4 @@
-using BankMore.Infra.Data.ContasCorrentes.Context;
+﻿using BankMore.Infra.Data.ContasCorrentes.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankMore.Services.Api.ContasCorrentes.Configurations;
@@ -12,7 +12,7 @@ public static class DatabaseSetup
         {
             var conn = configuration.GetConnectionString("DefaultConnection");
             options.UseSqlServer(conn);
-            
+
             if (!env.IsProduction())
             {
                 options.EnableDetailedErrors();

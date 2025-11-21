@@ -1,9 +1,9 @@
-namespace BankMore.Infra.CrossCutting.Identity.Models;
+﻿namespace BankMore.Infra.CrossCutting.Identity.Models;
 
-using System.Collections.Generic;
-using System.Security.Claims;
 using BankMore.Domain.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 public class AspNetUser : IUser
 {

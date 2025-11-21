@@ -1,9 +1,7 @@
 ﻿using BankMore.Infra.Apis.Configurations;
-using BankMore.Infra.CrossCutting.Identity.Authorization;
 using BankMore.Infra.CrossCutting.Identity.Data;
 using BankMore.Infra.CrossCutting.Identity.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

@@ -1,15 +1,15 @@
-using BankMore.Domain.Common.Interfaces;
+﻿using BankMore.Domain.Common.Interfaces;
+using BankMore.Domain.Common.Providers.Http;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
-using BankMore.Domain.Common.Providers.Http;
 using BankMore.Infra.CrossCutting.Bus;
 using BankMore.Infra.CrossCutting.Identity.Authorization;
+using BankMore.Infra.CrossCutting.Identity.Filters;
 using BankMore.Infra.CrossCutting.Identity.Models;
 using BankMore.Infra.CrossCutting.Identity.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
-using BankMore.Infra.CrossCutting.Identity.Filters;
 
 namespace BankMore.Infra.CrossCutting.IoC;
 

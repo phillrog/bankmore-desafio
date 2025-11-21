@@ -8,7 +8,7 @@ namespace BankMore.Application.ContasCorrentes.ViewModels;
 /// </summary>
 public class NovaCorrenteViewModel
 {
-    
+
     /// <summary>
     /// Nome completo do titular da conta.
     /// </summary>
@@ -30,5 +30,5 @@ public class NovaCorrenteViewModel
     /// </summary>
     [Required(ErrorMessage = "Obrigatório")]
     [DisplayName("Senha")]
-    public string Senha { get; set; }    
+    public string Senha { get; set; }
 }

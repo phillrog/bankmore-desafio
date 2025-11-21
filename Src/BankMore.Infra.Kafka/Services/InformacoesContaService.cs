@@ -9,11 +9,11 @@ namespace BankMore.Infra.Kafka.Services
 {
     public class InformacoesContaService
     {
-        private readonly IMessageProducer<IInforcacoesContaRequestProducer> _requestProducer;
+        private readonly IMessageProducer<IInforcacoesContaRequestProducerTag> _requestProducer;
         private readonly NumeroContaReplyManager _responseManager;
-        private const string ReplyTopic = "informacoes.conta.resposta"; 
+        private const string ReplyTopic = "informacoes.conta.resposta";
 
-        public InformacoesContaService(IMessageProducer<IInforcacoesContaRequestProducer> requestProducer,
+        public InformacoesContaService(IMessageProducer<IInforcacoesContaRequestProducerTag> requestProducer,
             NumeroContaReplyManager responseManager,
             IInformacoesContaRespository informacoesContaRespository)
         {
@@ -26,7 +26,7 @@ namespace BankMore.Infra.Kafka.Services
             var correlationId = Guid.NewGuid();
             var requestEvent = new BuscarNumeroContaEvent(cpf, correlationId, ReplyTopic);
 
-            await _requestProducer.ProduceAsync("informacoes.conta.requisicao", correlationId.ToString(), requestEvent); 
+            await _requestProducer.ProduceAsync("informacoes.conta.requisicao", correlationId.ToString(), requestEvent);
 
             return await _responseManager.WaitForResponseAsync(correlationId);
         }

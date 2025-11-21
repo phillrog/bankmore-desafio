@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace BankMore.Application.ContasCorrentes.ViewModels;
 
@@ -19,7 +18,7 @@ public class ContaCorrenteViewModel
     [DisplayName("Nome")]
     public string Nome { get; set; }
 
-    
+
     /// <summary>
     /// Senha de acesso.
     /// </summary>

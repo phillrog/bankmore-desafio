@@ -38,7 +38,7 @@ namespace BankMore.Application.Common.Querys
 
                 if (conta is null) return Result<InformacoesContaCorrenteDto>.Failure("Conta não encontrada", Erro.INVALID_VALUE);
 
-                return Result<InformacoesContaCorrenteDto>.Success(_mapper.Map<InformacoesContaCorrenteDto>(conta));
+                return Result<InformacoesContaCorrenteDto>.Success(conta);
             }
             catch (Exception)
             {

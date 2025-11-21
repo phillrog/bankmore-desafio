@@ -1,4 +1,4 @@
-using BankMore.Infra.CrossCutting.Identity.Data;
+﻿using BankMore.Infra.CrossCutting.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankMore.Services.Api.Identidade.Configurations;
@@ -18,7 +18,7 @@ public static class DatabaseSetup
                 options.EnableSensitiveDataLogging();
             }
         });
-        
+
         return services;
     }
 }

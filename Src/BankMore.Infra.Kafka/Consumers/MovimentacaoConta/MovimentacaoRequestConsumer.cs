@@ -1,10 +1,10 @@
-using BankMore.Application.ContasCorrentes.Commands;
+﻿using BankMore.Application.ContasCorrentes.Commands;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Models;
 using BankMore.Domain.Core.Notifications;
 using BankMore.Infra.Kafka.Events.Movimento;
-using BankMore.Infra.Kafka.Producers;
+using BankMore.Infra.Kafka.Tags;
 using KafkaFlow;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,17 +17,14 @@ public class MovimentacaoRequestConsumer : IMessageHandler<MovimentacaoRequestEv
     INotificationHandler<DomainNotification>
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IMessageProducer<IMovimentacaoResponseProducer> _responseProducer;
     private readonly ILogger<MovimentacaoRequestConsumer> _logger;
     private readonly List<DomainNotification> _notifications = new List<DomainNotification>();
 
     public MovimentacaoRequestConsumer(
         IServiceScopeFactory serviceScopeFactory,
-        IMessageProducer<IMovimentacaoResponseProducer> producer,
         ILogger<MovimentacaoRequestConsumer> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
-        _responseProducer = producer;
         _logger = logger;
     }
 
@@ -73,7 +70,8 @@ public class MovimentacaoRequestConsumer : IMessageHandler<MovimentacaoRequestEv
             };
         }
 
-        await _responseProducer.ProduceAsync(
+        var responseProducer = serviceProvider.GetRequiredService<IMessageProducer<IMovimentacaoResponseProducerTag>>();
+        await responseProducer.ProduceAsync(
             message.ReplyTopic,
             message.CorrelationId.ToString(),
             responseEvent

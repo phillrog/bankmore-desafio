@@ -22,10 +22,12 @@ namespace BankMore.Infra.Data.ContasCorrentes.Mappings
                    .IsRequired();
 
             builder.HasOne(i => i.ContaCorrente)
-                   .WithMany(g=> g.Idempotencias)
+                   .WithMany(g => g.Idempotencias)
                    .HasForeignKey(i => i.IdContaCorrente)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Property(i => i.IdTransferencia)
+                   .IsRequired(false);
             builder.ToTable("idempotencia");
         }
     }

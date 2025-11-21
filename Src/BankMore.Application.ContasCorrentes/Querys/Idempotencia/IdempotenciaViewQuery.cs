@@ -12,6 +12,6 @@ namespace BankMore.Application.ContasCorrentes.Querys
         }
 
         public Guid Id { get; set; }
-        
+
     }
 }

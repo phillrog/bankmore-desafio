@@ -16,7 +16,7 @@ namespace BankMore.Infra.Apis.Configurations
         public const string CanWriteData = "CanWriteData";
         public const string CanRemoveData = "CanRemoveData";
         public const string CanReadData = "CanReadData";
-        
+
         // PolÃ­ticas de filtragem de recurso
         public const string OwnerOrMaster_CPF_Policy = "OwnerOrMaster_CPF";
         public const string OwnerOrMaster_Conta_Policy = "OwnerOrMaster_Conta";
@@ -68,7 +68,7 @@ namespace BankMore.Infra.Apis.Configurations
             #endregion
 
             #region [ DEFINIÇÕO CENTRALIZADA DA POLÃTICA DE FILTRAGEM DE RECURSOS ]
-            
+
             // 1. POLÃTICA PARA ENDPOINTS COM {cpf} NA ROTA
             options.AddPolicy(OwnerOrMaster_CPF_Policy, policy => // Usando a constante
             {

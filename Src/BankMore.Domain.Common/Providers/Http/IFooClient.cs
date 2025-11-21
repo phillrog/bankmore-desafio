@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
-
-using Refit;
+﻿using Refit;
 
 namespace BankMore.Domain.Common.Providers.Http;
 

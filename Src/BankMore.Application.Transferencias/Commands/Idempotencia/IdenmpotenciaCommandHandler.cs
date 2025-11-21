@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using BankMore.Domain.Common.CommandHandlers;
 using BankMore.Domain.Common.Interfaces;
-using BankMore.Domain.Transferencias.Interfaces;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Models;
 using BankMore.Domain.Core.Notifications;
+using BankMore.Domain.Transferencias.Interfaces;
 using MediatR;
 
 
@@ -38,19 +38,20 @@ public class IdenmpotenciaCommandHandler : CommandHandler,
 
     #region [ HANDLERS ]       
 
-    public Task<Result<bool>> Handle(CadastrarNovaIdempotenciaCommand message, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(CadastrarNovaIdempotenciaCommand message, CancellationToken cancellationToken)
     {
         if (!message.IsValid())
         {
             NotifyValidationErrors(message);
-            return Task.FromResult(Result<bool>.Failure(message, Erro.INVALID_DOCUMENT));
+            return Result<bool>.Failure(message, Erro.INVALID_DOCUMENT);
         }
 
-        if (_idempotenciaRepository.GetById(message.Id) != null)
+        var idempotencia = await _idempotenciaRepository.GetByExpressionAsync(d => d.Id == message.Id);
+        if (idempotencia is not null)
         {
             var erro = "Chave já cadastrada.";
             _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
-            return Task.FromResult(Result<bool>.Failure(erro, Erro.INVALID_DOCUMENT));
+            return Result<bool>.Failure(erro, Erro.INVALID_DOCUMENT);
         }
 
         var chave = _mapper.Map<BankMore.Domain.Transferencias.Models.Idempotencia>(message);
@@ -58,10 +59,10 @@ public class IdenmpotenciaCommandHandler : CommandHandler,
         _idempotenciaRepository.Add(chave);
         if (Commit())
         {
-            return Task.FromResult(Result<bool>.Success(true));
+            return Result<bool>.Success(true);
         }
 
-        return Task.FromResult(Result<bool>.Failure("Ops! Algo deu errado ao salvar idempotencia", Erro.INVALID_TYPE));
+        return Result<bool>.Failure("Ops! Algo deu errado ao salvar idempotencia", Erro.INVALID_TYPE);
     }
 
 

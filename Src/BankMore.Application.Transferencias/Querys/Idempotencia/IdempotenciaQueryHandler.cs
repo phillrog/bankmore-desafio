@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BankMore.Application.Transferencias.ViewModels;
-using BankMore.Domain.Transferencias.Interfaces;
 using BankMore.Domain.Core.Models;
+using BankMore.Domain.Transferencias.Interfaces;
 using MediatR;
 
 namespace BankMore.Application.Transferencias.Querys

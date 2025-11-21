@@ -19,7 +19,7 @@ public abstract class IdempotenciaValidation<T> : AbstractValidator<T>
                 }
                 return false;
             }).WithMessage("O identificador da idempotência informado não é um GUID válido.");
-     
+
     }
 
     protected void ValidarRequisicao()

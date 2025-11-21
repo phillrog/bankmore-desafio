@@ -1,11 +1,16 @@
+﻿using BankMore.Application.Common.Topicos.Saga;
+using BankMore.Application.Transferencias.Interfaces;
+using BankMore.Domain.Common.Interfaces;
 using BankMore.Infra.Kafka.Consumers;
 using BankMore.Infra.Kafka.Managers;
 using BankMore.Infra.Kafka.Producers;
 using BankMore.Infra.Kafka.Responses;
 using BankMore.Infra.Kafka.Services;
+using BankMore.Infra.Kafka.Tags;
 using Confluent.Kafka;
 using KafkaFlow;
 using KafkaFlow.Serializer;
+
 
 namespace BankMore.Services.Api.ContasCorrentes.Configurations;
 
@@ -13,6 +18,12 @@ public static class KafkaSetup
 {
     public static void AddKafkaSetup(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<IMovimentacaoRespostaProducer, MovimentacaoRespostaProducer>();
+        services.AddSingleton<IDebitarContaProducerDispatcher, DebitarProducerDispatcher>();
+        services.AddSingleton<IValidarDebitoProducerDispatcher, ValidarDebitoProducerDispatcher>();
+        services.AddSingleton<ICreditarContaProducerDispatcher, CreditarContaProducerDispatcher>();
+        services.AddSingleton<IEstornoDebitoContaProducerDispatch, EstornoDebitoContaProducerDispatch>();
+        services.AddScoped<ISaldoService, SaldoService>();
 
         const string topicName = "usuario-criado";
         var broker = configuration.GetValue<string>("Kafka:Endereco");
@@ -79,7 +90,7 @@ public static class KafkaSetup
                         .AddTypedHandlers(handlers => handlers.AddHandler<MovimentacaoReplyManager>())
                     )
                 )
-                .AddProducer<ICadastroContaRequestProducer>(
+                .AddProducer<ICadastroContaRequestProducerTag>(
                     producer => producer
                         .DefaultTopic("cadastrar.conta.requisicao")
                         .WithAcks(KafkaFlow.Acks.All)
@@ -91,7 +102,7 @@ public static class KafkaSetup
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
 
                 )
-                .AddProducer<IInforcacoesContaResponseProducer>(
+                .AddProducer<IInforcacoesContaResponseProducerTag>(
                     producer => producer
                         .DefaultTopic("informacoes.conta.resposta")
                         .WithAcks(KafkaFlow.Acks.All)
@@ -102,7 +113,7 @@ public static class KafkaSetup
                         })
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
                 )
-                .AddProducer<IMovimentacaoRequestProducer>(
+                .AddProducer<IMovimentacaoRequestProducerTag>(
                     producer => producer
                         .DefaultTopic("movimentar.conta.requisicao")
                         .WithAcks(KafkaFlow.Acks.All)
@@ -113,7 +124,7 @@ public static class KafkaSetup
                         })
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
 
-                ).AddProducer<IMovimentacaoResponseProducer>(
+                ).AddProducer<IMovimentacaoResponseProducerTag>(
                     producer => producer
                         .DefaultTopic("movimentar.conta.resposta")
                         .WithAcks(KafkaFlow.Acks.All)
@@ -124,6 +135,7 @@ public static class KafkaSetup
                         })
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
                 )
+
                 .CreateTopicIfNotExists("buscar-saldo.conta.requisicao", 1, 1)
                 .AddConsumer(consumer => consumer
                     .Topic("buscar-saldo.conta.requisicao")
@@ -147,7 +159,7 @@ public static class KafkaSetup
                         .AddTypedHandlers(handlers => handlers.AddHandler<SaldoReplyManager>())
                     )
                 )
-                .AddProducer<ISaldoRequestProducer>(
+                .AddProducer<ISaldoRequestProducerTag>(
                     producer => producer
                         .DefaultTopic("buscar-saldo.conta.requisicao")
                         .WithAcks(KafkaFlow.Acks.All)
@@ -158,7 +170,7 @@ public static class KafkaSetup
                         })
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
 
-                ).AddProducer<ISaldoResponseProducer>(
+                ).AddProducer<ISaldoResponseProducerTag>(
                     producer => producer
                         .DefaultTopic("buscar-saldo.conta.resposta")
                         .WithAcks(KafkaFlow.Acks.All)
@@ -169,15 +181,82 @@ public static class KafkaSetup
                         })
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
                 )
+                //.AddProducer<MovimentacaoRespostaProducerTag>(
+                //    producer => producer
+                //        // UNIFICADO: Tópico de Resposta da Saga
+                //        .DefaultTopic("saga.movimentar.conta.rply")
+                //        .WithAcks(KafkaFlow.Acks.All)
+                //        .AddMiddlewares(m => m.AddSerializer<NewtonsoftJsonSerializer>())
+                //        .WithProducerConfig(new ProducerConfig
+                //        {
+                //            EnableIdempotence = true,
+                //            MessageTimeoutMs = 10000,
+                //        })
+                //)
+
+                ////---------------- \\\
+                /// --- SAGA ------- \\\
+                /// ---------------- \\\
+                .CreateTopicIfNotExists(SagaTopico.DebitarConta, 1, 1)
+                .AddConsumer(consumer => consumer
+                    .Topic(SagaTopico.DebitarConta)
+                    .WithGroupId(SagaTopico.ContaCorrenteGrupo)
+                    .WithBufferSize(100)
+                    .WithWorkersCount(10)
+                    .AddMiddlewares(middlewares => middlewares
+                        .AddDeserializer<JsonCoreDeserializer>()
+                        .AddTypedHandlers(h => h.AddHandler<DebitarContaConsumer>()
+                        )
+                    )
+                )
+                .AddProducer<IValidarDebitoProducerTag>(
+                    producer => producer
+                        .DefaultTopic(SagaTopico.DebitarConta)
+                        .WithAcks(KafkaFlow.Acks.All)
+                        .AddMiddlewares(m => m.AddSerializer<JsonCoreSerializer>())
+
+                )
+                .AddProducer<ICreditarContaProducerTag>(
+                    producer => producer
+                        .DefaultTopic(SagaTopico.CreditarConta)
+                        .WithAcks(KafkaFlow.Acks.All)
+                        .AddMiddlewares(m => m.AddSerializer<JsonCoreSerializer>())
+
+                )
+                .CreateTopicIfNotExists(SagaTopico.CreditarConta, 1, 1)
+                .AddConsumer(consumer => consumer
+                    .Topic(SagaTopico.CreditarConta)
+                    .WithGroupId(SagaTopico.ContaCorrenteGrupo)
+                    .WithBufferSize(100)
+                    .WithWorkersCount(10)
+                    .AddMiddlewares(middlewares => middlewares
+                        .AddDeserializer<JsonCoreDeserializer>()
+                        .AddTypedHandlers(h => h.AddHandler<TentarCreditoContaConsumer>())
+                    )
+                )
+                .CreateTopicIfNotExists(SagaTopico.EstornarConta, 1, 1)
+                .AddConsumer(consumer => consumer
+                    .Topics(SagaTopico.EstornarConta)
+                    .WithGroupId(SagaTopico.ContaCorrenteGrupo)
+                    .WithBufferSize(100)
+                    .WithWorkersCount(5)
+                    .AddMiddlewares(middlewares => middlewares
+                        .AddDeserializer<JsonCoreDeserializer>()
+                        .AddTypedHandlers(h => h.AddHandler<EstornoDebitoConsumer>())
+                    )
+                )
+
             )
         );
 
         /// Movimentações
         services.AddSingleton<MovimentacaoReplyManager>();
         services.AddScoped<MovimentarContaService>();
-        
+
         /// Saldo
         services.AddSingleton<SaldoReplyManager>();
         services.AddScoped<SaldoService>();
+
+
     }
 }

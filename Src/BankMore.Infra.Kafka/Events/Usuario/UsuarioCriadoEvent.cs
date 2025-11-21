@@ -1,8 +1,8 @@
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace BankMore.Infra.Kafka.Events;
 
-[DataContract]  
+[DataContract]
 public class UsuarioCriadoEvent
 {
     [DataMember(Order = 1)]
@@ -18,7 +18,7 @@ public class UsuarioCriadoEvent
 
     public UsuarioCriadoEvent()
     {
-        
+
     }
 
     public UsuarioCriadoEvent(Guid id, string nome, string cpf, string senha)

@@ -8,7 +8,7 @@ namespace BankMore.Application.ContasCorrentes.ViewModels
     /// Representa os dados de uma movimentação financeira (transação) associada a uma conta corrente.
     /// </summary>
     public class MovimentoViewModel
-    {       
+    {
         /// <summary>
         /// Tipo de operação realizada. 'C' para Crédito (entrada) ou 'D' para Débito (saÃ­da).
         /// </summary>

@@ -1,16 +1,17 @@
 ﻿using BankMore.Infra.Kafka.Producers;
 using BankMore.Infra.Kafka.Responses;
 using BankMore.Infra.Kafka.Services;
+using BankMore.Infra.Kafka.Tags;
 using KafkaFlow;
 using KafkaFlow.Serializer;
 
 namespace BankMore.Services.Api.Identidade.Configurations;
-    
+
 public static class KafkaSetup
 {
     public static void AddKafkaSetup(this IServiceCollection services, IConfiguration configuration)
     {
-        var broker =  configuration.GetValue<string>("Kafka:Endereco");
+        var broker = configuration.GetValue<string>("Kafka:Endereco");
         services.AddKafka(
             kafka => kafka
                 .UseConsoleLog()
@@ -18,14 +19,14 @@ public static class KafkaSetup
                     cluster => cluster
                         .WithBrokers(new[] { broker })
                         .CreateTopicIfNotExists("cadastrar.conta.requisicao", 1, 1)
-                        .AddProducer<ICadastroContaRequestProducer>(
+                        .AddProducer<ICadastroContaRequestProducerTag>(
                             producer => producer
                                 .DefaultTopic("cadastrar.conta.requisicao")
                                 .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
 
                         )
                         .CreateTopicIfNotExists("informacoes.conta.requisicao", 1, 1)
-                        .AddProducer<IInforcacoesContaRequestProducer>(
+                        .AddProducer<IInforcacoesContaRequestProducerTag>(
                             producer => producer
                                 .DefaultTopic("informacoes.conta.requisicao")
                                 .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())

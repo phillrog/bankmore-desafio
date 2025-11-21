@@ -1,4 +1,4 @@
-
+﻿
 using BankMore.Application.ContasCorrentes.Validations;
 using BankMore.Domain.ContasCorrentes.Dtos;
 using BankMore.Domain.ContasCorrentes.Enums;
@@ -14,7 +14,7 @@ public class CadastrarNovaMovimentacaoCommand : MovimentoCommand, IRequest<Resul
         Id = Guid.NewGuid();
         Valor = valor;
         DataMovimento = DateTime.UtcNow;
-        TipoMovimento = tipo; 
+        TipoMovimento = tipo;
     }
 
     public CadastrarNovaMovimentacaoCommand(decimal valor, TipoMovimento tipo, string numero)

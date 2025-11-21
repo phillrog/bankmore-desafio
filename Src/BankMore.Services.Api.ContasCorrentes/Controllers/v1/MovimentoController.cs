@@ -1,5 +1,4 @@
-﻿using BankMore.Application.ContasCorrentes.Interfaces;
-using BankMore.Application.ContasCorrentes.ViewModels;
+﻿using BankMore.Application.ContasCorrentes.ViewModels;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;

@@ -20,7 +20,7 @@ public class InformacoesContaRespository : IInformacoesContaRespository
 
     public async Task<InformacoesContaCorrenteDto> GetByCpf(string cpf)
     {
-        var connectionString = _configuration.GetConnectionString(ConnectionStringName);
+        var connectionString = _configuration.GetConnectionString(ConnectionStringName) ?? _configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
         using IDbConnection db = new SqlConnection(connectionString);
 
         if (connectionString is null) return new InformacoesContaCorrenteDto();
@@ -44,7 +44,7 @@ public class InformacoesContaRespository : IInformacoesContaRespository
     public async Task<InformacoesContaCorrenteDto> GetByNumero(int numero)
     {
         var connectionString = _configuration.GetConnectionString(ConnectionStringName);
-        
+
         if (connectionString is null) return new InformacoesContaCorrenteDto();
 
         using IDbConnection db = new SqlConnection(connectionString);

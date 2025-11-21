@@ -5,7 +5,7 @@ namespace BankMore.Domain.Transferencias.Models
 {
     public class Idempotencia : EntityAudit
     {
-        public Idempotencia(){}
+        public Idempotencia() { }
         public Idempotencia(Guid id, Guid idContaCorrente, string requisicao, string resultado)
         {
             Id = id;

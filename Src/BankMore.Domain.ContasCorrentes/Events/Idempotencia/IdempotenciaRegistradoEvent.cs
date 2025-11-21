@@ -1,4 +1,4 @@
-using BankMore.Domain.Core.Events;
+﻿using BankMore.Domain.Core.Events;
 
 namespace BankMore.Domain.ContasCorrentes.Events;
 
@@ -13,5 +13,5 @@ public class IdempotenciaRegistradoEvent : Event
 
     public Guid Id { get; private set; }
     public Guid IdContaCorrente { get; private set; }
-    public string Requisicao { get; private set; }    
+    public string Requisicao { get; private set; }
 }

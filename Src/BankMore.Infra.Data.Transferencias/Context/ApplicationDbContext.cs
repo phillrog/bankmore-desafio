@@ -1,5 +1,6 @@
 ﻿using BankMore.Domain.Core.Models;
 using BankMore.Domain.Transferencias.Models;
+using BankMore.Infra.Data.Common.Notifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -14,7 +15,7 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Transferencia> Transferencias { get; set; }
     public DbSet<Idempotencia> Idempotencias { get; set; }
-
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {

@@ -1,7 +1,5 @@
+﻿using BankMore.Infra.CrossCutting.Identity.Services;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-
-using BankMore.Infra.CrossCutting.Identity.Services;
 
 namespace BankMore.Infra.CrossCutting.Identity.Extensions;
 

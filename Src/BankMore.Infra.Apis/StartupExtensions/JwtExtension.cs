@@ -1,5 +1,4 @@
-using BankMore.Infra.Apis.Configurations;
-using BankMore.Infra.CrossCutting.Identity.Filters;
+﻿using BankMore.Infra.Apis.Configurations;
 using BankMore.Infra.CrossCutting.Identity.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -21,7 +20,7 @@ public static class JwtExtension
         }
 
         var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
-      
+
         var jwtAppSettingOptions = configuration.GetSection(nameof(JwtIssuerOptions));
 
         var tokenValidationParameters = new TokenValidationParameters
@@ -51,7 +50,7 @@ public static class JwtExtension
             configureOptions.SaveToken = true;
             configureOptions.Events = JwtEventsSetup.GetCustomEvents();
         });
-        
+
         services.AddAuthorization(options =>
         {
             PolicySetup.AddCustomPolicies(options);

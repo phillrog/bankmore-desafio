@@ -12,7 +12,7 @@ public static class DatabaseSetup
         {
             var conn = configuration.GetConnectionString("DefaultConnection");
             options.UseSqlServer(conn);
-            
+
             if (!env.IsProduction())
             {
                 options.EnableDetailedErrors();

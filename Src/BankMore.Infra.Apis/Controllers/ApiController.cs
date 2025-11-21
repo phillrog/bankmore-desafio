@@ -1,5 +1,4 @@
-using BankMore.Domain.Core.Bus;
-using BankMore.Domain.Core.Models;
+﻿using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
 
 using MediatR;
@@ -41,7 +40,7 @@ public abstract class ApiController : ControllerBase
     }
 
     protected IActionResult ResponseResult(dynamic result)
-    {        
+    {
         if (result.IsSuccess)
         {
             return Ok(new
@@ -103,7 +102,7 @@ public abstract class ApiController : ControllerBase
 
     protected void AddError(string error, string description)
     {
-        NotifyError(error, description);        
+        NotifyError(error, description);
     }
 
     #endregion

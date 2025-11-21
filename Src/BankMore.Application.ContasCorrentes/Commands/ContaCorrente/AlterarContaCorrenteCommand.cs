@@ -1,10 +1,10 @@
-using BankMore.Application.ContasCorrentes.Validations;
+﻿using BankMore.Application.ContasCorrentes.Validations;
 
 namespace BankMore.Application.ContasCorrentes.Commands;
 
 public class AlterarContaCorrenteCommand : ContaCorrenteCommand
 {
-    public AlterarContaCorrenteCommand(string nome, string senha, string senhaAnterior,  bool ativo)
+    public AlterarContaCorrenteCommand(string nome, string senha, string senhaAnterior, bool ativo)
     {
         Nome = nome;
         Senha = senha;

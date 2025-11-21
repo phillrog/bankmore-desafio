@@ -3,7 +3,6 @@ using BankMore.Application.Transferencias.ViewModels;
 using BankMore.Domain.Core.Bus;
 using BankMore.Domain.Core.Notifications;
 using BankMore.Infra.Apis.Configurations;
-using BankMore.Infra.Kafka.Services;
 using BankMore.Services.Apis.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -33,8 +32,8 @@ public class TransferenciaController : ApiController
     #endregion
 
     #region [ POST ]
-    
-    [HttpPost]    
+
+    [HttpPost]
     [ProducesResponseType(typeof(RealizarTransferenciaViewModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -53,6 +52,6 @@ public class TransferenciaController : ApiController
 
         return ResponseResult(result);
     }
-    
+
     #endregion
 }
