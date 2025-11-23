@@ -187,6 +187,7 @@ namespace BankMore.Infra.Kafka.Services
                     Data = movimentacao.DataMovimento,
                     Valor = movimentacao.Valor,
                     Tipo = movimentacao.TipoMovimento == 'C' ? "CRÉDITO" : "DÉBITO",
+                    NumeroContaOrigem = numeroOrigem,
                     NomeContraparte = nomeContraparte,
                     NumeroContaDestino = numeroDestino
                 });

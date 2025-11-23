@@ -181,18 +181,6 @@ public static class KafkaSetup
                         })
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
                 )
-                //.AddProducer<MovimentacaoRespostaProducerTag>(
-                //    producer => producer
-                //        // UNIFICADO: Tópico de Resposta da Saga
-                //        .DefaultTopic("saga.movimentar.conta.rply")
-                //        .WithAcks(KafkaFlow.Acks.All)
-                //        .AddMiddlewares(m => m.AddSerializer<NewtonsoftJsonSerializer>())
-                //        .WithProducerConfig(new ProducerConfig
-                //        {
-                //            EnableIdempotence = true,
-                //            MessageTimeoutMs = 10000,
-                //        })
-                //)
 
                 ////---------------- \\\
                 /// --- SAGA ------- \\\

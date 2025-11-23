@@ -80,7 +80,7 @@ public static class SwaggerExtension
     /// <summary>
     /// Configura o Swagger UI para mostrar um endpoint para cada versão de API.
     /// </summary>
-    public static IApplicationBuilder UseCustomizedSwagger(this IApplicationBuilder app, IWebHostEnvironment env, string api)
+    public static IApplicationBuilder UseCustomizedSwagger(this IApplicationBuilder app, IWebHostEnvironment env, string api, string pathBase)
     {
         // Obtém o provedor de versão após o app.Build()
         var provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
@@ -95,7 +95,7 @@ public static class SwaggerExtension
             foreach (var description in provider.ApiVersionDescriptions)
             {
                 c.SwaggerEndpoint(
-                    $"/swagger/{description.GroupName}/swagger.json",
+                    $"{pathBase}swagger/{description.GroupName}/swagger.json",
                     $"Desafio BankMore {api} {description.GroupName.ToUpperInvariant()}");
             }
 

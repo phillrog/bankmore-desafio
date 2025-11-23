@@ -1,4 +1,4 @@
-
+﻿
 version: '3.8'
 
 services:
@@ -71,7 +71,7 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
     healthcheck:
-      test: ["CMD", "kafka-topics", "--bootstrap-server", "broker:9092", "--list"]
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "broker:29092", "--list"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -95,4 +95,4 @@ services:
     hostname: kafka
     container_name: kafka
     command: ["tail", "-f", "/dev/null"]
-    network_mode: "host"
+    

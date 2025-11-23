@@ -100,18 +100,18 @@ public static class KafkaSetup
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
                 )
 
-                .CreateTopicIfNotExists("buscar-saldo.conta.requisicao", 1, 1)
-                .AddConsumer(consumer => consumer
-                    .Topic("buscar-saldo.conta.requisicao")
-                    .WithGroupId("grupo.aplicacao.transferencia")
-                    .WithBufferSize(100)
-                    .WithWorkersCount(10)
-                    .AddMiddlewares(middlewares => middlewares
+                //.CreateTopicIfNotExists("buscar-saldo.conta.requisicao", 1, 1)
+                //.AddConsumer(consumer => consumer
+                //    .Topic("buscar-saldo.conta.requisicao")
+                //    .WithGroupId("grupo.aplicacao.transferencia")
+                //    .WithBufferSize(100)
+                //    .WithWorkersCount(10)
+                //    .AddMiddlewares(middlewares => middlewares
 
-                        .AddDeserializer<ProtobufNetDeserializer>()
-                        .AddTypedHandlers(h => h.AddHandler<SaldoRequestConsumer>())
-                    )
-                )
+                //        .AddDeserializer<ProtobufNetDeserializer>()
+                //        .AddTypedHandlers(h => h.AddHandler<SaldoRequestConsumer>())
+                //    )
+                //)
                 .CreateTopicIfNotExists("buscar-saldo.conta.resposta", 1, 1)
                 .AddConsumer(consumer => consumer
                     .Topic("buscar-saldo.conta.resposta")
@@ -134,7 +134,8 @@ public static class KafkaSetup
                         })
                         .AddMiddlewares(m => m.AddSerializer<ProtobufNetSerializer>())
 
-                ).AddProducer<ISaldoResponseProducerTag>(
+                )
+                .AddProducer<ISaldoResponseProducerTag>(
                     producer => producer
                         .DefaultTopic("buscar-saldo.conta.resposta")
                         .WithAcks(KafkaFlow.Acks.All)

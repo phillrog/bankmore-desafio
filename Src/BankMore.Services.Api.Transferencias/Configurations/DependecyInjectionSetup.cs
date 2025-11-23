@@ -1,10 +1,12 @@
 ﻿using BankMore.Application.Common.Querys;
+using BankMore.Application.Common.Querys.ContaCorrente;
 using BankMore.Application.Transferencias.Commands;
 using BankMore.Application.Transferencias.Interfaces;
 using BankMore.Application.Transferencias.Querys;
 using BankMore.Application.Transferencias.Services;
 using BankMore.Application.Transferencias.ViewModels;
 using BankMore.Domain.Common;
+using BankMore.Domain.Common.Dtos;
 using BankMore.Domain.Common.Events;
 using BankMore.Domain.Common.Interfaces;
 using BankMore.Domain.Core.Models;
@@ -13,7 +15,6 @@ using BankMore.Domain.Transferencias.Interfaces;
 using BankMore.Infra.Data.Common.Repository;
 using BankMore.Infra.Data.Transferencias.Repository;
 using BankMore.Infra.Data.Transferencias.UoW;
-using BankMore.Infra.Kafka.Services;
 using MediatR;
 
 namespace BankMore.Services.Api.Transferencias.Configurations;
@@ -42,8 +43,10 @@ public static class DependecyInjectionSetup
         services.AddScoped<IRequestHandler<IdempotenciaViewQuery, Result<IdempotenciaViewModel>>, IdempotenciaQueryHandler>();
         services.AddScoped<IRequestHandler<IdempotenciaExisteQuery, bool>, IdempotenciaQueryHandler>();
 
+        // Application - Querys - Saldo
+        services.AddScoped<IRequestHandler<InformacoesContaCorrenteQuery, Result<InformacoesContaCorrenteDto>>, InformacoesContaCorrenteQueryHandler>();
         // Domain - Services
-        
+
 
         // Infra - Data
         services.AddScoped<ITransferenciaRepository, TransferenciaRepository>();

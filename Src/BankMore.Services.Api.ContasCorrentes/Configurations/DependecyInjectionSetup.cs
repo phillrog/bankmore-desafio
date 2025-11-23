@@ -61,10 +61,11 @@ public static class DependecyInjectionSetup
 
         // Application - Querys - Movimento
         services.AddScoped<IRequestHandler<MovimentoViewQuery, Result<MovimentoViewModel>>, MovimentoQueryHandler>();
+        services.AddScoped<IRequestHandler<InformacoesContaCorrenteQuery, Result<InformacoesContaCorrenteDto>>, InformacoesContaCorrenteQueryHandler>();
 
         // Application - Querys - Saldo
         services.AddScoped<IRequestHandler<SaldoQuery, Result<SaldoDto>>, InformacoesQueryHandler>();
-
+        
         // Domain - Services
         services.AddScoped<IGeradorNumeroService, GeradorNumeroService>();
         services.AddScoped<ICorrentistaService, CorrentistaService>();

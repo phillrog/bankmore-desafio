@@ -106,22 +106,6 @@ namespace BankMore.Application.Transferencias.Commands
                 return Result<TransferenciaDto>.Failure(erro, Erro.INVALID_ACCOUNT);
             }
 
-            var consultaSaldo = await _saldoService.ConsultarSaldo(Convert.ToInt32(_user.Conta));
-
-            if (!consultaSaldo.IsSuccess)
-            {
-                var erro = string.Join(", ", consultaSaldo.Erros);
-                _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
-                return Result<TransferenciaDto>.Failure(erro, Erro.INVALID_VALUE);
-            }
-
-            if (consultaSaldo.Data.SaldoAtualizado == 0)
-            {
-                var erro = "Saldo na conta insuficiente";
-                _bus.RaiseEvent(new DomainNotification(message.MessageType, erro));
-                return Result<TransferenciaDto>.Failure(erro, Erro.INSUFFICIENT_FUNDS);
-            }
-
             if (!contaOrigem.Ativo)
             {
                 var erro = "Apenas contas correntes ativas podem realizar transferências.Por favor verifique a conta origem.";

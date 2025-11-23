@@ -85,6 +85,8 @@ builder.Services.AddCustomizedHealthCheck(builder.Configuration, builder.Environ
 // END: Custom services
 
 var app = builder.Build();
+var pathBase = builder.Configuration.GetValue<string>("Base");
+app.UsePathBase(pathBase);
 
 // Globalization culture
 var supportedCultures = new[] { new CultureInfo("pt-BR") };
@@ -125,7 +127,7 @@ app.MapControllers();
 HealthCheckSetup.UseCustomizedHealthCheck(app, builder.Environment);
 
 // ----- Swagger UI -----
-app.UseCustomizedSwagger(builder.Environment, apiNome);
+app.UseCustomizedSwagger(builder.Environment, apiNome, pathBase);
 
 // END: Custom middlewares
 

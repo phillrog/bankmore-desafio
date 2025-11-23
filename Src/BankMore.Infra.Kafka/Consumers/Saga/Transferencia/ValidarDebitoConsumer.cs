@@ -115,16 +115,7 @@ namespace BankMore.Infra.Kafka.Consumers
                     }
                 }
 
-                await AtualizarTransferenciaAsync(message, scope.ServiceProvider);
-
-                var producer = scope.ServiceProvider.GetRequiredService<IMovimentacaoRespostaProducer>();
-
-                // 4. Usa o produtor resolvido no escopo.
-                await producer.ProduceAsync(
-                    message,
-                    message.Id.ToString(),
-                    message.Topico
-                );
+                await AtualizarTransferenciaAsync(message, scope.ServiceProvider);                
             }
         }
 
@@ -137,6 +128,8 @@ namespace BankMore.Infra.Kafka.Consumers
             try
             {
                 var transferencia = await transferenciaRepository.GetByExpressionAsync(t => t.Id == message.Id);
+
+                if (transferencia is null) return;
 
                 transferencia.AtualizarStatus((StatusEnum)message.Status);
                 transferencia.AtualizarDataUltimaAlteracao(DateTime.UtcNow);
