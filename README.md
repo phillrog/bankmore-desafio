@@ -237,6 +237,306 @@ Estes comandos devem ser executados **dentro do container broker** para inspeç�
 
 * * * * *
 
+
+O FLUXO DE NAVEGAÇÃO COMPLETO NO KUBERNETES
+===========================================
+
+O processo de uma requisição externa, como acessar `http://[IP_PÚBLICO]/identidade/swagger`, envolve a coordenação de quatro componentes principais do Kubernetes: o **Load Balancer**, o **Ingress Controller Service**, o **Recurso Ingress** (a regra) e o **Service ClusterIP** de destino.
+
+O Processo de 6 Etapas
+----------------------
+
+O tráfego segue uma jornada bem definida no cluster:
+
+### 1\. Origem: O Cliente e o DNS
+
+O cliente (navegador ou outra aplicação) tenta acessar o endpoint. Ele resolve o nome de domínio para o **IP Público** (Load Balancer IP) que o seu Ingress Controller expõe.
+
+### 2\. Ponto de Entrada: O Balanceador de Carga (Load Balancer)
+
+O tráfego HTTP/HTTPS chega primeiro ao Load Balancer do provedor de cloud (Azure, AWS, GKE, etc.). Este Load Balancer, por sua vez, foi provisionado e configurado automaticamente pelo Kubernetes por causa do **Service do NGINX Ingress Controller** ser do tipo `LoadBalancer`.
+
+-   **Função:** A única função neste ponto é encaminhar todo o tráfego da porta 80 e 443 para as portas correspondentes dos nós de trabalho (Worker Nodes) que hospedam o Ingress Controller.
+
+### 3\. A Ponte Interna: O Service do Ingress Controller
+
+O tráfego do Load Balancer chega ao Service do Ingress Controller (ex: `ingress-nginx-controller`) que roda no namespace `ingress-nginx`.
+
+-   **Função:** Ele atua como uma porta de entrada do cluster, roteando o tráfego recebido para os Pods do Ingress Controller (onde o software NGINX está de fato rodando).
+
+### 4\. O Roteador Central: O Pod do Ingress Controller (NGINX)
+
+A requisição finalmente chega a um dos Pods onde o NGINX Ingress Controller está em execução. Este software é a inteligência do roteamento.
+
+-   **Função:** O NGINX lê o **Recurso Ingress** que você criou (`bankmore-api-ingress`) e decide para onde a requisição deve ir.
+
+### 5\. A Decisão: O Recurso Ingress (Regra)
+
+O NGINX usa o `bankmore-api-ingress` como mapa. Na sua configuração final, a regra é simples:
+
+```
+paths:
+  - path: /identidade
+    pathType: Prefix
+    backend:
+      service:
+        name: bankmore-identidade-svc
+        port:
+          number: 5000
+
+```
+
+-   **Ação:** O NGINX verifica o caminho da URL (`/identidade/swagger/v1/swagger.json`).
+
+-   **Decisão (Graças ao `Prefix`):** Como o caminho começa com `/identidade`, o NGINX simplesmente encaminha a URL **completa** (`/identidade/swagger/v1/swagger.json`) para o Service interno de destino: `bankmore-identidade-svc` na porta 5000.
+
+    -   *Nota:* As anotações de reescrita complexas (`rewrite-target: /$2`) teriam removido o prefixo `/identidade` aqui, mas como elas foram bloqueadas pelo seu cluster, o trabalho de remoção do prefixo passa para o microsserviço (próxima etapa).
+
+### 6\. Destino Final: O Service ClusterIP e o Pod de Aplicação
+
+A requisição agora está dentro do cluster, endereçada ao Service `bankmore-identidade-svc`.
+
+-   **Função do Service:** O Service ClusterIP (porta 5000) atua como um load balancer interno, roteando a requisição para um dos Pods disponíveis que possuem o Label `app: bankmore-identidade`.
+
+-   **Ação do Pod (O Segredo do C#):** A requisição chega ao seu microsserviço na porta 5000 com o caminho **completo** (`/identidade/swagger/v1/swagger.json`). É aqui que a configuração C# entra em ação:
+
+    -   O método **`app.UsePathBase("/identidade")`** remove o prefixo `/identidade` da URL antes que ela seja processada pelo roteador da aplicação (Swagger/Minimal API).
+
+    -   A aplicação vê apenas `/swagger/v1/swagger.json` e a processa corretamente, retornando a resposta.
+
+Em resumo, o **Ingress (com `pathType: Prefix`)** roteia a requisição para o Service correto, e o **microsserviço C# (`UsePathBase`)** lida com o prefixo que foi mantido.
+
+    > Frameworks padrão do **.NET** para segurança, autenticação de usuários e geração/validação de tokens de acesso com claims (roles/policies).
+transações distribuídas em microsserviços.Outbox Pattern:Chris Richardson. Pattern: Outbox. Garante que a publicação de eventos seja atômica com a transação local do banco de dados.Domain-Driven Design (DDD):Eric Evans. Domain-Driven Design: Tackling Complexity in the Heart of Software. Foco na modelagem em torno do domínio de negócio.ASP.NET Identity Core & JWT:Frameworks padrão do .NET para segurança, autenticação de 
+usuários e geração/validação de tokens de acesso com claims (roles/policies).
+
+
+---
+
+Guia de Comandos do Projeto BankMore (Formato Simples)
+======================================================
+
+Esta documentação resume os comandos mais utilizados no ciclo de vida do projeto, organizados por ambiente.
+
+I. Gerenciamento do Ambiente Local (Docker Compose)
+---------------------------------------------------
+
+Estes comandos controlam a infraestrutura de desenvolvimento (SQL Server, Kafka, etc.).
+
+-   **Destruição Completa (Cleanup):** Remove containers, volumes de dados persistentes e órfãos.
+
+    ```
+    docker compose -f .\docker-compose.yml -f .\docker-compose.development.yml down --volumes --remove-orphans
+
+    ```
+
+-   **Inicialização da Infra:** Levanta serviços essenciais (`mssql`, `zookeeper`, `broker`, etc.) em modo *detached*.
+
+    ```
+    docker compose -f .\docker-compose.yml -f .\docker-compose.development.yml up -d mssql mssql-init zookeeper broker schema-registry kafka-tools
+
+    ```
+
+-   **Execução/Reconstrução (Produção):** Levanta todos os serviços, forçando a reconstrução de imagens (`--build`).
+
+    ```
+    docker compose --progress plain -f .\docker-compose.yml -f .\docker-compose.production.yml up --build --no-deps --force-recreate
+
+    ```
+
+II. Construção e Publicação de Imagens Docker
+---------------------------------------------
+
+Passos para preparar e enviar as imagens das APIs .NET. (Substitua `seusuario` pelo seu Docker Hub username).
+
+-   **Construir Imagem (.NET Identidade):**
+
+    ```
+    docker build -t phillrog/bankmore-api-identidade:latest -f Src/BankMore.Services.Api.Identidade/Dockerfile .
+
+    ```
+
+-   **Publicar (Push) a Imagem:**
+
+    ```
+    docker push phillrog/bankmore-api-identidade:latest
+
+    ```
+
+III. Gerenciamento e Monitoramento do Kafka
+-------------------------------------------
+
+Comandos para interagir diretamente com o Broker Kafka local.
+
+-   **Listar Todos os Tópicos:**
+
+    ```
+    docker exec -it broker /bin/bash -c "kafka-topics --bootstrap-server broker:29092 --list"
+
+    ```
+
+-   **Listar Grupos de Consumidores Ativos:**
+
+    ```
+    docker exec -it broker kafka-consumer-groups --bootstrap-server localhost:9092 --list
+
+    ```
+
+-   **Verificar Detalhes/LAG de um Consumidor:** (Substitua `[GRUPO_ID]`)
+
+    ```
+    docker exec -it kafka kafka-consumer-groups --bootstrap-server localhost:9092 --group [GRUPO_ID] --describe
+
+    ```
+
+-   **Visualizar Primeiras Mensagens de um Tópico:** (Substitua `[TOPICO_ID]`)
+
+    ```
+    docker exec -it broker kafka-console-consumer --bootstrap-server localhost:9092 --topic [TOPICO_ID] --from-beginning --max-messages 10
+
+    ```
+
+IV. Gerenciamento de Infraestrutura (Terraform e Azure)
+-------------------------------------------------------
+
+Comandos para provisionar e remover a infraestrutura como código (IaS) na nuvem.
+
+-   **Configuração Inicial da VM:**
+
+    ```
+    chmod +x setup_vm.sh && ./setup_vm.sh
+
+    ```
+
+-   **Inicialização do Terraform:**
+
+    ```
+    terraform init
+
+    ```
+
+-   **Planejamento (Verificar Ações):**
+
+    ```
+    terraform plan
+
+    ```
+
+-   **Aplicação (Provisionar Recursos):**
+
+    ```
+    terraform apply -auto-approve
+
+    ```
+
+-   **DESTRUIÇÃO TOTAL DA INFRAESTRUTURA:** **(Operação irreversível!)**
+
+    ```
+    terraform destroy -auto-approve
+
+    ```
+
+-   **Obter Connection Strings SQL:**
+
+    ```
+    terraform output -raw sql_connection_strings_all
+
+    ```
+
+V. Gerenciamento do Cluster Kubernetes (K8s)
+--------------------------------------------
+
+Comandos essenciais para o cluster K8s.
+
+-   **Instalar NGINX Ingress Controller:**
+
+    ```
+    kubectl create namespace ingress-nginx
+    helm install ingress-nginx ingress-nginx/ingress-nginx --repo [https://kubernetes.github.io/ingress-nginx](https://kubernetes.github.io/ingress-nginx) --namespace ingress-nginx
+
+    ```
+
+-   **Verificar Endereço Público (LoadBalancer):**
+
+    ```
+    kubectl get svc -n ingress-nginx
+
+    ```
+
+-   **Reiniciar Todos os Deployments das APIs:**
+
+    ```
+    # Exemplo: Adapte a lista de deployments conforme necessário
+    for deployment in identidade-deploy conta-corrente-deploy ; do kubectl rollout restart deployment $deployment -n kafka; done
+
+    ```
+
+-   **Monitorar Logs em Tempo Real (Exemplo Identidade):**
+
+    ```
+    POD_ID=$(kubectl get pods -n kafka | grep identidade-deploy | awk '{print $1}')
+    kubectl logs -f $POD_ID -n kafka
+
+
+Endereços das APIs (Via K8s Ingress)
+====================================
+
+**IMPORTANTE:** Substitua `http://[IP_PÚBLICO_DO_NGINX]` pelo IP real do seu Load Balancer NGINX.
+
+Documentação (Swagger UI)
+-------------------------
+
+-   **API de Identidade:** `http://[IP_PÚBLICO_DO_NGINX]/identidade/swagger/index.html`
+
+-   **API de Contas Correntes:** `http://[IP_PÚBLICO_DO_NGINX]/contascorrentes/swagger/index.html`
+
+-   **API de Transferências:** `http://[IP_PÚBLICO_DO_NGINX]/transferencias/swagger/index.html`
+
+Endereços Base (Endpoints)
+--------------------------
+
+-   **API de Identidade (Base):** `http://[IP_PÚBLICO_DO_NGINX]/identidade`
+
+-   **API de Contas Correntes (Base):** `http://[IP_PÚBLICO_DO_NGINX]/contascorrentes`
+
+-   **API de Transferências (Base):** `http://[IP_PÚBLICO_DO_NGINX]/transferencias`
+
+    ```
+
+# Resultado Final
+
+Atenção habilitar a porta do ingress porta 80
+
+<img width="1907" height="971" alt="image" src="https://github.com/user-attachments/assets/6fcf6bd2-8269-44e3-b5c2-4e7fc0a48c55" />
+
+
+Banco de dados
+
+<img width="1912" height="763" alt="image" src="https://github.com/user-attachments/assets/e627c44e-9220-4f3a-848e-4bb4c946a104" />
+
+
+<img width="1919" height="971" alt="Captura de tela 2025-11-23 183447" src="https://github.com/user-attachments/assets/b102006b-3222-4d44-8c63-f4e8e9747235" />
+
+<img width="1919" height="969" alt="Captura de tela 2025-11-23 183455" src="https://github.com/user-attachments/assets/2a21a5a1-afcf-44e4-9f85-bbfea9f9bd0d" />
+
+<img width="1919" height="978" alt="Captura de tela 2025-11-23 183526" src="https://github.com/user-attachments/assets/a410dad9-10a2-4f11-b9b6-8c588d19176d" />
+
+
+Cluster k8s
+
+<img width="1917" height="967" alt="image" src="https://github.com/user-attachments/assets/23ecd1c8-a3fd-4075-9888-7fbc32e2d821" />
+
+Deployments
+
+<img width="1917" height="623" alt="image" src="https://github.com/user-attachments/assets/78fad580-295e-47e5-9095-a652176b46c4" />
+
+<img width="1600" height="954" alt="Captura de tela 2025-11-23 190608" src="https://github.com/user-attachments/assets/c1ad6bf7-3613-453a-8803-57745ffc8b9e" />
+
+
+Apis
+
+
+
 📚 Referências e Conceitos Chave
 --------------------------------
 
@@ -253,7 +553,3 @@ Estes comandos devem ser executados **dentro do container broker** para inspeç�
     > Eric Evans. Domain-Driven Design: Tackling Complexity in the Heart of Software. Foco na modelagem em torno do domínio de negócio.
 
 -   **ASP.NET Identity Core & JWT:**
-
-    > Frameworks padrão do **.NET** para segurança, autenticação de usuários e geração/validação de tokens de acesso com claims (roles/policies).
-transações distribuídas em microsserviços.Outbox Pattern:Chris Richardson. Pattern: Outbox. Garante que a publicação de eventos seja atômica com a transação local do banco de dados.Domain-Driven Design (DDD):Eric Evans. Domain-Driven Design: Tackling Complexity in the Heart of Software. Foco na modelagem em torno do domínio de negócio.ASP.NET Identity Core & JWT:Frameworks padrão do .NET para segurança, autenticação de 
-usuários e geração/validação de tokens de acesso com claims (roles/policies).
