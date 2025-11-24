@@ -1,0 +1,69 @@
+# ----------------------------------------------------
+# File: broker.yaml
+# ----------------------------------------------------
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-broker-deploy
+  namespace: bankmore
+  labels:
+    app: kafka-broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-broker
+  template:
+    metadata:
+      labels:
+        app: kafka-broker
+    spec:
+      containers:
+      - name: kafka-broker
+        image: confluentinc/cp-kafka:7.8.0
+        ports:
+          - containerPort: 29092
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        env:
+          # --- CONEXÃO DO ZOOKEEPER ---
+          - name: KAFKA_ZOOKEEPER_CONNECT
+            value: zookeeper:2181
+
+          # --- ID DO BROKER ---
+          - name: KAFKA_BROKER_ID
+            value: "1"
+
+          # ----------------------------------------------------------------------
+          # O broker escuta em 0.0.0.0 na porta 29092.
+          # ----------------------------------------------------------------------
+          - name: KAFKA_LISTENERS
+            value: PLAINTEXT://:29092
+            
+          # ----------------------------------------------------------------------
+          # 'broker' é o nome do seu Service do Kubernetes.
+          # ----------------------------------------------------------------------
+          - name: KAFKA_ADVERTISED_LISTENERS
+            value: PLAINTEXT://broker:29092         
+
+          # --- OUTRAS CONFIGURAÇÕES ---
+          - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+            value: "1"
+          - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+            value: "1"
+        livenessProbe:
+          exec:
+            command: ["/bin/sh", "-c", "echo OK"]
+          initialDelaySeconds: 40
+          periodSeconds: 30
+        readinessProbe:
+          exec:
+            command: ["/bin/sh", "-c", "echo OK"]
+          initialDelaySeconds: 40
+          periodSeconds: 30

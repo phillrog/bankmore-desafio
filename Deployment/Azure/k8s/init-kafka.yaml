@@ -1,0 +1,30 @@
+# ----------------------------------------------------
+# File: init-kafka.yaml
+# ----------------------------------------------------
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-kafka
+  namespace: bankmore
+spec:
+  template:
+    spec:
+      containers:
+      - name: init-kafka
+        image: confluentinc/cp-kafka:7.8.0
+        command:
+        - /bin/sh
+        - -c
+        - |
+          # Espera 30 segundos para garantir que o Broker esteja totalmente iniciado
+          sleep 30 && \
+          echo "Criando tópico 'test-event'..." && \
+          kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic test-event --replication-factor 1 --partitions 3 && \
+          echo "Tópicos atuais:" && \
+          kafka-topics --bootstrap-server broker:29092 --list
+      restartPolicy: OnFailure
+      # Adiciona uma tolerância simples para esperar pelo nó do Broker
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"

@@ -1,0 +1,198 @@
+# ====================================================================
+# BANKMORE MICROSERVICES - DEPLOYMENTS, SERVICES & INGRESS
+# Namespace: bankmore
+# ====================================================================
+
+# ----------------------------------------------------
+# 1. API DE IDENTIDADE
+# ----------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bankmore-identidade-deploy
+  namespace: bankmore
+  labels:
+    app: bankmore-identidade
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bankmore-identidade
+  template:
+    metadata:
+      labels:
+        app: bankmore-identidade
+    spec:
+      containers:
+      - name: identidade-api
+        image: phillrog/bankmore-api-identidade:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "broker:29092"
+        - name: ConnectionStrings__DefaultConnection
+          value: "__CONN_IDENTIDADE_DEFAULT__"
+        - name: ConnectionStrings__BankMoreContaCorrenteDBConnection
+          value: "__CONN_CONTASCORRENTES_DEFAULT__"
+        - name: Base
+          value: "/identidade/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bankmore-identidade-svc
+  namespace: bankmore
+spec:
+  selector:
+    app: bankmore-identidade
+  ports:
+  - port: 5000
+    targetPort: 5000
+  type: ClusterIP 
+---
+# ----------------------------------------------------
+# 2. API DE CONTAS CORRENTES
+# ----------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bankmore-contascorrentes-deploy
+  namespace: bankmore
+  labels:
+    app: bankmore-contascorrentes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bankmore-contascorrentes
+  template:
+    metadata:
+      labels:
+        app: bankmore-contascorrentes
+    spec:
+      containers:
+      - name: contascorrentes-api
+        image: phillrog/bankmore-api-contascorrentes:latest
+        ports:
+        - containerPort: 5001
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "broker:29092"
+        - name: ConnectionStrings__DefaultConnection
+          value: "__CONN_CONTASCORRENTES_DEFAULT__"
+        - name: ConnectionStrings__TransferenciaDb
+          value: "__CONN_TRANSFERENCIA_DEFAULT__"
+        - name: ConnectionStrings__BankMoreContaCorrenteDBConnection
+          value: "__CONN_CONTASCORRENTES_DEFAULT__"
+        - name: Base
+          value: "/contascorrentes/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bankmore-contascorrentes-svc
+  namespace: bankmore
+spec:
+  selector:
+    app: bankmore-contascorrentes
+  ports:
+  - port: 5001
+    targetPort: 5001
+  type: ClusterIP
+---
+# ----------------------------------------------------
+# 3. API DE TRANSFERÊNCIAS
+# ----------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bankmore-transferencias-deploy
+  namespace: bankmore
+  labels:
+    app: bankmore-transferencias
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bankmore-transferencias
+  template:
+    metadata:
+      labels:
+        app: bankmore-transferencias
+    spec:
+      containers:
+      - name: transferencias-api
+        image: phillrog/bankmore-api-transferencias:latest
+        ports:
+        - containerPort: 5002
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "broker:29092"
+        - name: ConnectionStrings__DefaultConnection
+          value: "__CONN_TRANSFERENCIA_DEFAULT__"
+        - name: ConnectionStrings__BankMoreContaCorrenteDBConnection
+          value: "__CONN_CONTASCORRENTES_DEFAULT__"
+        - name: Base
+          value: "/transferencias/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bankmore-transferencias-svc
+  namespace: bankmore
+spec:
+  selector:
+    app: bankmore-transferencias
+  ports:
+  - port: 5002
+    targetPort: 5002
+  type: ClusterIP
+---
+# ----------------------------------------------------
+# 4. INGRESS (NGINX) - Roteamento das APIs (Versão Permitida)
+# ----------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bankmore-api-ingress
+  namespace: bankmore
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # Removidas as anotações proibidas pelo Admission Webhook
+spec:
+  rules:
+  - http:
+      paths:
+      # --- API de IDENTIDADE ---
+      - path: /identidade
+        pathType: Prefix
+        backend:
+          service:
+            name: bankmore-identidade-svc
+            port:
+              number: 5000
+
+      # --- API de CONTAS CORRENTES ---
+      - path: /contascorrentes
+        pathType: Prefix
+        backend:
+          service:
+            name: bankmore-contascorrentes-svc
+            port:
+              number: 5001
+
+      # --- API de TRANSFERÊNCIAS ---
+      - path: /transferencias
+        pathType: Prefix
+        backend:
+          service:
+            name: bankmore-transferencias-svc
+            port:
+              number: 5002
