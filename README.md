@@ -6,6 +6,7 @@
 
 # 🏦 Desfio # BankMore: Plataforma de Microsserviços Bancários
 
+
 Este projeto é a plataforma de serviços bancários digitais, **Deafio - BankMore**, desenvolvida com uma arquitetura de **Microsserviços** desacoplados. Adota fortemente os padrões de **Domain-Driven Design (DDD)** e **CQRS** para gerenciar a complexidade do domínio.
 
 A comunicação e as transações distribuídas são tratadas de forma assíncrona, utilizando **Apache Kafka** e o **Outbox Pattern (Kaflow)**, com o padrão **SAGA** implementado para garantir a consistência das transações de negócio (e.g., Transferências). O projeto garante **Idempotência** e aderência a boas práticas de desenvolvimento.
@@ -197,7 +198,7 @@ Inicia o **SQL Server** (`mssql`, `mssql-init`), a stack **Kafka** e todas as **
 Bash
 
 ```
-docker compose -f .\docker-compose.yml -f .\docker-compose.development.yml up -d mssql mssql-init zookeeper broker schema-registry kafka-tools
+docker compose -f .\docker-compose.yml -f .\docker-compose.development.yml up -d mssql mssql-init zookeeper broker schema-registry kafka-tools kafka-ui
 
 ```
 
@@ -405,7 +406,19 @@ Comandos para interagir diretamente com o Broker Kafka local.
 IV. Gerenciamento de Infraestrutura (Terraform e Azure)
 -------------------------------------------------------
 
-Comandos para provisionar e remover a infraestrutura como código (IaS) na nuvem.
+Comandos para provisionar e remover a infraestrutura como código (IaS) na Azure.
+
+```
+# Instalar ferramentas (az cli, kubectl, sqlcmd, helm, etc...)
+
+cd Deployment\Azure
+
+./setup_vm.sh 
+```
+
+```
+cd Deployment\Azure\terraform
+```
 
 -   **Configuração Inicial da VM:**
 
@@ -489,6 +502,7 @@ Endereços das APIs (Via K8s Ingress)
 
 **IMPORTANTE:** Substitua `http://[IP_PÚBLICO_DO_NGINX]` pelo IP real do seu Load Balancer NGINX.
 
+
 Documentação (Swagger UI)
 -------------------------
 
@@ -507,11 +521,31 @@ Endereços Base (Endpoints)
 
 -   **API de Transferências (Base):** `http://[IP_PÚBLICO_DO_NGINX]/transferencias`
 
-    ```
+Atenção habilitar a porta do ingress porta 80
+---    
 
 # Resultado Final
 
-Atenção habilitar a porta do ingress porta 80
+# Apis
+
+## Api.Identidade
+
+![cadastro](https://github.com/user-attachments/assets/5e7b33ea-b606-4c07-8063-291e378c0ed0)
+
+## Api.ContasCorresntes
+
+![movimentacao](https://github.com/user-attachments/assets/a03f0346-45e2-41d7-913d-4b7daae293e1)
+
+## Api.Transferencias
+
+![transferencia](https://github.com/user-attachments/assets/395fbc79-3f2d-4de6-b1e5-516ceb27f68f)
+
+## Extrato
+
+![extrato](https://github.com/user-attachments/assets/e9279efb-99d9-49f6-8484-d14e1c0f8e31)
+
+
+
 
 <img width="1907" height="971" alt="image" src="https://github.com/user-attachments/assets/6fcf6bd2-8269-44e3-b5c2-4e7fc0a48c55" />
 
@@ -539,23 +573,36 @@ Deployments
 <img width="1600" height="954" alt="Captura de tela 2025-11-23 190608" src="https://github.com/user-attachments/assets/c1ad6bf7-3613-453a-8803-57745ffc8b9e" />
 
 
-Apis
+
+
+# Kafka ui
+
+<img width="1118" height="226" alt="image" src="https://github.com/user-attachments/assets/1e231c12-bb39-4c7d-9225-40431860e836" />
+
+
+<img width="1917" height="691" alt="image" src="https://github.com/user-attachments/assets/e5f9aa34-d4fc-41ca-be1c-f19932d69728" />
+
+<img width="1913" height="807" alt="image" src="https://github.com/user-attachments/assets/124c1f94-1484-4d12-99c6-4b8e7d272388" />
 
 
 
 📚 Referências e Conceitos Chave
 --------------------------------
 
--   **SAGA Pattern:**
+-   **SAGA:** `https://martinfowler.com/articles/microservices.html#saga`
 
-    > Martin Fowler. Saga. Abordagem para gerenciar transações distribuídas em microsserviços.
+-   **Outbox:** `https://microservices.io/patterns/data/transactional-outbox.html`
 
--   **Outbox Pattern:**
+-   **DDD (Livro):** `https://www.amazon.com.br/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215`
 
-    > Chris Richardson. Pattern: Outbox. Garante que a publicação de eventos seja atômica com a transação local do banco de dados.
+-   **KafkaFlow:** `https://kafkaflow.io/docs/getting-started/introduction`
 
--   **Domain-Driven Design (DDD):**
+-   **MediatR:** `https://github.com/jbogard/MediatR`
 
-    > Eric Evans. Domain-Driven Design: Tackling Complexity in the Heart of Software. Foco na modelagem em torno do domínio de negócio.
+-   **Kafka:** `https://www.confluent.io`
 
--   **ASP.NET Identity Core & JWT:**
+-   **Kafka:** `https://www.confluent.io`
+
+-   **Terraform:** `https://developer.hashicorp.com/terraform/docs`
+
+-   **Azure DevOps:** `https://learn.microsoft.com/pt-br/azure/devops/?view=azure-devops`
