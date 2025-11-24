@@ -400,7 +400,19 @@ Comandos para interagir diretamente com o Broker Kafka local.
 IV. Gerenciamento de Infraestrutura (Terraform e Azure)
 -------------------------------------------------------
 
-Comandos para provisionar e remover a infraestrutura como código (IaS) na nuvem.
+Comandos para provisionar e remover a infraestrutura como código (IaS) na Azure.
+
+```
+# Instalar ferramentas (az cli, kubectl, sqlcmd, helm, etc...)
+
+cd Deployment\Azure
+
+./setup_vm.sh 
+```
+
+```
+cd Deployment\Azure\terraform
+```
 
 -   **Configuração Inicial da VM:**
 
