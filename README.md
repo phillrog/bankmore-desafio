@@ -1,6 +1,6 @@
 # Build
 
-[![Build BankMore](https://github.com/phillrog/bankmore-desafio/actions/workflows/build.yml/badge.svg)](https://github.com/phillrog/bankmore-desafio/actions/workflows/build.yml)
+[![Build BankMore]([https://github.com/phillrog/bankmore-desafio/actions/workflows/build.yaml/badge.svg)](https://github.com/phillrog/bankmore-desafio/actions/workflows/build.yaml)
 
 ---
 
