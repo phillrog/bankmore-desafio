@@ -1,0 +1,26 @@
+name: Build Clients
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOTNET_VERSION: '8.0.x'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build dos projetos do BankMore
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Permissão no .sh
+        run: chmod +x "./build.sh"
+
+      - name: Build Projects
+        run: ./build.sh 
