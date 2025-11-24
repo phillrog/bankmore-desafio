@@ -1,4 +1,4 @@
-name: Build Clients
+name: Build Desafio BankMore 2025
 
 on:
   push:
