@@ -1,11 +1,17 @@
-﻿services:
+﻿version: '3.8'
+
+services:
+  # ====================================================================
+  # 1. MICROSSERVIÇOS .NET
+  # (Configurações mantidas)
+  # ====================================================================
   bankmore.services.api.identidade:
     image: ${DOCKER_REGISTRY-}bankmoreservicesapiidentidade
     build:
       context: .
       dockerfile: Src/BankMore.Services.Api.Identidade/Dockerfile
     depends_on:
-      broker: 
+      broker:
         condition: service_healthy
       mssql:
         condition: service_healthy
@@ -22,27 +28,27 @@
       context: .
       dockerfile: Src/BankMore.Services.Api.ContasCorrentes/Dockerfile
     depends_on:
-      broker: 
+      broker:
         condition: service_healthy
       mssql:
-        condition: service_healthy 
+        condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=5001
       - ASPNETCORE_URLS=http://0.0.0.0:5001
     ports:
       - "5001:5001"
- 
+
   bankmore.services.api.transferencias:
     image: ${DOCKER_REGISTRY-}bankmoreservicesapicontastransferencias
     build:
       context: .
       dockerfile: Src/BankMore.Services.Api.Transferencias/Dockerfile
     depends_on:
-      broker: 
+      broker:
         condition: service_healthy
       mssql:
-        condition: service_healthy 
+        condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=5002
@@ -50,24 +56,24 @@
     ports:
       - "5002:5002"
 
+  # ====================================================================
+  # 2. BANCO DE DADOS (SQL SERVER)
+  # ====================================================================
   mssql:
     image: mcr.microsoft.com/mssql/server:2017-latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - SA_PASSWORD=yourStrong(!)Password
       - ACCEPT_EULA=Y
-    
     healthcheck:
       test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PyourStrong(!)Password", "-Q", "select 1"]
       interval: 1s
       retries: 20
-    
     ports:
       - "1433:1433"
-      
     volumes:
       - ./sql:/scripts
-      
+
   mssql-init:
     image: mcr.microsoft.com/mssql/server:2017-latest
     container_name: mssql-init
@@ -80,6 +86,9 @@
       - SA_PASSWORD=yourStrong(!)Password
     command: /bin/bash /scripts/criarbanco.sh
 
+  # ====================================================================
+  # 3. INFRAESTRUTURA KAFKA
+  # ====================================================================
   zookeeper:
     image: confluentinc/cp-zookeeper:7.8.0
     hostname: zookeeper
@@ -102,6 +111,7 @@
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      # Endereço Interno (para containers .NET) e Externo (para a máquina host)
       KAFKA_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
@@ -145,3 +155,28 @@
     container_name: kafka
     command: ["tail", "-f", "/dev/null"]
     network_mode: "host"
+
+  # ====================================================================
+  # 4. FERRAMENTA DE MONITORAMENTO (KAFKA-UI)
+  # ====================================================================
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      broker:
+        condition: service_healthy
+    ports:
+      # Expõe a porta 8080 do container para a porta 8080 da sua máquina host
+      - "8080:8080"
+    environment:
+      # Configura o nome do cluster que aparecerá na UI
+      - KAFKA_CLUSTERS_0_NAME=BankMore-Local
+      # Endereço Interno do Broker para o Container Kafka-UI
+      # (O broker utiliza a porta 29092 para comunicação interna na rede Docker)
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=broker:29092
+      # URL do Schema Registry (se configurado, o que é o seu caso)
+      - KAFKA_CLUSTERS_0_SCHEMAREGISTRY=http://schema-registry:8081
+      # Autenticação (opcional, mas incluída conforme sua configuração YAML)
+      - AUTH_TYPE=LOGIN_FORM
+      - SPRING_SECURITY_USER_NAME=admin
+      - SPRING_SECURITY_USER_PASSWORD=admin123

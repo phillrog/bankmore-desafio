@@ -483,7 +483,7 @@ GO
 
 DECLARE @CurrentDate DATETIME2(7) = GETDATE();
 -- O hash é calculado como Hash(SenhaPura + ID_do_usuario_em_minusculas)
-DECLARE @MasterPasswordHash NVARCHAR(MAX) = N'10000.YXwK4ASk1S6XvxAGMEDEIw==.IbEYeANMiR1CsNftByIP0flRlAtxGUP4uns7c6o6lCI='; 
+DECLARE @MasterPasswordHash NVARCHAR(MAX) = N'10000.YXwK4ASk1S6XvxAGMEDEIw==.IbEYeANMiR1CsNftByIP0flRlAtxGUP4uns7c6o6lCI='; --- senhha Master2025$
 -- O 'salt' será o ID do usuário, que é a parte que foi concatenada na senha para gerar o hash
 DECLARE @MasterId NVARCHAR(100) = N'C40CB0C3-D8D2-474D-B172-21785D5F71F8';
 DECLARE @MasterRoleId NVARCHAR(450) = (SELECT ID FROM [dbo].[AspNetRoles] WHERE NAME = 'Master'); -- Busca o id da role master
@@ -565,7 +565,7 @@ GO
 
 DECLARE @CurrentDate DATETIME2(7) = GETDATE();
 -- O hash é calculado como Hash(SenhaPura + ID_do_usuario_em_minusculas)
-DECLARE @MasterPasswordHash NVARCHAR(MAX) = N'10000.YXwK4ASk1S6XvxAGMEDEIw==.IbEYeANMiR1CsNftByIP0flRlAtxGUP4uns7c6o6lCI='; 
+DECLARE @MasterPasswordHash NVARCHAR(MAX) = N'10000.YXwK4ASk1S6XvxAGMEDEIw==.IbEYeANMiR1CsNftByIP0flRlAtxGUP4uns7c6o6lCI='; --- senhha Master2025$
 -- O 'salt' será o ID do usuário, que é a parte que foi concatenada na senha para gerar o hash
 DECLARE @MasterId NVARCHAR(100) = N'c40cb0c3-d8d2-474d-b172-21785d5f71f8';
 DECLARE @MasterCpf NVARCHAR(20) = N'00000000000';
