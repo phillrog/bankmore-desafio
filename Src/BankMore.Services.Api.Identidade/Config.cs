@@ -72,56 +72,7 @@ namespace BankMore.Services.Api.Identidade
                     AccessTokenLifetime = 75, // Force refresh
                     AllowedCorsOrigins = { "http://localhost:4200" }
                 },
-                new Client
-                {
-                    ClientId = "bff.dpop",
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-                    RequireDPoP = true,
-
-                    AllowedGrantTypes =
-                    {
-                        GrantType.AuthorizationCode,
-                        GrantType.ClientCredentials,
-                        OidcConstants.GrantTypes.TokenExchange
-                    },
-
-                    RedirectUris = { "https://localhost:5003/signin-oidc" },
-                    FrontChannelLogoutUri = "https://localhost:5003/signout-oidc",
-                    PostLogoutRedirectUris = { "https://localhost:5003/signout-callback-oidc" },
-
-                    AllowOfflineAccess = true,
-                    AllowedScopes =
-                    {
-                        "openid",
-                        "profile",
-                        "contas_correntes_api",
-                        "transferencias_api"
-                    },
-
-                    AccessTokenLifetime = 75 // Force refresh
-                },
-
-
-                 new Client
-                {
-                    ClientId = "angular",
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-
-                    AllowedGrantTypes =
-                    {
-                        GrantType.AuthorizationCode,
-                        GrantType.ClientCredentials,
-                        OidcConstants.GrantTypes.TokenExchange
-                    },
-
-                    RedirectUris = { "https://localhost:5005/signin-oidc" },
-                    PostLogoutRedirectUris = { "https://localhost:5005/signout-callback-oidc" },
-
-                    AllowOfflineAccess = true,
-                    AllowedScopes = { "openid", "profile", "api", "geral_api" },
-
-                    AccessTokenLifetime = 75
-                 }
+                
             ];
     }
 
