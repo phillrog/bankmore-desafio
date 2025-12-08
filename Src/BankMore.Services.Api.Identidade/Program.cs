@@ -1,9 +1,13 @@
 ﻿using BankMore.Infra.CrossCutting.IoC;
+using BankMore.Services.Api.Identidade;
 using BankMore.Services.Api.Identidade.Configurations;
 using BankMore.Services.Api.Identidade.Controllers.V1;
 using BankMore.Services.Apis.StartupExtensions;
 using KafkaFlow;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using System.Globalization;
@@ -14,9 +18,26 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 var apiNome = "API Identidade";
 // START: Variables
+const string CorsPolicyName = "AllowFrontendOrigins";
+
+var allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicyName,
+        policy =>
+        {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
 // END: Variables
 
 // START:
+builder.Services.AddRazorPages();
+
 /// kafka 
 builder.Services.AddKafkaSetup(builder.Configuration);
 // ----- Database -----
@@ -81,12 +102,18 @@ builder.Services.AddEndpointsApiExplorer();
 // ----- Swagger UI -----
 builder.Services.AddCustomizedSwagger(builder.Environment, apiNome, typeof(AccountController));
 
-
+builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+});
 // END: Custom services
 
 var app = builder.Build();
 var pathBase = builder.Configuration.GetValue<string>("Base");
 app.UsePathBase(pathBase);
+
+SeedData.EnsureSeedData(app.Services);
 
 // Globalization culture
 var supportedCultures = new[] { new CultureInfo("pt-BR") };
@@ -107,16 +134,18 @@ if (app.Environment.IsDevelopment())
     app.UseCustomizedErrorHandling();
 }
 
+app.UseStaticFiles();
 app.UseRouting();
 
 // ----- CORS -----
-app.UseCors(x => x
-    .AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader());
+app.UseCors(CorsPolicyName);
 
 // ----- Auth -----
 app.UseCustomizedAuth();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 // ----- Controller -----
 app.MapControllers();
@@ -126,6 +155,23 @@ app.MapControllers();
 app.UseCustomizedSwagger(builder.Environment, apiNome, pathBase);
 // END: Custom middlewares
 
+app.MapRazorPages();
+app.MapGet("/api/status", (HttpContext ctx) =>
+{
+    if (ctx.User.Identity?.IsAuthenticated == true)
+    {
+        var userName = ctx.User.Identity.Name;
+        var subjectId = ctx.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        return Results.Ok(new
+        {
+            status = "Authenticated",
+            username = userName,
+            subject_id = subjectId
+        });
+    }
+    return Results.Unauthorized();
+});//.RequireAuthorization();
 
 var kafkaBus = app.Services.CreateKafkaBus();
 await kafkaBus.StartAsync();

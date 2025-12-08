@@ -4,6 +4,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Dapper" Version="2.1.66" />
+    <PackageVersion Include="Duende.IdentityModel" Version="8.0.0" />
+    <PackageVersion Include="Duende.IdentityServer" Version="7.4.2" />
+    <PackageVersion Include="Duende.IdentityServer.AspNetIdentity" Version="7.4.2" />
+    <PackageVersion Include="Duende.IdentityServer.EntityFramework" Version="7.0.0" />
     <PackageVersion Include="Extensions.FluentValidation.Br" Version="1.0.2" />
     <PackageVersion Include="KafkaFlow" Version="4.0.1" />
     <PackageVersion Include="KafkaFlow.LogHandler.Console" Version="4.0.1" />
@@ -11,7 +15,9 @@
     <PackageVersion Include="KafkaFlow.Serializer.JsonCore" Version="4.0.1" />
     <PackageVersion Include="KafkaFlow.Serializer.NewtonsoftJson" Version="4.0.1" />
     <PackageVersion Include="KafkaFlow.Serializer.ProtobufNet" Version="4.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.22" />
     <PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="8.0.22" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.22" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.20" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
