@@ -1,32 +1,22 @@
-﻿@using Duende.IdentityServer.Extensions
-@{
-    string name = null;
-    if (!true.Equals(ViewData["signed-out"]))
-    {
-        name = Context.User?.GetDisplayName();
-    }
+﻿@{
+    var primaryColor = "#ff8c00"; // Laranja/Amarelo Forte
+    var secondaryColor = "#000d3d"; // Azul Escuro/Quase Preto
 }
+<header class="w-100 fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-light bg-white ">
 
-@* <div class="nav-page">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
-        <a href="~/" class="navbar-brand">
-            <img src="~/duende-logo.svg" class="icon-banner">
-            Duende IdentityServer
+        <a class="navbar-brand" href="#" style="font-family: 'Arial Black', sans-serif; font-size: 1.5rem; font-weight: 900; color: @secondaryColor;">
+            <span style="color: @primaryColor;">Bank</span>More
         </a>
 
-        @if (!string.IsNullOrWhiteSpace(name))
-        {
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@name <b class="caret"></b></a>
-                    
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-page="/Account/Logout/Index">Logout</a>
-                    </div>
-              </li>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ml-auto">
+                
             </ul>
-        }
-    
+        </div>
     </nav>
-</div> *@
+</header>

@@ -15,12 +15,19 @@
     <link rel="stylesheet" href="~/css/site.css" />
     
 </head>
-<body>
+<body class="d-flex flex-column min-vh-120">
     <partial name="_Nav" />
    
-    <div class="container body-container">
-        @RenderBody()
-    </div>
+    <main role="main" class="flex-shrink-0 mt-5">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+    <footer class="border-top footer text-muted bg-light mt-5 py-3 w-100 fixed-bottom">
+        <div class="container">
+            &copy; @DateTime.Now.Year - BankMore 
+        </div>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
