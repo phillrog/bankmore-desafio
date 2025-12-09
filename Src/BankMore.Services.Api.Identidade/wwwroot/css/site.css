@@ -31,3 +31,197 @@
 
 .ciba-page form {
   display: inline; }
+
+
+
+
+
+/* =========================
+       VARIÁVEIS DE COR (ITAÚ)
+       ========================= */
+:root {
+    --primary-color: #ff8c00; /* Laranja/Amarelo Forte */
+    --secondary-color: #000d3d; /* Azul Escuro/Quase Preto */
+    --background-gradient: linear-gradient(135deg, #000d3d 0%, #00237d 100%);
+    --card-bg: #ffffff;
+}
+
+/* =========================
+       ESTRUTURA DA PÁGINA
+       ========================= */
+
+body, .login-page {
+    /* Ocupa a altura da tela e remove margem */
+    min-height: 100vh;
+    background: var(--background-gradient);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container que simula a "dobra" do site */
+.main-login-container {
+    max-width: 1200px;
+    width: 90%;
+    margin: 4px auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+    display: flex; /* Garante que as colunas fiquem lado a lado */
+    height: 700px;
+}
+
+/* =========================
+       COLUNA ESQUERDA (BRANDING)
+       ========================= */
+
+.branding-panel {
+    background-color: var(--secondary-color);
+    color: #ffffff;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    height: 100%;
+    position: relative;
+}
+
+/* Estilo para a imagem dentro do branding-panel (como um elemento fixo) */
+.side-image {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    border-radius: 0 0 0 12px;
+    border-radius: 56px 56px 0 0;
+}
+
+.branding-panel h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--primary-color); /* Título em cor de destaque */
+}
+
+.branding-panel p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* =========================
+       COLUNA DIREITA (FORMULÁRIO)
+       ========================= */
+
+.login-form-panel {
+    background-color: var(--card-bg);
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza o formulário verticalmente */
+    height: 100%;
+}
+
+    .login-form-panel .lead h1 {
+        color: var(--secondary-color);
+        font-weight: 700;
+    }
+
+/* Ajustes no Formulário */
+.form-control {
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    height: 44px;
+}
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(255, 140, 0, 0.25);
+    }
+
+/* Botão Principal */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--secondary-color);
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 12px 20px;
+}
+
+    .btn-primary:hover {
+        background-color: #e57e00;
+        border-color: #e57e00;
+    }
+
+/* Esconde o card-header do login local para ficar mais limpo */
+.login-form-panel .card-header {
+    display: none;
+}
+
+.login-form-panel .card {
+    box-shadow: none;
+    border: none;
+}
+/* Alinha os itens do formulário de forma mais limpa */
+.login-form-panel .card-body {
+    padding: 0;
+}
+
+/* Responsividade: Empilha em telas menores */
+@media (max-width: 992px) {
+    .main-login-container {
+        display: block;
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .branding-panel {
+        text-align: center;
+        padding: 30px;
+        border-radius: 0;
+    }
+
+    .login-form-panel {
+        padding: 40px 20px;
+        border-radius: 0;
+    }
+}
+
+.tab-panel-bank .nav-pills .nav-link {
+    color: var(--secondary-color); /* Texto padrão escuro */
+    background-color: #f0f0f0; /* Fundo leve para o link inativo */
+    border-radius: 8px; /* Cantos arredondados */
+    margin: 0 5px;
+    padding: 10px 15px;
+    font-weight: 500;
+}
+
+    /* Estilo da aba ativa */
+    .tab-panel-bank .nav-pills .nav-link.active,
+    .tab-panel-bank .nav-pills .show > .nav-link {
+        color: var(--secondary-color); /* Texto escuro no ativo */
+        background-color: var(--primary-color); /* Fundo de destaque (Amarelo Itaú) */
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+
+.tab-panel-bank .card {
+    border: 1px solid #e0e0e0; /* Borda suave */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombra bem leve */
+}
+
+/* Garante que o corpo do card tenha padding */
+.tab-panel-bank .card-body {
+    padding: 25px; /* Adiciona o padding que foi removido antes */
+}
+
+/* Remove qualquer header de card que possa interferir no design das abas */
+.login-form-panel .card-header {
+    display: none;
+}

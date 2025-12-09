@@ -1,89 +1,149 @@
 ﻿@page
 @model BankMore.Services.Api.Identidade.Pages.Login.Index
 
-<div class="login-page">
-    <div class="lead">
-        <h1>Login</h1>
-        <p>Choose how to login</p>
-    </div>
+<div class="container main-login-container">
+    <div class="row w-100 m-0">
 
-    <partial name="_ValidationSummary" />
+        <div class="col-lg-6 d-none d-lg-block branding-panel">
+            <div class="hero-personnalite__texts">
+                <h1>BankMore Acesso Seguro</h1>
+                <p>
+                    A melhor experiência digital e humana. Acesse sua conta com total
+                    confiança e controle seus investimentos.
+                </p>
+            </div>
+            
+            <div class="mt-5">
+                <h3 class="mt-4">Nossos Benefícios</h3>
+                <ul class="list-unstyled mt-3 small">
+                    <li>✔️ Proteção antifraude 24 horas.</li>
+                    <li>✔️ Zero burocracia, 100% digital.</li>
+                    <li>✔️ Suporte especializado via Chat/WhatsApp.</li>
+                </ul>
+            </div>      
+            
+            <img src="/images/lp-personalite.jpeg" alt="BankMore Personnalite Image" class="side-image">
+        </div>
+       
+        <div class="col-lg-6 col-12 login-form-panel">
 
-    <div class="row">
+            <div class="lead mb-4">
+                <h1 class="h2">Acesso à Conta</h1>
+                <p class="text-muted">Informe seus dados ou crie uma conta.</p>
+            </div>
 
-        @if (Model.View.EnableLocalLogin)
-        {
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Local Account</h2>
-                    </div>
+            <partial name="_ValidationSummary" />
 
-                    <div class="card-body">
-                        <form asp-page="/Account/Login/Index">
-                            <input type="hidden" asp-for="Input.ReturnUrl" />
+            @if (Model.View.EnableLocalLogin)
+            {
+                <div class="tab-panel-bank">
 
-                            <div class="form-group">
-                                <label asp-for="Input.Username"></label>
-                                <input class="form-control" placeholder="Username" asp-for="Input.Username" autofocus>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Input.Password"></label>
-                                <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password" autocomplete="off">
-                            </div>
-                            
-                            @if (Model.View.AllowRememberLogin)
-                            {
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" asp-for="Input.RememberLogin">
-                                        <label class="form-check-label" asp-for="Input.RememberLogin">
-                                            Remember My Login
-                                        </label>
-                                    </div>
+                    <ul class="nav nav-pills nav-fill mb-4" id="pills-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="pills-login-tab" data-toggle="pill" href="#pills-login" role="tab" aria-controls="pills-login" aria-selected="true">
+                                Entrar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pills-register-tab" data-toggle="pill" href="#pills-register" role="tab" aria-controls="pills-register" aria-selected="false">
+                                Abrir Conta
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="tab-content" id="pills-tabContent">
+
+                                <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
+                                    <form asp-page="/Account/Login/Index">
+                                        <input type="hidden" asp-for="Input.ReturnUrl" />
+
+                                        <div class="form-group">
+                                            <label asp-for="Input.Username">Usuário</label>
+                                            <input class="form-control" placeholder="Informe seu CPF" asp-for="Input.Username" autofocus>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Input.Password">Senha</label>
+                                            <input type="password" class="form-control" placeholder="Sua senha de acesso" asp-for="Input.Password" autocomplete="off">
+                                        </div>
+
+                                        @if (Model.View.AllowRememberLogin)
+                                        {
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" asp-for="Input.RememberLogin">
+                                                    <label class="form-check-label" asp-for="Input.RememberLogin">Lembrar-me</label>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="mt-4">
+                                            <button class="btn btn-primary btn-block" name="Input.Button" value="login">
+                                                Acessar Conta
+                                            </button>
+                                        </div>
+                                        <small class="form-text text-center mt-3">
+                                            <a href="#" class="text-secondary">Esqueci minha senha</a>
+                                        </small>
+                                    </form>
                                 </div>
-                            }
-                            
-                            <button class="btn btn-primary" name="Input.Button" value="login">Login</button>
-                            <button class="btn btn-secondary" name="Input.Button" value="cancel">Cancel</button>
-                        </form>
+                                <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="pills-register-tab">
+                                    <form asp-page="/Account/Register/Index">
+                                        <input type="hidden" asp-for="Input.ReturnUrl" />
+
+                                        <div class="form-group">
+                                            <label for="Input.NewUsername">Defina um Usuário</label>
+                                            <input class="form-control" id="Input.NewUsername" name="Input.NewUsername" placeholder="Digite seu CPF" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Input.NewPassword">Defina uma Senha</label>
+                                            <input type="password" class="form-control" id="Input.NewPassword" name="Input.NewPassword" placeholder="Sua nova senha" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Input.ConfirmPassword">Confirme a Senha</label>
+                                            <input type="password" class="form-control" id="Input.ConfirmPassword" name="Input.ConfirmPassword" placeholder="Confirme a senha" required>
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <button class="btn btn-primary btn-block" name="Input.Button" value="register">
+                                                Criar Minha Conta
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-
-        @if (Model.View.VisibleExternalProviders.Any())
-        {
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>External Account</h2>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-inline">
-                            @foreach (var provider in Model.View.VisibleExternalProviders)
-                            {
-                                <li class="list-inline-item">
-                                    <a class="btn btn-secondary"
-                                       asp-page="/ExternalLogin/Challenge"
-                                       asp-route-scheme="@provider.AuthenticationScheme"
-                                       asp-route-returnUrl="@Model.Input.ReturnUrl">
-                                        @provider.DisplayName
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+            }
+            @if (Model.View.VisibleExternalProviders.Any())
+            {
+                <div class="mt-4 pt-3 border-top">
+                    <p class="text-center text-muted small">Ou entre com sua conta:</p>
+                    <ul class="list-inline text-center">
+                        @foreach (var provider in Model.View.VisibleExternalProviders)
+                        {
+                            <li class="list-inline-item mb-2">
+                                <a class="btn btn-secondary btn-block"
+                                   asp-page="/ExternalLogin/Challenge"
+                                   asp-route-scheme="@provider.AuthenticationScheme"
+                                   asp-route-returnUrl="@Model.Input.ReturnUrl">
+                                    @provider.DisplayName
+                                </a>
+                            </li>
+                        }
+                    </ul>
                 </div>
-            </div>
-        }
+            }
 
-        @if (!Model.View.EnableLocalLogin && !Model.View.VisibleExternalProviders.Any())
-        {
-            <div class="alert alert-warning">
-                <strong>Invalid login request</strong>
-                There are no login schemes configured for this request.
-            </div>
-        }
+            @if (!Model.View.EnableLocalLogin && !Model.View.VisibleExternalProviders.Any())
+            {
+                <div class="alert alert-warning text-center">
+                    <strong>Solicitação de login inválida</strong>
+                    Nenhuma forma de login configurada.
+                </div>
+            }
+        </div>
     </div>
 </div>
