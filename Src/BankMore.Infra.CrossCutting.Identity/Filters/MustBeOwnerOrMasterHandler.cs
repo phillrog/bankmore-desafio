@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Duende.IdentityServer.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace BankMore.Infra.CrossCutting.Identity.Filters
@@ -11,6 +15,8 @@ namespace BankMore.Infra.CrossCutting.Identity.Filters
     /// </summary>
     public class MustBeOwnerOrMasterHandler : IAuthorizationHandler
     {
+        private static readonly string Bearer = "bearer";
+        private readonly JwtSecurityTokenHandler _handler = new JwtSecurityTokenHandler();
         private readonly IHttpContextAccessor _httpContextAccessor;
         // Chave do Claim que contém o identificador do usuário (Conta) no JWT.
         private const string MasterRoleName = "Master";
@@ -39,10 +45,18 @@ namespace BankMore.Infra.CrossCutting.Identity.Filters
 
             Console.WriteLine("--- [MustBeOwnerOrMasterHandler] INICIANDO VALIDAÇÕO IAuthorizationHandler ---");
             var user = context.User;
+            var token = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString();
+
+            if ((!user.IsAuthenticated() && !string.IsNullOrEmpty(token)) || !user.Claims.Any(d => d.Value.Equals(AdminRoleName)))
+            {
+                var jwt = _handler.ReadJwtToken(token.Substring(Bearer.Length).TrimStart());
+
+                user = new ClaimsPrincipal(new ClaimsIdentity(jwt.Claims, JwtBearerDefaults.AuthenticationScheme));
+            }
 
             // BYPASS MASTER: Se a Role for Master, acesso concedido imediatamente.
             // O Master pode consultar a própria conta ou qualquer outra.
-            if (user.IsInRole(MasterRoleName))
+            if (user.IsInRole(MasterRoleName) || user.Claims.Any(d => d.Value.Equals(MasterRoleName)))
             {
                 Console.WriteLine("--- [MustBeOwnerOrMasterHandler] SUCESSO: Usuário é Master (BYPASS). Permissão total.");
                 context.Succeed(ownerOrMasterRequirement);

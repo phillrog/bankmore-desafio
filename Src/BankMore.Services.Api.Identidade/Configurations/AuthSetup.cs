@@ -1,6 +1,9 @@
-﻿using BankMore.Infra.CrossCutting.Identity.Data;
+﻿using BankMore.Domain.Common.Providers.Hash;
+using BankMore.Infra.CrossCutting.Identity.Data;
 using BankMore.Infra.CrossCutting.Identity.Models;
 using BankMore.Services.Api.Identidade.Pages;
+using BankMore.Services.Api.Identidade.Validators;
+using Duende.IdentityServer.Validation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore; // Necessário para UseSqlServer
@@ -13,6 +16,10 @@ public static class AuthSetup
 {
     public static IServiceCollection AddCustomizedAuth(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        
+        services.AddTransient<IResourceOwnerPasswordValidator, CustomResourceOwnerPasswordValidator>();
+
         var secretKey = configuration.GetValue<string>("SecretKey");
         if (string.IsNullOrEmpty(secretKey))
         {
@@ -37,14 +44,7 @@ public static class AuthSetup
             .AddDefaultTokenProviders()
             .AddDefaultUI();
         
-        services.ConfigureApplicationCookie(options =>
-        {
-            options.Cookie.SameSite = SameSiteMode.None;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
-            options.Cookie.IsEssential = true;
-            options.LoginPath = "/Account/Login";
-        }).AddDataProtection();
-
+       
         // 2. CONFIGURAÇÃO DUENDE IDENTITY SERVER
         var isBuilder = services.AddIdentityServer(options =>
         {
@@ -55,6 +55,7 @@ public static class AuthSetup
             options.EmitStaticAudienceClaim = true;
             options.UserInteraction.LogoutUrl = "/Account/Logout";
             options.UserInteraction.LoginUrl = "/Account/Login";
+            //options.Authentication.CookieSameSiteMode = SameSiteMode.Lax;
         })
             .AddTestUsers(TestUsers.Users)
             .AddDeveloperSigningCredential() // credencial temporária
@@ -75,7 +76,11 @@ public static class AuthSetup
                 options.EnableTokenCleanup = true;
                 options.TokenCleanupInterval = 3600;
             })
-            .AddAspNetIdentity<ApplicationUser>();
+            .AddAspNetIdentity<ApplicationUser>()
+            .AddProfileService<CustomProfileService>()
+            .AddExtensionGrantValidator<TokenExchangeGrantValidator>()
+            .AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>()
+            .AddCustomTokenRequestValidator<CustomTokenRequestValidator>();
 
 
         // 3. CONFIGURAÇÃO JWT OPTIONS (Para emissão de tokens)
@@ -134,8 +139,6 @@ public static class AuthSetup
                 policy.RequireClaim("scope", "transferencias_api");
             });
 
-            // Se você usa o PolicySetup, mantenha. Caso contrário, remova ou comente.
-            // PolicySetup.AddCustomPolicies(options); 
         });
 
         return services;

@@ -162,7 +162,7 @@ namespace BankMore.Services.Api.Identidade.Pages.Login
 
                 if (isPasswordValid)
                 {
-                    // ✅ LOGIN BEM SUCEDIDO
+                    // LOGIN BEM SUCEDIDO
 
                     // Dispara evento de sucesso (opcional, Duende já faz isso)
                     await _events.RaiseAsync(new UserLoginSuccessEvent(appUser.UserName, appUser.Id, appUser.UserName, clientId: context?.Client.ClientId));
@@ -176,15 +176,20 @@ namespace BankMore.Services.Api.Identidade.Pages.Login
                             IsPersistent = true,
                             ExpiresUtc = DateTimeOffset.UtcNow.Add(LoginOptions.RememberMeLoginDuration)
                         };
+                    } else
+                    {
+                        props = new AuthenticationProperties
+                        {
+                            ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(80)
+                        };
                     }
-                    ;
 
                     // 4. Emitir o Cookie de Autenticação
                     // O SubjectId é o Id do ApplicationUser (string)
                     var isuser = new IdentityServerUser(appUser.Id)
                     {
                         DisplayName = appUser.UserName,
-                        // 💡 Para claims customizadas (Roles, numero_conta), é obrigatório o IProfileService.
+                        // Para claims customizadas (Roles, numero_conta), é obrigatório o IProfileService.
                         // O Duende chamará seu ProfileService após este SignInAsync para enriquecer a sessão e tokens.
                     };
 

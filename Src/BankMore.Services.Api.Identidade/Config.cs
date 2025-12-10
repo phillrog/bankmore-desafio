@@ -11,7 +11,7 @@ namespace BankMore.Services.Api.Identidade
         public static IEnumerable<IdentityResource> IdentityResources =>
             [
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
+                new IdentityResources.Profile(),                
             ];
 
         public static IEnumerable<ApiScope> ApiScopes =>
@@ -20,7 +20,7 @@ namespace BankMore.Services.Api.Identidade
                 new ApiScope("contas_correntes_api", "API de Gestão de Contas Correntes"), 
 
                 // Escopo para a API de Transferências
-                new ApiScope("transferencias_api", "API de Execução de Transferências"),
+                new ApiScope("transferencias_api", "API de Execução de Transferências"),              
             ];
 
         public static IEnumerable<ApiResource> ApiResources =>
@@ -29,13 +29,15 @@ namespace BankMore.Services.Api.Identidade
                 new ApiResource("contas_correntes_api", "API Contas Correntes")
                 {
                     // Os clientes precisam solicitar este scope para acessar este Recurso.
-                    Scopes = { "contas_correntes_api" }
+                    Scopes = { "contas_correntes_api" },
+                    UserClaims = { "role", "sub", "numero_conta" }
                 },
 
                 // Recurso 2: API Transferências
                 new ApiResource("transferencias_api", "API Transferências")
                 {
-                    Scopes = { "transferencias_api" }
+                    Scopes = { "transferencias_api" },
+                    UserClaims = { "role", "sub" }
                 },
         
                 // Recurso 3: API Geral (se mantiver o escopo "geral_api")
@@ -55,24 +57,111 @@ namespace BankMore.Services.Api.Identidade
                     AllowedGrantTypes =
                     {
                         GrantType.AuthorizationCode,
-                        GrantType.ClientCredentials,
-                        OidcConstants.GrantTypes.TokenExchange
+                        GrantType.ResourceOwnerPassword
                     },
 
-                    RedirectUris = { "https://localhost:5000/signin-oidc" },
-                    FrontChannelLogoutUri = "https://localhost:5000/signin-oidc",
-                    PostLogoutRedirectUris = { 
-                        "https://localhost:5000/signout-callback-oidc",
+                    RedirectUris = { "http://localhost:5003/signin-oidc" },
+                    FrontChannelLogoutUri = "http://localhost:5000/signin-oidc",
+                    PostLogoutRedirectUris = {
+                        "http://localhost:5000/signout-callback-oidc",
                         "http://localhost:4200"
                     },
 
                     AllowOfflineAccess = true,
-                    AllowedScopes = { "openid", "profile", "contas_correntes_api", "transferencias_api", "geral_api" },
+                    AllowedScopes = { "openid", "profile", "offline_access", "contas_correntes_api", "transferencias_api", "geral_api" },
 
                     AccessTokenLifetime = 75, // Force refresh
-                    AllowedCorsOrigins = { "http://localhost:4200" }
+                    AllowedCorsOrigins = { "http://localhost:4200" },
+
+                    RequirePkce = true,
+                    RequireClientSecret = true,
                 },
-                
+                new Client
+                {
+                    ClientId = "bff_client",
+                    ClientSecrets = { new Secret("secret_bff".Sha256()) },
+
+                    AllowedGrantTypes =
+                    {
+                        GrantType.AuthorizationCode, // Para pegar o token do usuário vindo do Angular (4200)
+                        GrantType.ClientCredentials, // Para chamadas S2S internas (Ex: BFF -> 5001 sem usuário)
+                        OidcConstants.GrantTypes.TokenExchange, // Recomendado para delegação
+                    },
+
+                    RedirectUris = { "http://localhost:5003/signin-oidc" },
+                    FrontChannelLogoutUri = "http://localhost:5003/signout-oidc",
+                    PostLogoutRedirectUris = { "http://localhost:5003/signout-callback-oidc" },
+
+                    AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse, // Allow reuse of refresh tokens
+                    RefreshTokenExpiration = TokenExpiration.Absolute, // Use absolute lifetime
+                    AbsoluteRefreshTokenLifetime = 2592000, // 30
+                    AllowedScopes =
+                    {
+                        "openid",
+                        "profile",
+                        "offline_access",
+                        "contas_correntes_api",
+                        "transferencias_api",
+                    },
+
+                    AccessTokenLifetime = 75 ,// Force refresh
+                    ClientClaimsPrefix = null,
+                    RequirePkce = true,
+                    RequireClientSecret = true,
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    UpdateAccessTokenClaimsOnRefresh = true
+                },
+                new Client
+                {
+                    ClientId = "contacorrente_client",
+                    ClientSecrets = { new Secret("secret_conta_corrente".Sha256()) },
+
+                    AllowedGrantTypes =
+                    {
+                        GrantType.ClientCredentials,
+                    },
+
+                    AllowOfflineAccess = true,
+                    AllowedScopes =
+                    {
+                        "openid",
+                        "profile",
+                        "offline_access",
+                        "contas_correntes_api",
+                        "transferencias_api",
+                    },
+
+                    AccessTokenLifetime = 75 ,// Force refresh
+                    ClientClaimsPrefix = null,
+                    RequirePkce = true,
+                    RequireClientSecret = true,
+                },
+
+                new Client
+                {
+                    ClientId = "transferencia_client",
+                    ClientSecrets = { new Secret("secret_transferencia".Sha256()) },
+
+                    AllowedGrantTypes =
+                    {
+                        GrantType.ClientCredentials,
+                    },
+
+                    AllowOfflineAccess = true,
+                    AllowedScopes =
+                    {
+                        "openid",
+                        "profile",
+                        "offline_access",
+                        "contas_correntes_api",
+                    },
+
+                    AccessTokenLifetime = 75 ,// Force refresh
+                    ClientClaimsPrefix = null,
+                    RequirePkce = true,
+                    RequireClientSecret = true,
+                },
             ];
     }
 
@@ -128,6 +217,7 @@ namespace BankMore.Services.Api.Identidade
                     }
                     context.SaveChanges();
                 }
+
 
                 // 2. Persistência Operacional (Tokens, Grants)
                 scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>()

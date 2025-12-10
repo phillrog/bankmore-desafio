@@ -10,11 +10,23 @@ using BankMore.Infra.CrossCutting.Identity.Services;
 using BankMore.Infra.Kafka.Events;
 using BankMore.Infra.Kafka.Services;
 using BankMore.Services.Apis.Controllers;
+using Duende.IdentityServer;
+using Duende.IdentityServer.Extensions;
+using Duende.IdentityServer.Extensions;
+using Duende.IdentityServer.Models;     // TokenCreationRequest, Resources, ApiResource, etc.
+using Duende.IdentityServer.Services;    // ITokenService
+using Duende.IdentityServer.Stores;     // IClientStore
+using Duende.IdentityServer.Validation; // IResourceValidator
+using IdentityModel;                    // OidcConstants
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
+using NPOI.Util;
+using System.Collections.Specialized;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 
 namespace BankMore.Services.Api.Identidade.Controllers.V1;
@@ -33,7 +45,10 @@ public class AccountController : ApiController
     private readonly IPasswordHasher _passwordHasher;
     private readonly InformacoesContaService _informacoesContaService;
     private readonly ContaCorrenteService _contaCorrenteService;
-
+    private readonly ITokenService _tokenService;
+    private readonly IClientStore _clientStore;
+    private readonly IResourceValidator _resourceValidator;
+    private readonly ITokenCreationService _tokenCreationService;
     public AccountController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
@@ -46,7 +61,11 @@ public class AccountController : ApiController
         IMediatorHandler mediator,
         IPasswordHasher passwordHasher,
         InformacoesContaService informacoesContaService,
-        ContaCorrenteService contaCorrenteService
+        ContaCorrenteService contaCorrenteService,
+        ITokenService tokenService,
+        IClientStore clientStore,
+        IResourceValidator resourceValidator,
+        ITokenCreationService tokenCreationService
         )
         : base(notifications, mediator)
     {
@@ -60,6 +79,10 @@ public class AccountController : ApiController
         _passwordHasher = passwordHasher;
         _informacoesContaService = informacoesContaService;
         _contaCorrenteService = contaCorrenteService;
+        _tokenService = tokenService;
+        _clientStore = clientStore;
+        _resourceValidator = resourceValidator;
+        _tokenCreationService = tokenCreationService;
     }
 
     /// <summary>
@@ -178,6 +201,7 @@ public class AccountController : ApiController
         {
             // 2. Define o hash manualmente (Identity armazena o hash completo nesta coluna)
             appUser.PasswordHash = hash;
+            appUser.Conta = result.Data.NumeroConta.ToString();
             await _userManager.UpdateAsync(appUser);
         }
 
@@ -320,23 +344,21 @@ public class AccountController : ApiController
 
         var result = await _informacoesContaService.ObterNumeroContaPorCpf(appUser.UserName);
 
-        // Init ClaimsIdentity
+        // ******************************************************
+        // 1. COLETA DE CLAIMS
+        // ******************************************************
         var claimsIdentity = new ClaimsIdentity();
-        claimsIdentity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, appUser.NormalizedUserName));
+        claimsIdentity.AddClaim(new Claim("name", appUser.NormalizedUserName));
         claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, appUser.Id));
+        claimsIdentity.AddClaim(new Claim("sub", appUser.Id));
         claimsIdentity.AddClaim(new Claim("numero_conta", result.Data.ToString()));
 
-        // Get UserClaims
         var userClaims = await _userManager.GetClaimsAsync(appUser);
         claimsIdentity.AddClaims(userClaims);
 
-        // Get UserRoles
         var userRoles = await _userManager.GetRolesAsync(appUser);
-        claimsIdentity.AddClaims(userRoles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
+        claimsIdentity.AddClaims(userRoles.Select(role => new Claim("role", role)));
 
-        // ClaimsIdentity.DefaultRoleClaimType & ClaimTypes.Role is the same
-
-        // Get RoleClaims
         foreach (var userRole in userRoles)
         {
             var role = await _roleManager.FindByNameAsync(userRole);
@@ -347,24 +369,57 @@ public class AccountController : ApiController
             }
         }
 
-        // Generate access token
-        var jwtToken = await _jwtFactory.GenerateJwtToken(claimsIdentity);
+        // 2. CONFIGURAÇÃO DUENDE: ENCONTRAR CLIENTE E SCOPES
+        const string clientId = "identity";
+        var client = await _clientStore.FindClientByIdAsync(clientId);
 
-        // Add refresh token
-        var refreshToken = new RefreshToken
+        if (client is null)
+        {
+            throw new InvalidOperationException($"O ClientId '{clientId}' não foi encontrado na configuração do Duende.");
+        }
+
+        var scopeClaims = client.AllowedScopes.Select(s => new Claim("scope", s)).ToList();
+
+        // 3. CRIAÇÃO DO OBJETO TOKEN (Modelo que você forneceu)
+        var token = new Token(IdentityServerConstants.TokenTypes.AccessToken)
+        {
+            Audiences = client.AllowedScopes.Where(s => s.EndsWith("_api")).ToList(),
+            Issuer = "http://localhost:5000",
+            Lifetime = client.AccessTokenLifetime,
+            ClientId = clientId,
+            AccessTokenType = client.AccessTokenType,
+            CreationTime = DateTime.UtcNow,
+            IncludeJwtId = true,
+
+            // Combina claims de usuário e claims de escopo
+            Claims = claimsIdentity.Claims.Union(scopeClaims).ToList()
+        };
+
+        // 4. SERIALIZAÇÃO DO TOKEN (A CORREÇÃO)
+        // Usamos o ITokenCreationService para gerar a STRING JWT final e assinada
+        var accessTokenString = await _tokenCreationService.CreateTokenAsync(token);
+
+        // 5. EXTRAÇÃO DO JWT ID (JTI) para o Refresh Token
+        // Usamos o handler nativo para ler a string e extrair o JTI
+        var handler = new JsonWebTokenHandler();
+        var jwt = handler.ReadJsonWebToken(accessTokenString);
+
+        // 6. ADICIONAR REFRESH TOKEN (Seu código adaptado)
+        var refreshToken = new Infra.CrossCutting.Identity.Models.RefreshToken
         {
             Token = Guid.NewGuid().ToString(),
             UserId = appUser.Id,
             CreationDate = DateTime.UtcNow,
             ExpiryDate = DateTime.UtcNow.AddMinutes(90),
-            JwtId = jwtToken.JwtId,
+            JwtId = jwt.Id, // <--- ID do JWT extraído
         };
         await _dbContext.RefreshTokens.AddAsync(refreshToken);
         await _dbContext.SaveChangesAsync();
 
+        // 7. RETORNO
         return new TokenViewModel
         {
-            AccessToken = jwtToken.AccessToken,
+            AccessToken = accessTokenString,
             RefreshToken = refreshToken.Token,
         };
     }

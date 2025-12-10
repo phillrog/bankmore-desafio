@@ -33,6 +33,11 @@ builder.Services.AddCors(options =>
                   .AllowCredentials();
         });
 });
+builder.Services.Configure<Microsoft.AspNetCore.Builder.CookiePolicyOptions>(options =>
+{
+    // Se estiver em desenvolvimento HTTP, use SameSite=Lax
+    options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
+});
 // END: Variables
 
 // START:
@@ -137,6 +142,8 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseCookiePolicy();
+
 // ----- CORS -----
 app.UseCors(CorsPolicyName);
 
@@ -156,22 +163,6 @@ app.UseCustomizedSwagger(builder.Environment, apiNome, pathBase);
 // END: Custom middlewares
 
 app.MapRazorPages();
-app.MapGet("/api/status", (HttpContext ctx) =>
-{
-    if (ctx.User.Identity?.IsAuthenticated == true)
-    {
-        var userName = ctx.User.Identity.Name;
-        var subjectId = ctx.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
-        return Results.Ok(new
-        {
-            status = "Authenticated",
-            username = userName,
-            subject_id = subjectId
-        });
-    }
-    return Results.Unauthorized();
-});//.RequireAuthorization();
 
 var kafkaBus = app.Services.CreateKafkaBus();
 await kafkaBus.StartAsync();

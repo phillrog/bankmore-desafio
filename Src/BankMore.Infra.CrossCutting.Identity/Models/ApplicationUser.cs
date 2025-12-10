@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace BankMore.Infra.CrossCutting.Identity.Models;
 
@@ -6,4 +6,5 @@ namespace BankMore.Infra.CrossCutting.Identity.Models;
 public class ApplicationUser : IdentityUser
 {
     public string Cpf { get; set; }
+    public string Conta { get; set; }
 }

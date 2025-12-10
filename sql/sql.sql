@@ -170,6 +170,7 @@ CREATE TABLE [dbo].[AspNetUsers](
 	[TwoFactorEnabled] [bit] NOT NULL,
 	[UserName] [nvarchar](256) NULL,
 	[Cpf] [nvarchar](20) NULL,
+	[Conta] [nvarchar](20) NULL,
  CONSTRAINT [PK_AspNetUsers] PRIMARY KEY CLUSTERED
 (
 	[Id] ASC
@@ -516,7 +517,8 @@ BEGIN
         [NormalizedUserName],
         [Cpf],
         [PasswordHash],
-        [SecurityStamp]
+        [SecurityStamp],
+		[Conta]
     )
     VALUES
     (
@@ -532,7 +534,8 @@ BEGIN
         @MasterNormalizedUserName,
         @MasterLogin,
         @MasterPasswordHash,
-        NEWID()
+        NEWID(),
+		-1
     );
 
 	-- Atribuir a Role 'Master' ao usuário Master    
