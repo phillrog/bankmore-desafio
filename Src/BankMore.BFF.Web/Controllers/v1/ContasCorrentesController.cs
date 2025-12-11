@@ -1,19 +1,24 @@
-﻿using BankMore.Domain.Common;
-using BankMore.Domain.Common.Interfaces;
+﻿using BankMore.BFF.Web.Extensions;
+using BankMore.BFF.Web.Services;
+using BankMore.Domain.Common;
+using BankMore.Domain.Common.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace BankMore.BFF.Web.Controllers.V1
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
+    [Authorize]
     public class ContasCorrentesController : ControllerBase
     {
-        private readonly HttpClient _downstreamClient;
+        private IContaCorrenteService _contaCorrenteService;
 
-        public ContasCorrentesController(IHttpClientFactory httpClientFactory)
+        public ContasCorrentesController(IContaCorrenteService contaCorrenteService)
         {
-            _downstreamClient = httpClientFactory.CreateClient("ContasCorrentesAPI");
+            _contaCorrenteService = contaCorrenteService;
         }
 
         /// <summary>
@@ -32,24 +37,21 @@ namespace BankMore.BFF.Web.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetInformacoes()
         {
-            var claimNumeroConta = User.FindFirst("numero_conta");
+            string? numeroConta = this.GetNumeroConta();
 
-            if (claimNumeroConta == null)
+            if (numeroConta == null)
             {
                 return Unauthorized("A claim 'numero_conta' não foi encontrada.");
             }
 
-            string numeroConta = claimNumeroConta.Value;
+            var response = await _contaCorrenteService.BuscarInformacoes(numeroConta);
 
-            var response = await _downstreamClient.GetAsync($"/api/v1/ContaCorrente/informacoes?numeroConta={numeroConta}");
-
-            if (response.IsSuccessStatusCode)
+            if (response.Success)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                return Ok(content);
+                return Ok(response);
             }
 
-            return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
+            return StatusCode((int)HttpStatusCode.BadRequest, response);
         }
 
         /// <summary>
@@ -67,24 +69,53 @@ namespace BankMore.BFF.Web.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSaldo()
         {
-            var claimNumeroConta = User.FindFirst("numero_conta");
+            string? numeroConta = this.GetNumeroConta();
 
-            if (claimNumeroConta == null)
+            if (numeroConta == null)
             {
                 return Unauthorized("A claim 'numero_conta' não foi encontrada.");
             }
 
-            string numeroConta = claimNumeroConta.Value;
+            var response = await _contaCorrenteService.BuscarSaldo(numeroConta);
 
-            var response = await _downstreamClient.GetAsync($"/api/v1/ContaCorrente/saldo?numeroConta={numeroConta}");
-
-            if (response.IsSuccessStatusCode)
+            if (response.Success)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                return Ok(content);
+                return Ok(response);
             }
 
-            return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
+            return StatusCode((int)HttpStatusCode.BadRequest, response);
+        }
+
+        /// <summary>
+        /// Gera o extrato de movimentações (débitos e créditos) de uma conta corrente.
+        /// </summary>
+        /// <remarks>
+        /// Permite a consulta do próprio extrato ou o extrato de terceiros (para Masters/Admins).
+        /// </remarks>
+        /// <returns>Retorna uma lista de ExtratoDto contendo todas as movimentações.</returns>
+        [HttpGet("extrato")]
+        [ProducesResponseType(typeof(IEnumerable<ExtratoDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetExtrato()
+        {
+            string? numeroConta = this.GetNumeroConta();
+
+            if (numeroConta == null)
+            {
+                return Unauthorized("A claim 'numero_conta' não foi encontrada.");
+            }
+
+            var response = await _contaCorrenteService.BuscarExtrato(numeroConta);
+
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+
+            return StatusCode((int)HttpStatusCode.BadRequest, response);
         }
     }
 }
