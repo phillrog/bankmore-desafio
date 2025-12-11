@@ -51,7 +51,7 @@ namespace BankMore.Services.Api.Identidade.Pages.Register
         {
             if (!ModelState.IsValid)
             {
-                Redirect("~/Account/Login");
+                return Redirect("/Account/Login/Index");
             }
 
             try
@@ -65,7 +65,7 @@ namespace BankMore.Services.Api.Identidade.Pages.Register
                 if (existingUser != null)
                 {
                     ModelState.AddModelError(string.Empty, "O CPF informado já está cadastrado.");
-                    Redirect("~/Account/Login");
+                    return Redirect("/Account/Login/Index");
                 }
 
                 // Add User
@@ -78,7 +78,7 @@ namespace BankMore.Services.Api.Identidade.Pages.Register
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
-                    Redirect("~/Account/Login");
+                    return Redirect("/Account/Login/Index");
                 }
 
                 var id = appUser.Id.ToLower();
@@ -102,17 +102,23 @@ namespace BankMore.Services.Api.Identidade.Pages.Register
                     await _userManager.DeleteAsync(appUser);
                     ModelState.AddModelError(string.Empty, $"Falha ao cadastrar conta: {result.Erros}");
                     TempData["ErrorMessage"] = $"Falha no registro: {string.Join(", ", result.Erros)}";
-                    Redirect("~/");
+                    return Redirect("/Account/Login/Index");
                 }
 
+                identityResult = await _userManager.AddToRoleAsync(appUser, "Admin");
+
+                if (!identityResult.Succeeded)
+                {
+                    TempData["ErrorMessage"] = $"Falha no registro: {string.Join(", ", result.Erros)}";
+                }
 
                 // Add UserClaims
                 var userClaims = new List<Claim>
-            {
-                new Claim("Admin_Write", "Write"),
-                new Claim("Admin_Remove", "Remove"),
-                new Claim("Admin_Read", "Read"),
-            };
+                {
+                    new Claim("Admin_Write", "Write"),
+                    new Claim("Admin_Remove", "Remove"),
+                    new Claim("Admin_Read", "Read"),
+                };
                 await _userManager.AddClaimsAsync(appUser, userClaims);
 
                 // 2. Define o hash e conta manualmente
@@ -129,14 +135,13 @@ namespace BankMore.Services.Api.Identidade.Pages.Register
                 Input = new RegisterViewModel(); // Limpa os campos do formulário
 
                 TempData["SuccessMessage"] = $"Conta número {result.Data.NumeroConta} criada com sucesso! Faça login para continuar.";
-                // Redireciona para o GET (Post/Redirect/Get pattern) ou apenas retorna a página para exibir a mensagem.                
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Falha no registro: {ex.Message}";
             }
 
-            return RedirectToPage("/Account/Login/Index");
+            return Redirect("/Account/Login/Index");
         }
     }
 }

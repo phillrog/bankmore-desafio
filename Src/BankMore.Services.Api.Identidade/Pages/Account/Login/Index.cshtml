@@ -82,6 +82,7 @@
                                         <button class="btn btn-primary btn-block"
                                                 name="Input.Button"
                                                 value="login"
+
                                                 id="loginButton">
 
                                             <span class="spinner-border spinner-border-sm d-none"
@@ -306,6 +307,12 @@
                 // 3. Exibe o loader e altera o texto
                 spinner.removeClass('d-none');
                 buttonText.text('Processando...');
+                
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'Input.Button',
+                    value: button.val()
+                }).appendTo($(form));
             });
         }
     </script>
