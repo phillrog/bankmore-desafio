@@ -40,6 +40,7 @@ namespace BankMore.Application.Common.Commands
         public DateTime DataMovimento { get; set; }
         [DataMember(Order = 8)]
         public bool IsCompensation { get; set; } = false;
-
+        [DataMember(Order = 9)]
+        public string Descricao { get; set; }
     }
 }

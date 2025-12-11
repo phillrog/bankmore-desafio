@@ -34,5 +34,7 @@ namespace BankMore.Infra.Kafka.Events.Movimento
         public decimal SaldoAposMovimentacao { get; set; }
         [DataMember(Order = 12)]
         public string ReplyTopic { get; set; }
+        [DataMember(Order = 13)]
+        public string Descricao { get; set; }
     }
 }

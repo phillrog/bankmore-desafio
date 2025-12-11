@@ -9,6 +9,7 @@ public class TransferenciaCommand : IRequest<bool>
     public DateTime DataMovimento { get; set; }
     public TipoMovimento TipoMovimento { get; set; }
     public decimal Valor { get; set; }
+    public string Descricao { get; set; }
 
     public TransferenciaCommand(decimal valor, TipoMovimento tipo, Guid idContaCorrente)
     {

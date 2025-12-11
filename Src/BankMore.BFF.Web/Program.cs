@@ -120,10 +120,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
-app.UseCookieConfig();
-
 // ----- CORS -----
 app.UseCors(CorsPolicyName);
+
+
+app.UseCookieConfig();
+
 
 // ----- Auth -----
 app.UseJwtConfig();

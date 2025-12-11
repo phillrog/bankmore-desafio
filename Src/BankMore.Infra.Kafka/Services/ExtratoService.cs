@@ -3,8 +3,6 @@ using BankMore.Domain.Common.Interfaces;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace BankMore.Infra.Kafka.Services
 {
@@ -19,6 +17,7 @@ namespace BankMore.Infra.Kafka.Services
         public char TipoMovimento { get; set; }
         public decimal Valor { get; set; }
         public Guid IdContaCorrente { get; set; } // Adicionado para clareza
+        public string Descricao { get; set; }
     }
 
 
@@ -66,7 +65,7 @@ namespace BankMore.Infra.Kafka.Services
                 #region [ BUSCA MOVIMENTAÇÕES ]
 
                 var movimentosSql = @"
-                SELECT id, idtransferencia, datamovimento, tipomovimento, valor, idcontacorrente
+                SELECT id, idtransferencia, datamovimento, tipomovimento, valor, idcontacorrente, descricao
                 FROM movimento
                 WHERE idcontacorrente = @IdConta AND IsDeleted = 0
                 ORDER BY datamovimento DESC;";
@@ -156,7 +155,7 @@ namespace BankMore.Infra.Kafka.Services
 
                 int numeroOrigem = contaAtualNumero;
                 int numeroDestino = 0;
-
+                
                 if (transferenciasMap.TryGetValue(movimentacao.IdTransferencia, out dynamic transferencia))
                 {
                     var idContraparte = movimentacao.TipoMovimento == 'D'
@@ -178,7 +177,7 @@ namespace BankMore.Infra.Kafka.Services
                     {
                         numeroDestino = contaAtualNumero;
                         numeroOrigem = numeroContraparte;
-                    }
+                    }                    
                 }
 
                 extratoFinal.Add(new ExtratoDto
@@ -189,7 +188,8 @@ namespace BankMore.Infra.Kafka.Services
                     Tipo = movimentacao.TipoMovimento == 'C' ? "CRÉDITO" : "DÉBITO",
                     NumeroContaOrigem = numeroOrigem,
                     NomeContraparte = nomeContraparte,
-                    NumeroContaDestino = numeroDestino
+                    NumeroContaDestino = numeroDestino,
+                    Descricao = movimentacao.Descricao
                 });
             }
             #endregion

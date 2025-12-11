@@ -23,14 +23,15 @@ public class ViewModelToDomainMappingProfile : Profile
 
         /// Commands Movimentação
         CreateMap<MovimentoViewModel, CadastrarNovaMovimentacaoCommand>()
-            .ConstructUsing(c => new CadastrarNovaMovimentacaoCommand(c.Valor, c.TipoMovimento));
+            .ConstructUsing(c => new CadastrarNovaMovimentacaoCommand(c.Valor, c.TipoMovimento, c.Descricao));
         CreateMap<CadastrarNovaMovimentacaoCommand, Movimento>()
             .ConstructUsing(c => new Movimento(
                                                 c.Id,
                                                 c.IdContaCorrente,
                                                 c.DataMovimento,
                                                 (char)c.TipoMovimento,
-                                                c.Valor
+                                                c.Valor,
+                                                c.Descricao
             ))
             .ForMember(
                 dest => dest.TipoMovimento,

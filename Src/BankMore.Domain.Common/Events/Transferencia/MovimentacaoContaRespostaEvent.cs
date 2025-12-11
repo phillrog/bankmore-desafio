@@ -31,5 +31,6 @@ namespace BankMore.Domain.Common.Events
         public string ErrorType { get; set; }
         public bool IsCompensation { get; set; } = false;
         public string Topico { get; set; }
+        public string Descricao { get; set; }
     }
 }

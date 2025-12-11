@@ -38,7 +38,7 @@ namespace BankMore.Application.Transferencias.Commands
                     Valor = command.Valor,
                     DataMovimento = command.DataMovimento,
                     IdContaCorrenteOrigem = command.IdContaCorrenteOrigem,
-                    Topico = SagaTopico.FinalizadaTransferencia
+                    Topico = SagaTopico.FinalizadaTransferencia,
                 };
                 ///FIM
             }

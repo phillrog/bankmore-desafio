@@ -49,9 +49,16 @@ public static class JwtExtension
             options.TokenValidationParameters.ValidateAudience = true;
             options.TokenValidationParameters.ValidIssuer = identityServerUrl;
             options.TokenValidationParameters.ValidAudience = apiResourceName;
-            options.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
 
-            options.Events = JwtEventsSetup.GetCustomEvents();
+            options.Events = new JwtBearerEvents
+            {
+                OnAuthenticationFailed = context =>
+                {
+                    // Este log mostrará a exceção (ex: Invalid signature, expired token, issuer mismatch)
+                    Console.WriteLine($"JWT Bearer Authentication FAILED: {context.Exception.Message}");
+                    return Task.CompletedTask;
+                }
+            };
         });
 
 
@@ -59,13 +66,6 @@ public static class JwtExtension
         {
             PolicySetup.AddCustomPolicies(options);
         });
-
-
-        services.AddAuthorization(options =>
-        {
-            PolicySetup.AddCustomPolicies(options);
-        });
-
 
         return services;
     }

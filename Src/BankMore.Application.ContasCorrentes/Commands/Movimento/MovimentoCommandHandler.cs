@@ -157,7 +157,8 @@ public class MovimentoCommandHandler : CommandHandler,
                 DataHora = movimento.DataMovimento,
                 Tipo = movimento.TipoMovimento,
                 Valor = movimento.Valor,
-                SaldoAposMovimentacao = novoSaldo
+                SaldoAposMovimentacao = novoSaldo,
+                Descricao = movimento.Descricao
             };
 
             var requisicao = ParseJson(message);
@@ -185,7 +186,8 @@ public class MovimentoCommandHandler : CommandHandler,
                     movimento.IdContaCorrente,
                     movimento.DataMovimento,
                     movimento.TipoMovimento,
-                    movimento.Valor));
+                    movimento.Valor,
+                    movimento.Descricao));
 
                 return Result<MovimentacaoRelaizadaDto>.Success(retorno);
             }

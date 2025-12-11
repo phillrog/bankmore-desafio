@@ -4,6 +4,7 @@ using BankMore.Domain.Common.Enums;
 using BankMore.Domain.Common.Events;
 using BankMore.Domain.ContasCorrentes.Interfaces;
 using BankMore.Domain.ContasCorrentes.Models;
+using BankMore.Infra.Data.ContasCorrentes.Repository;
 using MediatR;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -15,12 +16,15 @@ namespace BankMore.Application.ContasCorrentes.Commands
     {
         private readonly IIdempotenciaRepository _idempotenciaRepository;
         private readonly IMovimentoRepository _movimentoRepository;
+        private readonly IContaCorrenteRepository _contaCorrenteRepository;
 
         public TentarCreditarContaCommandHandler(IIdempotenciaRepository idempotenciaRepository,
-            IMovimentoRepository movimentoRepository)
+            IMovimentoRepository movimentoRepository,
+            IContaCorrenteRepository contaCorrenteRepository)
         {
             _idempotenciaRepository = idempotenciaRepository;
             _movimentoRepository = movimentoRepository;
+            _contaCorrenteRepository = contaCorrenteRepository;
         }
 
         public async Task<MovimentacaoContaRespostaEvent> Handle(TentarCreditoCommand command, CancellationToken cancellationToken)
@@ -29,7 +33,9 @@ namespace BankMore.Application.ContasCorrentes.Commands
             try
             {
                 var novoId = Guid.NewGuid();
-                var movimento = new Movimento(novoId, command.IdContaCorrenteDestino, command.DataMovimento, 'C', command.Valor);
+                var contaOrigem = _contaCorrenteRepository.GetById(command.IdContaCorrenteOrigem);
+
+                var movimento = new Movimento(novoId, command.IdContaCorrenteDestino, command.DataMovimento, 'C', command.Valor, "DEPÓSITO FEITO POR " + contaOrigem.Nome);
                 movimento.DefinirIdTransferencia(novoId);
                 _movimentoRepository.Add(movimento);
                 _movimentoRepository.SaveChanges();
@@ -53,7 +59,8 @@ namespace BankMore.Application.ContasCorrentes.Commands
                     DataMovimento = command.DataMovimento,
                     IdContaCorrenteOrigem = command.IdContaCorrenteOrigem,
                     Topico = SagaTopico.DebitarConta,
-                    IsCompensation = false
+                    IsCompensation = false,
+                    Descricao = command.Descricao,
                 };
             }
             catch (Exception ex)

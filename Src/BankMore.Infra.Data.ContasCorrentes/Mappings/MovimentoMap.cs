@@ -29,6 +29,9 @@ namespace BankMore.Infra.Data.ContasCorrentes.Mappings
                    .HasColumnType("DECIMAL(18, 2)")
                    .IsRequired();
 
+            builder.Property(m => m.Descricao)
+                   .HasColumnType("VARCHAR(200)");
+
             builder.Property(i => i.IdTransferencia)
                    .IsRequired(false);
 

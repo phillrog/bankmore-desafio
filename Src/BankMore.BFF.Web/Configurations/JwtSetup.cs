@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using System.Security.Claims;
@@ -13,16 +14,16 @@ public static class JwtSetup
         {
             options.DefaultScheme = "cookie";
             // Usar a constante para alinhar com o AddOpenIdConnect
-            options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme; //"cookie";
             options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
         })
         .AddCookie("cookie", options =>
         {
             // set session lifetime
-            options.ExpireTimeSpan = TimeSpan.FromSeconds(5);
+            options.ExpireTimeSpan = TimeSpan.FromSeconds(180);
 
             // sliding or absolute
-            options.SlidingExpiration = true;
+            options.SlidingExpiration = false;
 
             // host prefixed cookie name
             options.Cookie.Name = "bffcookie";
@@ -34,6 +35,20 @@ public static class JwtSetup
             options.Cookie.SameSite = SameSiteMode.Lax; // OK para o redirecionamento OIDC
             options.Cookie.SecurePolicy = CookieSecurePolicy.None; // OK para HTTP
             options.Cookie.IsEssential = true;
+
+            options.Events = new CookieAuthenticationEvents
+            {
+                OnRedirectToLogin = context =>
+                {
+                    // Define o status de erro para o Angular
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+                    // Alerta o cliente que a sessão expirou (opcional, mas bom)
+                    context.Response.Headers["X-Session-Expired"] = "true";
+
+                    return Task.CompletedTask;
+                }
+            };
         })
         .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options => // Esquema registrado com o nome padrão
         {

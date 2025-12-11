@@ -41,5 +41,7 @@ namespace BankMore.Domain.Common.Dtos
         /// O número da conta de destino da transação (para Débitos) ou o número da conta atual (para Créditos).
         /// </summary>
         public int NumeroContaDestino { get; set; }
+
+        public string Descricao { get; set; }
     }
 }

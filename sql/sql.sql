@@ -427,7 +427,7 @@ CREATE TABLE movimento (
     datamovimento DATETIME2(0) NOT NULL, -- Data e hora do movimento
     tipomovimento CHAR(1) NOT NULL, -- Tipo do movimento (C ou D)
     valor DECIMAL(18, 2) NOT NULL, -- Valor do movimento (moeda)
-    
+    descricao VARCHAR(200),
     -- Colunas de Auditoria
     CreatedAt DATETIME2(7) NOT NULL,
     CreatedBy INT NOT NULL,

@@ -1,4 +1,5 @@
 ﻿using BankMore.Domain.Common.Providers.Hash;
+using BankMore.Infra.Apis.Configurations;
 using BankMore.Infra.CrossCutting.Identity.Data;
 using BankMore.Infra.CrossCutting.Identity.Models;
 using BankMore.Services.Api.Identidade.Pages;
@@ -138,6 +139,8 @@ public static class AuthSetup
                 policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
                 policy.RequireClaim("scope", "transferencias_api");
             });
+
+            PolicySetup.AddCustomPolicies(options);
 
         });
 

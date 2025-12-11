@@ -9,21 +9,23 @@ namespace BankMore.Application.ContasCorrentes.Commands;
 
 public class CadastrarNovaMovimentacaoCommand : MovimentoCommand, IRequest<Result<MovimentacaoRelaizadaDto>>
 {
-    public CadastrarNovaMovimentacaoCommand(decimal valor, TipoMovimento tipo)
+    public CadastrarNovaMovimentacaoCommand(decimal valor, TipoMovimento tipo, string descricao)
     {
         Id = Guid.NewGuid();
         Valor = valor;
         DataMovimento = DateTime.UtcNow;
         TipoMovimento = tipo;
+        Descricao = descricao;
     }
 
-    public CadastrarNovaMovimentacaoCommand(decimal valor, TipoMovimento tipo, string numero)
+    public CadastrarNovaMovimentacaoCommand(decimal valor, TipoMovimento tipo, string numero, string descricao)
     {
         Id = Guid.NewGuid();
         Valor = valor;
         DataMovimento = DateTime.UtcNow;
         TipoMovimento = tipo;
         NumeroConta = Convert.ToInt32(numero);
+        Descricao = descricao;
     }
 
     public override bool IsValid()

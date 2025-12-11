@@ -1,4 +1,4 @@
-using BankMore.Domain.ContasCorrentes.Enums;
+﻿using BankMore.Domain.ContasCorrentes.Enums;
 using BankMore.Domain.Core.Commands;
 
 namespace BankMore.Application.ContasCorrentes.Commands;
@@ -11,4 +11,5 @@ public abstract class MovimentoCommand : Command
     public TipoMovimento TipoMovimento { get; set; }
     public decimal Valor { get; set; }
     public int NumeroConta { get; set; }
+    public string Descricao { get; set; }
 }

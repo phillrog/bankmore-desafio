@@ -48,6 +48,7 @@ namespace BankMore.Infra.Kafka.Consumers
                             IdContaCorrenteDestino = message.IdContaCorrenteDestino,
                             Valor = message.Valor,
                             Topico = SagaTopico.ValidarDebitoConta,
+                            Descricao = message.Descricao
                         };
 
                         await dispatcher.PublishAsync(command, SagaTopico.CreditarConta);
@@ -64,6 +65,7 @@ namespace BankMore.Infra.Kafka.Consumers
                             IdContaCorrenteOrigem = message.IdContaCorrenteOrigem,
                             IdContaCorrenteDestino = message.IdContaCorrenteDestino,
                             Valor = message.Valor,
+                            Descricao = message.Descricao
                         });
                     }
                 }
@@ -83,7 +85,8 @@ namespace BankMore.Infra.Kafka.Consumers
                                 IdContaCorrenteOrigem = message.IdContaCorrenteOrigem,
                                 IdContaCorrenteDestino = message.IdContaCorrenteDestino,
                                 Valor = message.Valor,
-                                Status = (int)StatusEnum.COMPENSADA_COM_FALHA
+                                Status = (int)StatusEnum.COMPENSADA_COM_FALHA,
+                                Descricao = message.Descricao
                             };
                         }
                         else
@@ -96,7 +99,8 @@ namespace BankMore.Infra.Kafka.Consumers
                                 IdContaCorrenteOrigem = message.IdContaCorrenteOrigem,
                                 IdContaCorrenteDestino = message.IdContaCorrenteDestino,
                                 Valor = message.Valor,
-                                Status = (int)StatusEnum.CONCLUIDA
+                                Status = (int)StatusEnum.CONCLUIDA,
+                                Descricao = message.Descricao
                             };
                         }
                         await dispatcher.PublishAsync(command, SagaTopico.FinalizadaTransferencia);
@@ -111,6 +115,7 @@ namespace BankMore.Infra.Kafka.Consumers
                             IdContaCorrenteOrigem = message.IdContaCorrenteOrigem,
                             IdContaCorrenteDestino = message.IdContaCorrenteDestino,
                             Valor = message.Valor,
+                            Descricao = message.Descricao
                         });
                     }
                 }

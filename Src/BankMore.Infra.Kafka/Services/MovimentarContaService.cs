@@ -31,6 +31,7 @@ namespace BankMore.Infra.Kafka.Services
                 CorrelationId = correlationId,
                 ReplyTopic = ReplyTopic,
                 Conta = message.Conta,
+                Descricao = message.Descricao,
             };
 
             await _requestProducer.ProduceAsync("movimentar.conta.requisicao", correlationId.ToString(), requestEvent);

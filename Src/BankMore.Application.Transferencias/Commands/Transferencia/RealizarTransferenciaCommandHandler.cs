@@ -167,7 +167,8 @@ namespace BankMore.Application.Transferencias.Commands
                     transferencia.IdContaCorrenteDestino,
                     transferencia.Valor,
                     (int)transferencia.Status,
-                    transferencia.DataMovimento
+                    transferencia.DataMovimento,
+                    "TRANSFERÊNCIA PARA " + contaDestino.Nome
                 );
                 eventoIniciado.Topico = SagaTopico.IniciarTranferencia;
 

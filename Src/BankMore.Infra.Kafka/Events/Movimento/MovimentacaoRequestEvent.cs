@@ -28,5 +28,8 @@ namespace BankMore.Infra.Kafka.Events.Movimento
 
         [DataMember(Order = 8)]
         public string Conta { get; set; }
+
+        [DataMember(Order = 9)]
+        public string Descricao { get; set; }
     }
 }

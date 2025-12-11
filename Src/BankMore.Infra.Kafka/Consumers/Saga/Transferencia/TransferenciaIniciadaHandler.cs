@@ -38,6 +38,7 @@ namespace BankMore.Infra.Kafka.Consumers.Saga.Transferencia
                     Status = message.Status,
                     DataMovimento = message.DataMovimento,
                     Topico = SagaTopico.IniciarTranferencia,
+                    Descricao = message.Descricao,
                 };
 
                 await dispatcher.PublishAsync(debitCommand, SagaTopico.DebitarConta);

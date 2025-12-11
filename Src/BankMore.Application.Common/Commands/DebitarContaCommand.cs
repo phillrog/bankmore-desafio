@@ -39,5 +39,7 @@ namespace BankMore.Application.Common.Commands
         public DateTime DataMovimento { get; set; }
         [DataMember(Order = 8)]
         public string Topico { get; set; }
+        [DataMember(Order = 9)]
+        public string Descricao { get; set; }
     }
 }

@@ -26,6 +26,6 @@ namespace BankMore.Application.ContasCorrentes.Commands.Transferencia
         public int Status { get; set; }
         public Guid CorrelationId { get; set; }
         public DateTime DataMovimento { get; set; }
-
+        public string Descricao { get; set; }
     }
 }

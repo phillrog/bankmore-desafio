@@ -5,13 +5,14 @@ namespace BankMore.Domain.ContasCorrentes.Models
     public class Movimento : EntityAudit
     {
         public Movimento() { }
-        public Movimento(Guid id, Guid idContaCorrente, DateTime dataMovimento, char tipoMovimento, decimal valor)
+        public Movimento(Guid id, Guid idContaCorrente, DateTime dataMovimento, char tipoMovimento, decimal valor, string descricao)
         {
             IdContaCorrente = idContaCorrente;
             DataMovimento = dataMovimento;
             TipoMovimento = tipoMovimento;
             Valor = valor;
             Id = id;
+            Descricao = descricao;
         }
 
         public Guid IdContaCorrente { get; private set; }
@@ -25,5 +26,6 @@ namespace BankMore.Domain.ContasCorrentes.Models
             IdTransferencia = id;
         }
         public ContaCorrente? ContaCorrente { get; set; }
+        public string Descricao { get; }
     }
 }

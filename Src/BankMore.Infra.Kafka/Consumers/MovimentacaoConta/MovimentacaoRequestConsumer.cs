@@ -38,7 +38,7 @@ public class MovimentacaoRequestConsumer : IMessageHandler<MovimentacaoRequestEv
 
         var bus = serviceProvider.GetRequiredService<IMediatorHandler>();
 
-        var registerCommand = new CadastrarNovaMovimentacaoCommand(message.Valor, message.Tipo, message.Conta);
+        var registerCommand = new CadastrarNovaMovimentacaoCommand(message.Valor, message.Tipo, message.Conta, message.Descricao);
         var result = await bus.SendCommand<CadastrarNovaMovimentacaoCommand, Result<MovimentacaoRelaizadaDto>>(registerCommand);
         _logger.LogInformation($"[Lógica] levou {sw.ElapsedMilliseconds}ms.");
 
@@ -56,7 +56,8 @@ public class MovimentacaoRequestConsumer : IMessageHandler<MovimentacaoRequestEv
                 DataHora = result.Data.DataHora,
                 Nome = result.Data.Nome,
                 Id = result.Data.Id,
-                SaldoAposMovimentacao = result.Data.SaldoAposMovimentacao
+                SaldoAposMovimentacao = result.Data.SaldoAposMovimentacao,
+                Descricao = result.Data.Descricao,
             };
         }
         else

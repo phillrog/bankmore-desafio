@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <None Include="Configurations\Policys.csSetup.cs" />
+    <None Include="Configurations\PolicySetup.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -27,7 +27,7 @@ namespace BankMore.Application.ContasCorrentes.Commands.Transferencia
             try
             {
                 var novoId = Guid.NewGuid();
-                var movimento = new Movimento(novoId, command.IdContaCorrenteDestino, command.DataMovimento, 'C', command.Valor);
+                var movimento = new Movimento(novoId, command.IdContaCorrenteDestino, command.DataMovimento, 'C', command.Valor, command.Descricao);
                 movimento.DefinirIdTransferencia(novoId);
                 _movimentoRepository.Add(movimento);
                 _movimentoRepository.SaveChanges();
@@ -51,7 +51,8 @@ namespace BankMore.Application.ContasCorrentes.Commands.Transferencia
                     DataMovimento = command.DataMovimento,
                     IdContaCorrenteOrigem = command.IdContaCorrenteOrigem,
                     Topico = SagaTopico.DebitarConta,
-                    IsCompensation = true
+                    IsCompensation = true,
+                    Descricao = "Estorno - " + command.Descricao
                 };
             }
             catch (Exception ex)

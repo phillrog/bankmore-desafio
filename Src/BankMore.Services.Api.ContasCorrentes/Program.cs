@@ -24,7 +24,7 @@ builder.Services.AddKafkaSetup(builder.Configuration);
 builder.Services.AddDatabaseSetup(builder.Configuration, builder.Environment);
 
 // ----- Auth -----
-builder.Services.AddJwtConfig(builder.Configuration);
+builder.Services.AddJwtConfiguration(builder.Configuration);
 
 // ----- Http -----
 builder.Services.AddCustomizedHttp(builder.Configuration);
@@ -116,7 +116,7 @@ app.UseCors(x => x
 
 
 // ----- Auth -----
-app.UseJwtConfig();
+app.UseJwtConfiguration();
 
 // ----- Controller -----
 app.MapControllers();

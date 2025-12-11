@@ -12,7 +12,7 @@ namespace BankMore.Domain.Transferencias.Events
         {
 
         }
-        public TransferenciaIniciadaEvent(Guid id, Guid correlationId, Guid idContaCorrenteOrigem, Guid idContaCorrenteDestino, decimal valor, int status, DateTime dataMovimento)
+        public TransferenciaIniciadaEvent(Guid id, Guid correlationId, Guid idContaCorrenteOrigem, Guid idContaCorrenteDestino, decimal valor, int status, DateTime dataMovimento, string descricao)
         {
 
             Id = id;
@@ -22,6 +22,7 @@ namespace BankMore.Domain.Transferencias.Events
             Status = status;
             CorrelationId = correlationId;
             DataMovimento = dataMovimento;
+            Descricao = descricao;
         }
 
         [DataMember(Order = 1)]
@@ -48,5 +49,7 @@ namespace BankMore.Domain.Transferencias.Events
         [DataMember(Order = 8)]
         public string Topico { get; set; }
 
+        [DataMember(Order = 9)]
+        public string Descricao { get; set; }
     }
 }

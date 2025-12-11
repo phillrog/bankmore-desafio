@@ -23,6 +23,12 @@ namespace BankMore.Application.ContasCorrentes.ViewModels
         public decimal Valor { get; set; }
 
         /// <summary>
+        /// Descrição do que foi feito
+        /// </summary>
+        /// <example>Compra no supermercado</example>
+        public string Descricao { get; set; }
+
+        /// <summary>
         /// NÃºmero da conta do usuário
         /// </summary>
         /// <example>123456</example>

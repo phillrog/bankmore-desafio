@@ -176,11 +176,12 @@ namespace BankMore.Services.Api.Identidade.Pages.Login
                             IsPersistent = true,
                             ExpiresUtc = DateTimeOffset.UtcNow.Add(LoginOptions.RememberMeLoginDuration)
                         };
-                    } else
+                    }
+                    else
                     {
                         props = new AuthenticationProperties
                         {
-                            ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(80)
+                            ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(300)
                         };
                     }
 
