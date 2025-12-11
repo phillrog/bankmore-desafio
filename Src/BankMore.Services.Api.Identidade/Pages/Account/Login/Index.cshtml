@@ -56,16 +56,17 @@
                             <div class="tab-content" id="pills-tabContent">
 
                                 <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
-                                    <form asp-page="/Account/Login/Index">
+                                    <form id="frmLogin" asp-page="/Account/Login/Index">
                                         <input type="hidden" asp-for="Input.ReturnUrl" />
 
                                         <div class="form-group">
                                             <label asp-for="Input.Username">Usuário</label>
-                                            <input class="form-control" placeholder="Informe seu CPF" asp-for="Input.Username" autofocus>
+                                            <input class="form-control" placeholder="Informe seu CPF" asp-for="Input.Username" autofocus required
+                                            type="tel" id="cpfLogin" maxlength="11"pattern="[0-9]{11}" inputmode="numeric" >
                                         </div>
                                         <div class="form-group">
                                             <label asp-for="Input.Password">Senha</label>
-                                            <input type="password" class="form-control" placeholder="Sua senha de acesso" asp-for="Input.Password" autocomplete="off">
+                                            <input type="password" class="form-control" placeholder="Sua senha de acesso" asp-for="Input.Password" autocomplete="off" required>
                                         </div>
 
                                         @if (Model.View.AllowRememberLogin)
@@ -78,36 +79,82 @@
                                             </div>
                                         }
 
-                                        <div class="mt-4">
-                                            <button class="btn btn-primary btn-block" name="Input.Button" value="login">
-                                                Acessar Conta
-                                            </button>
-                                        </div>
+                                        <button class="btn btn-primary btn-block"
+                                                name="Input.Button"
+                                                value="login"
+                                                id="loginButton">
+
+                                            <span class="spinner-border spinner-border-sm d-none"
+                                                  role="status"
+                                                  aria-hidden="true"
+                                                  id="spinner"></span>
+
+                                            <span id="buttonText">Acessar Conta</span>
+                                        </button>
                                         <small class="form-text text-center mt-3">
                                             <a href="#" class="text-secondary">Esqueci minha senha</a>
                                         </small>
                                     </form>
                                 </div>
                                 <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="pills-register-tab">
-                                    <form asp-page="/Account/Register/Index">
+                                    <form id="frmNovoCadastro" method="POST" asp-page="/Account/Register/Index">
                                         <input type="hidden" asp-for="Input.ReturnUrl" />
 
                                         <div class="form-group">
-                                            <label for="Input.NewUsername">Defina um Usuário</label>
-                                            <input class="form-control" id="Input.NewUsername" name="Input.NewUsername" placeholder="Digite seu CPF" required>
+                                            <label for="Input.Cpf">Informe seu CPF</label>
+                                            <input class="form-control" id="cpfCadastro" name="Input.Cpf" placeholder="Digite seu CPF" required
+                                                   type="tel" maxlength="11" pattern="[0-9]{11}" inputmode="numeric">
                                         </div>
                                         <div class="form-group">
-                                            <label for="Input.NewPassword">Defina uma Senha</label>
-                                            <input type="password" class="form-control" id="Input.NewPassword" name="Input.NewPassword" placeholder="Sua nova senha" required>
+                                            <label for="Input.Nome">Informe seu nome completo</label>
+                                            <input class="form-control" id="Input.Nome" name="Input.Nome" placeholder="Digite seu nome" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="Input.Password">Defina uma Senha</label>
+                                            <div class="input-group">
+                                                <input type="password"
+                                                       class="form-control"
+                                                       id="Input.Password"
+                                                       name="Input.Password"
+                                                       placeholder="Sua nova senha"
+                                                       required>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text toggle-password" data-target="Input\.Password">
+                                                        <i class="glyphicon glyphicon-eye-close" id="icon_Input.Password"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="Input.ConfirmPassword">Confirme a Senha</label>
-                                            <input type="password" class="form-control" id="Input.ConfirmPassword" name="Input.ConfirmPassword" placeholder="Confirme a senha" required>
+                                            <div class="input-group">
+                                                <input type="password"
+                                                       class="form-control"
+                                                       id="Input.ConfirmPassword"
+                                                       name="Input.ConfirmPassword"
+                                                       placeholder="Confirme a senha"
+                                                       required>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text toggle-password" data-target="Input\.ConfirmPassword">
+                                                        <i class="glyphicon glyphicon-eye-close" id="icon_Input.ConfirmPassword"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="mt-4">
-                                            <button class="btn btn-primary btn-block" name="Input.Button" value="register">
-                                                Criar Minha Conta
+                                            <button class="btn btn-primary btn-block"
+                                                    name="Input.Button"
+                                                    value="register"
+                                                    id="registerButton">
+
+                                                <span class="spinner-border spinner-border-sm d-none"
+                                                      role="status"
+                                                      aria-hidden="true"
+                                                      id="spinner"></span>
+
+                                                <span id="buttonText">Criar Minha Conta</span>
                                             </button>
                                         </div>
                                     </form>
@@ -147,3 +194,119 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var passwordInput = $('#frmNovoCadastro').find('#Input\\.Password');
+            var confirmPasswordInput = $('#frmNovoCadastro').find('#Input\\.ConfirmPassword');
+
+            spinnerButton('#frmLogin');
+            spinnerButton('#frmNovoCadastro',()=>{
+                var password = passwordInput.val();
+                var confirmPassword = confirmPasswordInput.val();
+
+                if (!password || !confirmPassword) {
+                    return;
+                }
+                if (password !== confirmPassword) {
+
+                    event.preventDefault();
+                    if (typeof toastr !== 'undefined') {
+                        toastr.error('As senhas digitadas não coincidem. Por favor, verifique e tente novamente.', 'Erro de Senha');
+                    } else {
+                        alert('Erro: As senhas não coincidem.');
+                    }
+
+                    confirmPasswordInput.val('');
+                    confirmPasswordInput.focus();
+
+                    return false;
+                }
+                return true;
+            });
+
+            passwordInput.on('blur', (e)=>{
+                if (passwordInput.val().length > 0){
+                    passwordInput.addClass('is-valid');
+                } else{
+                    passwordInput.removeClass('is-invalid');
+                }
+            })
+            confirmPasswordInput.on('keyup', function() {
+                if (passwordInput.val() !== confirmPasswordInput.val()) {
+                    confirmPasswordInput.addClass('is-invalid');
+                } else {
+                    confirmPasswordInput.removeClass('is-invalid');
+                    confirmPasswordInput.addClass('is-valid');
+                }
+            });
+
+        
+            formatarCpf('#cpfLogin');
+            formatarCpf('#cpfCadastro');
+
+            $('.toggle-password').on('click', function() {
+
+                var targetId = $(this).data('target');
+                var passwordInput = $('#' + targetId);
+                var icon = $('#icon_' + targetId);
+
+                var currentType = passwordInput.attr('type');
+
+                if (currentType === 'password') {
+                    passwordInput.attr('type', 'text');
+                    icon.removeClass('glyphicon-eye-close').addClass('glyphicon-eye-open');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    icon.removeClass('glyphicon-eye-open').addClass('glyphicon-eye-close');
+                }
+            });
+        });
+
+
+        function formatarCpf(input){
+            var cpfInput = $(input);
+
+            cpfInput.on('keypress', function (event) {
+
+                var charCode = (event.which) ? event.which : event.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    event.preventDefault();
+                }
+            });
+
+            cpfInput.on('paste', function (event) {
+                var pastedData = event.originalEvent.clipboardData.getData('text');
+
+                var cleanData = pastedData.replace(/[^0-9]/g, '');
+                var finalData = cleanData.substring(0, 11);
+                $(this).val(finalData);
+                event.preventDefault();
+            });
+        }
+
+        function spinnerButton(form, validation){
+            var button = $(form).find('button');
+            var spinner = $(form).find('#spinner');
+            var buttonText = $(form).find('#buttonText');
+            $(form).on('submit', function (event) {
+                if (validation && !validation()){
+                    return;
+                }
+
+                // Verifica se o formulário já está sendo processado (previne cliques duplos)
+                if (button.prop('disabled')) {
+                    event.preventDefault();
+                    return;
+                }
+
+                // 2. Desabilita o botão para impedir mais cliques
+                button.prop('disabled', true);
+
+                // 3. Exibe o loader e altera o texto
+                spinner.removeClass('d-none');
+                buttonText.text('Processando...');
+            });
+        }
+    </script>
+}

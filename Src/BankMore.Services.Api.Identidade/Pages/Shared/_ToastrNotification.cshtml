@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Mvc.ViewFeatures
+
+@{
+    string successMessage = ViewContext.TempData["SuccessMessage"] as string;
+    string errorMessage = ViewContext.TempData["ErrorMessage"] as string;
+    string alertMessage = ViewContext.TempData["AlertMessage"] as string;
+}
+
+
+<script>
+    $(document).ready(function () {
+        // Configurações Globais (Opção 1 corrigida do erro anterior)
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "6000",
+            "extendedTimeOut": "1000",
+            "showMethod": "show",
+            "hideMethod": "hide"
+        };
+    @if (!string.IsNullOrEmpty(successMessage) || !string.IsNullOrEmpty(errorMessage) || !string.IsNullOrEmpty(alertMessage))
+    {
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <text>toastr.success('@Html.Raw(successMessage)', 'Sucesso!');</text>
+        }
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <text>toastr.error('@Html.Raw(errorMessage)', 'Erro!');</text>
+        }
+        @if (!string.IsNullOrEmpty(alertMessage))
+        {
+            <text>toastr.warning('@Html.Raw(alertMessage)', 'Atenção!');</text>
+        }
+    }
+    });
+</script>

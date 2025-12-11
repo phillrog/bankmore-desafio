@@ -52,7 +52,7 @@
 
 body, .login-page {
     /* Ocupa a altura da tela e remove margem */
-    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
     background: var(--background-gradient);
     display: flex;
     justify-content: center;
@@ -224,4 +224,9 @@ body, .login-page {
 /* Remove qualquer header de card que possa interferir no design das abas */
 .login-form-panel .card-header {
     display: none;
+}
+
+.toggle-password {
+    cursor: pointer;
+    padding-right: 10px;
 }

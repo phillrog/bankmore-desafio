@@ -6,32 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
 
     <title>BankMore</title>
-    
+
     <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
     <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" />
-    
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap4-glyphicons/css/bootstrap-glyphicons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    
+    <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
 </head>
 <body class="d-flex flex-column min-vh-120">
     <partial name="_Nav" />
-   
-    <main role="main" class="flex-shrink-0 mt-5">
+
+    <main role="main" class="flex-shrink-0 mt-1">
         <div class="container">
             @RenderBody()
         </div>
     </main>
     <footer class="border-top footer text-muted bg-light mt-5 py-3 w-100 fixed-bottom">
         <div class="container">
-            &copy; @DateTime.Now.Year - BankMore 
+            &copy; @DateTime.Now.Year - BankMore
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
     @RenderSection("scripts", required: false)
+
+
+    <partial name="_ToastrNotification" />
+    <script defer>
+        function setTrueVh() {
+            let vh = window.innerHeight * 0.013;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        // Executa na carga inicial e em qualquer redimensionamento
+        window.addEventListener('resize', setTrueVh);
+        window.addEventListener('orientationchange', setTrueVh);
+        setTrueVh();
+
+        
+    </script>
 </body>
 </html>

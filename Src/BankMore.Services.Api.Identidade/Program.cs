@@ -166,4 +166,21 @@ app.MapRazorPages();
 
 var kafkaBus = app.Services.CreateKafkaBus();
 await kafkaBus.StartAsync();
+
+app.Use(async (context, next) =>
+{
+    // Define a política de CSP que permite o que :
+    // 1. style-src 'self' 'unsafe-inline': Permite CSS local e estilos injetados (pelo Toastr).
+    // 2. script-src 'self' 'unsafe-inline': Permite JS local e scripts injetados (nosso script Toastr).
+    // 3. connect-src 'self' ws://localhost:* http://localhost:*: Permite conexões do BrowserLink/Auto-Refresh.
+
+    string csp = "default-src 'self';" +
+                 "style-src 'self' 'unsafe-inline';" +
+                 "script-src 'self' 'unsafe-inline';" +
+                 "connect-src 'self' ws://localhost:* http://localhost:*;" +
+                 "img-src 'self' data:;"; // Se estiver usando imagens inline ou data URIs
+
+    context.Response.Headers.Add("Content-Security-Policy", csp);
+    await next();
+});
 app.Run();

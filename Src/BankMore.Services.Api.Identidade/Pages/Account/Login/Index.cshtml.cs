@@ -93,7 +93,7 @@ namespace BankMore.Services.Api.Identidade.Pages.Login
                     }
 
                     // Faz login
-                    return Redirect("~/");
+                    return Redirect("~/Account/Login");
                 }
 
                 // Se o usuário estiver autenticado, mas houver um returnUrl, 
@@ -142,7 +142,9 @@ namespace BankMore.Services.Api.Identidade.Pages.Login
                     return Redirect(Input.ReturnUrl);
                 }
 
-                return Redirect("~/");
+                TempData["AlertMessage"] = $"Usuário ou senha não encontrados.";
+
+                return Redirect("~/Account/Login");
             }
 
             if (ModelState.IsValid)
@@ -214,7 +216,7 @@ namespace BankMore.Services.Api.Identidade.Pages.Login
                     {
                         // Fallback: Redireciona para a primeira URI de Post-Logout configurada ou Home
                         var client = await _clientStore.FindClientByIdAsync("identity");
-                        var redirectUri = client?.PostLogoutRedirectUris.FirstOrDefault() ?? "~/";
+                        var redirectUri = client?.PostLogoutRedirectUris.FirstOrDefault() ?? "~/Account/Login";
 
                         return Redirect(redirectUri);
                     }
