@@ -1,4 +1,4 @@
-[![Build Desafio BankMore 2025](https://github.com/phillrog/bankmore-desafio/actions/workflows/build.yaml/badge.svg?branch=identity-duende)](https://github.com/phillrog/bankmore-desafio/actions/workflows/build.yaml)
+[![Build Desafio BankMore 2025](https://github.com/phillrog/bankmore-desafio/actions/workflows/build.yaml/badge.svg)](https://github.com/phillrog/bankmore-desafio/actions/workflows/build.yaml)
 
 ---
 
