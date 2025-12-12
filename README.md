@@ -13,6 +13,66 @@ A comunicação e as transações distribuídas são tratadas de forma assíncro
 
 ---
 
+<img width="1911" height="957" alt="Captura de tela 2025-12-08 221326" src="https://github.com/user-attachments/assets/7a06223c-985e-48e3-bf9b-5aa961335dbe" />
+
+
+
+## 🗺️ Overview Identity
+
+O IdentityServer (neste caso, o **Duende Identity Server**) foi configurado para atuar como o **Servidor de Autorização Central** da sua arquitetura de microsserviços BankMore.
+
+Em termos simples, ele é o responsável por:
+
+1.  **Saber quem é o usuário** (Autenticação).
+
+2.  **Decidir o que o usuário pode fazer** (Autorização e Emissão de Tokens).
+
+Ele gerencia a fronteira de segurança entre o seu Frontend Angular e as APIs do Backend.
+
+Aqui estão as quatro funções principais que o Identity Server realiza no contexto do seu desafio:
+
+* * * * *
+
+1\. 🔑 Autenticação Centralizada (Login)
+----------------------------------------
+
+O Identity Server é o único ponto onde as credenciais do usuário (CPF/Senha) são validadas.
+
+-   **Fluxo de Login:** O Frontend Angular envia as credenciais para o endpoint `/login` do `AccountController`. O Identity Server verifica o usuário, e se as credenciais forem válidas, ele inicia o processo de geração de tokens.
+
+-   **Controle de Senhas:** Ele lida com o *hashing* seguro e o gerenciamento das senhas dos usuários (utilizando o ASP.NET Identity Core, que é integrado a ele).
+
+2\. 🛡️ Emissão de Tokens JWT (Acesso e Renovação)
+--------------------------------------------------
+
+Após a autenticação, o Identity Server emite tokens que são a "carteira de identidade" do usuário para o sistema.
+
+-   **Access Token (JWT):** É o token de curto prazo usado pelo Frontend Angular para acessar os Microsserviços (Contas Correntes, Transferências). O JWT contém as *Claims* do usuário.
+
+-   **Refresh Token:** É o token de longo prazo usado para obter um novo Access Token **sem que o usuário precise fazer login novamente** (endpoint `/refresh`).
+
+-   **Claims (Identidade):** É onde o Duende armazena os dados essenciais do usuário, como o **ID do Usuário**, as **Roles** (Master/Admin) e, crucialmente, o **`numero_conta`** (necessário para a Policy `OwnerOrMaster_Conta`).
+
+3\. 🎯 Autorização por Políticas (`Roles & Policies`)
+-----------------------------------------------------
+
+Ele garante que apenas usuários com permissões corretas possam acessar recursos específicos.
+
+-   **Inclusão de Claims:** As roles (como `Master` ou `Admin`) são incluídas nas *Claims* do token JWT.
+
+-   **Verificação nos Microsserviços:** Quando um Microsserviço (como `ContaCorrenteController`) recebe um JWT, ele confia no Identity Server para validar a assinatura e extrair as *Claims*. As *Policies* (ex: `OwnerOrMaster_Conta`) usam essas *Claims* para verificar se o usuário pode prosseguir (ex: "Você só pode ver seu extrato se o `numero_conta` no token for o mesmo que está sendo consultado, OU se sua `Role` for Master").
+
+4\. 🔗 Orquestração do Registro de Usuário
+------------------------------------------
+
+No fluxo de `POST /register`, o Identity Server não só cria o usuário, mas também coordena o primeiro passo para criar a conta corrente:
+
+-   **Integração Assíncrona:** O `AccountController` (hospedado no Identity) **dispara um evento** (`UsuarioCriadoEvent`) para o **Kafka** (utilizando o *Outbox Pattern*) após o registro bem-sucedido.
+
+-   **Provisionamento:** Este evento é consumido pelo Microsserviço de Contas Correntes para **provisionar a Conta Corrente** do novo usuário.
+
+Portanto, o Duende Identity Server centraliza a segurança, descentralizando a complexidade da autorização e autenticação para o restante dos Microsserviços.
+
 ## 🗺️ Overview dos Microsserviços
 
 O sistema é composto por três APIs Web principais e um Worker dedicado:
