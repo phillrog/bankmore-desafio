@@ -13,7 +13,7 @@ A comunicação e as transações distribuídas são tratadas de forma assíncro
 
 ---
 
-<img width="1911" height="957" alt="Captura de tela 2025-12-08 221326" src="https://github.com/user-attachments/assets/7a06223c-985e-48e3-bf9b-5aa961335dbe" />
+<img width="1917" height="963" alt="image" src="https://github.com/user-attachments/assets/1f3e7bb1-8c60-46be-86e5-100c763618e2" />
 
 
 
