@@ -73,6 +73,34 @@ No fluxo de `POST /register`, o Identity Server não só cria o usuário, mas ta
 
 Portanto, o Duende Identity Server centraliza a segurança, descentralizando a complexidade da autorização e autenticação para o restante dos Microsserviços.
 
+🔒 Fluxo de Autenticação e Autorização (Hybrid Security Flow)
+-------------------------------------------------------------
+
+O projeto BankMore utiliza uma abordagem de segurança híbrida, onde o Frontend (`Angular`) usa Cookies para gerenciar a sessão com o BFF, enquanto a comunicação *Server-to-Server* (BFF para APIs internas) utiliza **Tokens JWT**.
+
+### 1. 🔑 Início: Autenticação (Frontend $\rightarrow$ Identity Server $\rightarrow$ BFF)
+
+<img width="787" height="441" alt="image" src="https://github.com/user-attachments/assets/191a9de6-8fa4-4459-8342-124070a389e2" />
+
+
+### 2. 🍪 Sessão Ativa: Frontend $\leftrightarrow$ BFF (O Cookie)Após o login, o Angular não manipula o JWT diretamente (ou o manipula minimamente). A autenticação é gerenciada pelo Cookie HTTP.
+
+<img width="784" height="262" alt="Captura de tela 2025-12-12 174848" src="https://github.com/user-attachments/assets/498a843d-6b81-4ed9-8b5a-e56add3b37c5" />
+
+
+### 3. 🛡️ Comunicação Interna: BFF $\rightarrow$ Microsserviços (O JWT)O Cookie não pode ser enviado para os Microsserviços internos, pois eles não possuem o contexto da sessão do usuário. O BFF age como um "cliente" autenticado em nome do usuário.
+
+<img width="792" height="347" alt="image" src="https://github.com/user-attachments/assets/9e2354b8-363e-4ef3-99af-c9c361c266dd" />
+
+
+### Conclusão: Por que essa Abordagem Híbrida?
+
+-   **Segurança do Cookie (Frontend $\leftrightarrow$ BFF):** O Cookie gerencia a sessão, é mais resiliente a ataques CSRF quando configurado corretamente, e o Angular não precisa armazenar o JWT no *browser* (local storage/session storage), o que é geralmente considerado mais seguro contra XSS.
+
+-   **Eficiência do JWT (BFF $\leftrightarrow$ APIs):** O JWT é um padrão leve, *stateless* e auto-contido. É o mecanismo ideal para a comunicação *Server-to-Server*, pois cada Microsserviço pode validar o token sem precisar consultar um banco de dados de sessão central.
+
+---
+
 ## 🗺️ Overview dos Microsserviços
 
 O sistema é composto por três APIs Web principais e um Worker dedicado:
