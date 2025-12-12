@@ -1,6 +1,6 @@
 # Build
 
-[![Build Clients](https://github.com/phillrog/identityserver4-dot-net-8/actions/workflows/ci-clients.yml/badge.svg)](https://github.com/phillrog/identityserver4-dot-net-8/actions/workflows/ci-clients.yml)
+[![Build Desafio BankMore 2025](https://github.com/phillrog/bankmore-desafio/actions/workflows/build.yaml/badge.svg?branch=identity-duende)](https://github.com/phillrog/bankmore-desafio/actions/workflows/build.yaml)
 
 ---
 
