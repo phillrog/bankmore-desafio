@@ -18,5 +18,6 @@ public static class DependecyInjectionSetup
 
         services.AddScoped<IContaCorrenteService, ContaCorrenteService>();
         services.AddScoped<IMovimentacaoService, MovimentacaoService>();
+        services.AddScoped<ITransferenciaService, TransferenciaService>();
     }
 }

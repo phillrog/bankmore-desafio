@@ -19,6 +19,21 @@
 
                 return new TokenInjectionHandler(httpContextAccessor);
             });
+
+            services.AddHttpClient("TransferenciasAPI", client =>
+            {
+                client.BaseAddress = new Uri("http://localhost:5002/");
+                client.Timeout = TimeSpan.FromSeconds(30);
+            })
+            .AddPolicyHandler(PolicySetup.GetRetryPolicy())
+            .AddPolicyHandler(PolicySetup.GetCircuitBreakerPolicy())
+            .AddHttpMessageHandler(sp =>
+            {
+
+                var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+
+                return new TokenInjectionHandler(httpContextAccessor);
+            });
             return services;
         }
 
