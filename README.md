@@ -4,7 +4,7 @@
 
 ---
 
-# 🏦 Desfio # BankMore: Plataforma de Microsserviços Bancários
+# 🏦 Desafio Backend # BankMore: Plataforma de Microsserviços Bancários
 
 
 Este projeto é a plataforma de serviços bancários digitais, **Deafio - BankMore**, desenvolvida com uma arquitetura de **Microsserviços** desacoplados. Adota fortemente os padrões de **Domain-Driven Design (DDD)** e **CQRS** para gerenciar a complexidade do domínio.
