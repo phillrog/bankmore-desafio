@@ -3,7 +3,7 @@ name: Build Clients
 on:
   push:
     branches:
-      - main
+      - identity-duende
 
 env:
   DOTNET_VERSION: '8.0.x'
